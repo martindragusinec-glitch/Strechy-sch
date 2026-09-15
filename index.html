@@ -317,6 +317,15 @@ input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(
 input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--green)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-12px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 6px 16px rgba(27,32,40,.25);cursor:grab}
 input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 6px 16px rgba(27,32,40,.25);cursor:grab}
+.calc__live{display:none;margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;grid-template-columns:1fr 1fr;gap:8px 12px}
+.calc__live>div{display:grid;gap:2px}
+.calc__live span{font-size:12.5px;color:var(--ink-3)}
+.calc__live b{font-size:16px;font-weight:600;color:var(--ink);white-space:nowrap}
+.calc__live b.is-green{color:var(--green-dark)}
+.calc__live-pay{grid-column:1/-1;border-top:1px dashed var(--line-strong);padding-top:10px;display:flex!important;justify-content:space-between;align-items:baseline}
+.calc__live-pay span{font-size:14px;font-weight:600;color:var(--ink)}
+.calc__live-pay b{font-size:26px;letter-spacing:-.03em;color:var(--green-dark)}
+@media (max-width:959px){.calc__live{display:grid;position:sticky;bottom:calc(76px + env(safe-area-inset-bottom));z-index:3;box-shadow:0 8px 24px -12px rgba(27,32,40,.35)}}
 .calc__msg{margin-top:18px;padding:14px 16px;border-radius:var(--r-sm);background:var(--green-soft);color:var(--green-dark);font-weight:500;font-size:15px;display:flex;gap:10px;align-items:flex-start}
 .calc__msg.is-over{background:#FFF3D6;color:#7A5200}
 .calc__msg svg{flex:none;margin-top:2px}
@@ -1295,6 +1304,11 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         </div>
         <input type="range" id="m2" min="40" max="200" step="5" value="100" aria-valuetext="100 metrů čtverečních">
         <div class="calc__hint"><span>40&nbsp;m²</span><span>nebo posuňte přesněji</span><span>200&nbsp;m²</span></div>
+        <div class="calc__live num" aria-live="polite">
+          <div><span>Cena celkem</span><b id="l-cena">385&nbsp;500&nbsp;Kč</b></div>
+          <div><span>Dotace</span><b id="l-dot" class="is-green">− 320&nbsp;000&nbsp;Kč</b></div>
+          <div class="calc__live-pay"><span>Váš doplatek</span><b id="l-dop">65&nbsp;500&nbsp;Kč</b></div>
+        </div>
         <div class="calc__msg" id="calc-msg" aria-live="polite">
           <svg width="20" height="20"><use href="#i-info"/></svg>
           <span id="calc-msg-text">Zateplení je dotované korunu za korunu, ve vašem doplatku se neprojeví. Platíte jen doplatek za fotovoltaiku.</span>
@@ -1554,6 +1568,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     slider.setAttribute('aria-valuetext', m2 + ' metrů čtverečních');
     out.textContent = m2 + ' m²';
     cCena.textContent = fmt(r.cena); cDop.textContent = fmt(r.doplatek);
+    var lc = $('#l-cena'), ld = $('#l-dot'), lp = $('#l-dop'); if (lc) { lc.textContent = fmt(r.cena); ld.textContent = '− ' + fmt(r.dotace); lp.textContent = fmt(r.doplatek); }
     ['#c-kryti', '#c-kryti-2', '#c-kryti-3'].forEach(function (id) { var el = $(id); if (el) el.textContent = r.kryti; });
     var zb = $('#c-zbyva'); if (zb) zb.textContent = fmt(r.zbyva);
     ['#r-m2', '#r-m2b'].forEach(function (id) { var el = $(id); if (el) el.textContent = m2; });
