@@ -668,11 +668,11 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
 /* ═══════════════ REVIEWS ═══════════════ */
 .reviews{display:grid;gap:14px}
-.review{padding:26px 24px;background:var(--paper);border-radius:20px;display:grid;gap:16px;align-content:start}
+.review{padding:26px 24px;background:var(--paper);border-radius:20px;display:grid;grid-template-rows:auto 1fr auto;gap:16px}
 .review__stars{color:#F2B300;display:flex;gap:3px}
 .review p{font-size:17px;color:var(--ink);line-height:1.5;letter-spacing:-.01em}
 .review mark{background:rgba(36,165,49,.16);color:var(--ink);font-weight:600;padding:.04em .22em;border-radius:5px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-.review__who{display:flex;align-items:center;gap:12px;margin-top:auto}
+.review__who{display:flex;align-items:center;gap:12px;align-self:end}
 .review__avatar{width:42px;height:42px;border-radius:50%;background:var(--paper-2);color:var(--ink);display:grid;place-items:center;font-weight:600;font-size:14px;flex:none}
 .review__who b{display:block;font-size:15px;color:var(--ink)}
 .review__who span{font-size:13px;color:var(--muted)}
