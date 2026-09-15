@@ -1,0 +1,1132 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap&subset=latin-ext">
+  <style>
+
+/* ═══════════════ FONTS ═══════════════ */
+
+
+
+
+
+
+
+
+
+/* ═══════════════ TOKENS ═══════════════ */
+:root{
+  --ink:#1B2028;--ink-2:#383F47;--ink-3:#646B74;--muted:#98A0A8;
+  --line:rgba(27,32,40,.10);--line-strong:rgba(27,32,40,.18);
+  --paper:#F6F5F1;--paper-2:#EEECE6;--white:#FFFFFF;
+  --green:#24A531;--green-dark:#1B7C25;--green-soft:#E7F5E9;
+  --red:#DA000F;--red-dark:#AD0F1A;--red-soft:#FCEBEC;
+  --r-sm:12px;--r:20px;--r-lg:28px;--pill:999px;
+  --sh:0 30px 70px -30px rgba(27,32,40,.35);--sh-sm:0 12px 30px -16px rgba(27,32,40,.25);
+  --ff:"Poppins",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --container:1300px;--gutter:20px;--ease:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:var(--ff);font-size:16.5px;line-height:1.6;color:var(--ink-2);background:var(--white);padding-bottom:84px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;color:var(--ink);font-weight:600;line-height:1.1;letter-spacing:-.025em}
+h2{font-size:clamp(30px,4.2vw,50px)}
+h3{font-size:clamp(19px,2vw,22px);letter-spacing:-.015em;line-height:1.25}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+strong{font-weight:600;color:var(--ink)}
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--gutter)}
+.section{padding:72px 0}
+.section--paper{background:var(--paper)}
+.section--ink{background:var(--ink);color:rgba(255,255,255,.78)}
+.section--ink h2,.section--ink h3,.section--ink strong{color:#fff}
+.label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.label::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green)}
+.section--ink .label{color:rgba(255,255,255,.6)}
+.sec-head{display:grid;gap:14px;margin-bottom:40px}
+.sec-head h2{margin-top:14px;max-width:16ch}
+.sec-head p{font-size:18px;color:var(--ink-3);max-width:46ch}
+.section--ink .sec-head p{color:rgba(255,255,255,.7)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:6px}
+.nowrap{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+@media (min-width:960px){
+  .section{padding:120px 0}
+  .sec-head{grid-template-columns:7fr 5fr;align-items:end;gap:40px;margin-bottom:56px}
+  .sec-head p{justify-self:end;padding-bottom:6px}
+}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:56px;padding:6px 8px 6px 26px;border-radius:var(--pill);border:1.5px solid transparent;font-weight:600;font-size:16.5px;line-height:1.2;text-decoration:none;cursor:pointer;transition:transform .12s var(--ease),background .15s,border-color .15s;text-align:center;white-space:nowrap}
+.btn__arrow{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center;flex:none;transition:transform .2s var(--ease)}
+.btn--primary{background:var(--red);color:#fff;box-shadow:0 10px 24px -10px rgba(218,0,15,.55)}
+.btn--primary:hover{background:var(--red-dark)}
+.btn--primary:hover .btn__arrow{transform:translateX(3px)}
+.btn--primary:active{transform:scale(.98)}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--line-strong);padding:6px 24px}
+.btn--ghost:hover{border-color:var(--ink)}
+.btn--white{background:#fff;color:var(--ink);padding:6px 24px}
+.btn--block{width:100%}
+.btn--lg{min-height:62px;font-size:17.5px}
+.btn[disabled]{opacity:.65;cursor:default;transform:none}
+.btn svg{flex:none}
+@media (hover:none){.btn--primary:hover{background:var(--red)}}
+
+/* ═══════════════ HEADER ═══════════════ */
+.header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.header__in{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
+.header__logo img{height:22px;width:auto}
+.header__right{display:flex;align-items:center;gap:22px}
+.phone{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;color:var(--ink);white-space:nowrap}
+.phone__icon{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;flex:none;color:var(--ink)}
+.phone__meta{display:flex;flex-direction:column;line-height:1.15}
+.phone__hours{font-size:12px;font-weight:500;color:var(--ink-3)}
+.phone__hours.is-open{color:var(--green-dark)}
+.header .btn{display:none}
+@media (min-width:960px){.header__in{min-height:80px}.header__logo img{height:28px}.header .btn{display:inline-flex;min-height:48px}}
+
+/* ═══════════════ HERO (100 vh) ═══════════════ */
+.hero{position:relative;overflow:hidden;background:#12161C;color:#fff;isolation:isolate}
+.hero__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 60%;z-index:-2}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(18,22,28,.86) 0%,rgba(18,22,28,.6) 45%,rgba(18,22,28,.86) 100%)}
+.hero__in{padding:28px 0 40px;display:grid;gap:22px;align-content:center;min-height:calc(100svh - 64px)}
+html.qa .hero__in{min-height:0!important}
+.hero__nzu img{height:56px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
+.hero__paperwrap{position:relative}
+.hero__eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 14px 8px 11px;border-radius:var(--pill);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:500;color:#fff;backdrop-filter:blur(6px)}
+.hero__eyebrow .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(36,165,49,.25)}
+.hero h1{font-size:clamp(34px,4.6vw,60px);margin-top:28px;line-height:1.06;color:#fff;letter-spacing:-.03em;font-weight:600}
+.hero .hl{display:inline-block;background:var(--green);color:#fff;padding:0 14px;border-radius:12px;line-height:1.22;white-space:nowrap}
+.hero__h1b{display:block;font-weight:500;font-size:.58em;margin-top:14px;color:rgba(255,255,255,.78);letter-spacing:-.02em}
+.hero__sub{margin-top:16px;font-size:16.5px;color:rgba(255,255,255,.78);max-width:50ch}
+.hero__who{margin-top:26px;display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.55;color:#fff;max-width:48ch;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.hero__who svg{flex:none;color:var(--green);margin-top:3px}
+.hero__who strong{color:#fff}
+.hero__proof{margin-top:26px;display:grid;gap:12px}
+.hero__proof li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;color:rgba(255,255,255,.85);line-height:1.5}
+.hero__proof svg{flex:none;color:var(--green);margin-top:4px}
+.hero__proof strong{color:#fff}
+.hero__cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.hero__call{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-size:15.5px}
+.hero__call b{font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.5)}
+.hero__micro{font-size:13px;color:rgba(255,255,255,.6)}
+/* papírová účtenka */
+.paper{position:relative;background:#fff;color:var(--ink-2);border-radius:4px;padding:16px 20px 20px;box-shadow:0 30px 60px -24px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.15);font-variant-numeric:tabular-nums}
+.paper::before,.paper::after{content:"";position:absolute;left:0;right:0;height:10px;background:linear-gradient(-45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%),linear-gradient(45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%);background-size:14px 20px}
+.paper::before{top:-9px;transform:rotate(180deg)}
+.paper::after{bottom:-9px}
+.paper__head{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:2px dashed var(--line-strong);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.paper__head img{height:14px;width:auto}
+.paper__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line-strong)}
+.paper__row span{font-size:13.5px;color:var(--ink-3)}
+.paper__row b{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap}
+.paper__row--sub b{color:var(--green-dark)}
+.paper__row--pay{border-bottom:0;background:var(--green-soft);margin:8px -20px 0;padding:14px 20px;align-items:flex-end}
+.paper__row--pay span{color:var(--ink);font-weight:600;font-size:14.5px}
+.paper__row--pay b{font-size:30px;letter-spacing:-.035em;line-height:1}
+.paper__stamp{margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted)}
+.paper__stamp b{display:inline-block;padding:5px 10px;border:2px solid var(--green);color:var(--green-dark);border-radius:5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-4deg);font-size:11px}
+.paper--lead{transform:rotate(-1.5deg)}
+/* animovaná šipka účtenka → CTA */
+.lead__paperwrap{position:relative;margin-top:24px;padding-bottom:110px}
+.paper--lead{max-width:420px}
+.lead__arrow{position:absolute;left:50%;bottom:-2px;width:100px;transform:translateX(-50%) rotate(90deg);pointer-events:none;z-index:5}
+.lead__arrow svg{width:100%;height:auto;overflow:visible}
+.arrow__path{stroke-dasharray:260;stroke-dashoffset:260;animation:arrowDraw 1.3s var(--ease) .7s forwards}
+.arrow__head{stroke-dasharray:60;stroke-dashoffset:60;animation:arrowDraw .35s var(--ease) 1.9s forwards}
+.lead__arrow.is-drawn svg{animation:arrowNudge 1.8s ease-in-out 2.4s infinite}
+@keyframes arrowDraw{to{stroke-dashoffset:0}}
+@keyframes arrowNudge{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,0)}}
+@media (min-width:960px){
+  .hero__in{grid-template-columns:minmax(0,1fr) 460px;align-items:center;gap:0 96px;padding:48px 0 56px;min-height:calc(100vh - 80px)}
+  .hero__nzu img{height:74px}
+  .quick{margin-top:8px}
+  .hero::before{background:linear-gradient(90deg,rgba(18,22,28,.9) 0%,rgba(18,22,28,.66) 48%,rgba(18,22,28,.3) 100%)}
+  .hero__bg{object-position:60% 55%}
+  .lead__paperwrap{padding-bottom:0}
+  .lead__arrow{left:auto;right:-92px;top:-64px;bottom:auto;width:150px;transform:none}
+  .lead__points{margin-top:32px}
+  @keyframes arrowNudge{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,-3px)}}
+}
+@media (prefers-reduced-motion:reduce){.arrow__path,.arrow__head{stroke-dashoffset:0;animation:none}.lead__arrow.is-drawn svg{animation:none}}
+
+/* quick start card (krok 1 v hero) */
+.quick{position:relative;background:#fff;color:var(--ink-2);border-radius:var(--r-lg);box-shadow:var(--sh);padding:22px 20px 18px}
+.quick__step{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.quick__step::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red)}
+.quick__h{font-size:clamp(20px,2.2vw,24px);margin-top:10px;letter-spacing:-.02em}
+.quick__opts{display:grid;gap:10px;margin-top:16px}
+.quick__opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:13px 14px;border:1.5px solid var(--line-strong);border-radius:16px;background:#fff;cursor:pointer;transition:border-color .12s,background .12s,transform .1s}
+.quick__opt>svg:first-child{flex:none;color:var(--ink)}
+.quick__opt span{flex:1;display:flex;flex-direction:column;line-height:1.25}
+.quick__opt b{font-weight:600;color:var(--ink);font-size:15.5px}
+.quick__opt small{font-size:13px;color:var(--ink-3);margin-top:2px}
+.quick__arr{flex:none;color:var(--red);opacity:.75;transition:transform .15s}
+.quick__opt:hover{border-color:var(--ink);background:var(--paper)}
+.quick__opt:hover .quick__arr{transform:translateX(3px);opacity:1}
+.quick__opt:active{transform:scale(.985)}
+.quick__foot{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px}
+.quick__link{background:none;border:0;padding:4px 0;font-size:13.5px;font-weight:500;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.quick__link:hover{color:var(--ink)}
+.quick__note{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-strong);font-size:13px;color:var(--ink-3)}
+.quick__sum{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-strong);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:13px;color:var(--ink-3)}
+.quick__sum b{font-weight:600;color:var(--muted);text-decoration:line-through;font-size:14px}
+.quick__minus{color:var(--green-dark);font-weight:500}
+.quick__sum .quick__pay{text-decoration:none;color:var(--ink);font-size:20px;font-weight:600;margin-left:auto}
+@media (min-width:960px){.quick{padding:28px 28px 22px}}
+
+.cover{display:grid;gap:8px;margin-top:6px}
+.cover__bar{height:8px;border-radius:4px;background:var(--paper-2);overflow:hidden}
+.cover__bar i{display:block;height:100%;background:var(--green);border-radius:4px;transition:width .35s var(--ease)}
+.cover__legend{display:flex;justify-content:space-between;font-size:12.5px;font-weight:500;color:var(--ink-3)}
+.cover__legend span{display:inline-flex;align-items:center;gap:6px}
+.cover__dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.cover__dot--g{background:var(--green)}.cover__dot--i{background:var(--paper-2);border:1px solid var(--line-strong)}
+
+/* ═══════════════ TRUST STRIP ═══════════════ */
+.trust{background:var(--paper);border-bottom:1px solid var(--line)}
+.trust__in{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.trust li{padding:18px 16px 18px 0;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line)}
+.trust li:nth-child(odd){border-right:1px solid var(--line);padding-right:16px}
+.trust li:nth-child(even){padding-left:16px}
+.trust li:nth-last-child(-n+2){border-bottom:0}
+.trust b{font-size:26px;font-weight:600;color:var(--ink);letter-spacing:-.03em;line-height:1.1}
+.trust span{font-size:13.5px;color:var(--ink-3)}
+@media (min-width:960px){
+  .trust__in{grid-template-columns:repeat(4,1fr)}
+  .trust li{padding:26px 28px;border-bottom:0;border-right:1px solid var(--line)}
+  .trust li:first-child{padding-left:0}.trust li:last-child{border-right:0}
+  .trust b{font-size:32px}.trust span{font-size:14.5px}
+}
+
+/* ═══════════════ ELIGIBILITY ═══════════════ */
+.elig{display:grid;gap:28px}
+.elig__logo{height:52px;width:auto;margin-top:16px}
+.hl{display:inline-block;background:var(--green);color:#fff;padding:0 12px;border-radius:10px;line-height:1.25}
+@media (min-width:960px){.elig__logo{height:60px}}
+.elig__lead{font-size:18px;color:var(--ink-3)}
+.elig__panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:6px 22px}
+.elig__row{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;padding:20px 0;border-bottom:1px solid var(--line);align-items:start}
+.elig__row:last-child{border-bottom:0}
+.elig__row svg{color:var(--green-dark);margin-top:2px}
+.elig__row h3{font-size:18px}
+.elig__row p{grid-column:2;font-size:15px;color:var(--ink-3)}
+.elig__alt{margin-top:18px;display:grid;gap:14px;padding:22px;border-radius:var(--r);background:var(--paper-2)}
+.elig__alt h3{font-size:17px}
+.elig__alt p{font-size:15px;color:var(--ink-3)}
+@media (min-width:960px){
+  .elig{grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+  .elig__left{position:sticky;top:110px}
+  .elig__panel{padding:10px 32px}
+  .elig__alt{grid-template-columns:1fr auto;align-items:center;padding:24px 28px}
+}
+
+/* ═══════════════ CALCULATOR ═══════════════ */
+.calc{display:grid;gap:28px;background:var(--paper);border-radius:var(--r-lg);padding:28px 22px;font-variant-numeric:tabular-nums}
+.calc__label{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;color:var(--ink)}
+.calc__label output{font-size:44px;font-weight:600;color:var(--ink);letter-spacing:-.03em;line-height:1}
+.calc__hint{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:4px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;margin:6px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--green) var(--pct,37%),var(--paper-2) var(--pct,37%))}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--paper-2)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--green)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-12px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 6px 16px rgba(27,32,40,.25);cursor:grab}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 6px 16px rgba(27,32,40,.25);cursor:grab}
+.calc__msg{margin-top:18px;padding:14px 16px;border-radius:var(--r-sm);background:var(--green-soft);color:var(--green-dark);font-weight:500;font-size:15px;display:flex;gap:10px;align-items:flex-start}
+.calc__msg.is-over{background:#FFF3D6;color:#7A5200}
+.calc__msg svg{flex:none;margin-top:2px}
+.calc__foot{margin-top:14px;font-size:13px;color:var(--muted);line-height:1.5}
+.receipt{background:#fff;border-radius:var(--r);padding:6px 20px 20px;box-shadow:var(--sh-sm)}
+.receipt__row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.receipt__row span{font-size:15px;color:var(--ink-3)}
+.receipt__row b{font-size:18px;font-weight:600;color:var(--ink);white-space:nowrap}
+.receipt__row--sub b{color:var(--green-dark)}
+.receipt__row--pay{border-bottom:0;padding:16px 0 10px;align-items:flex-end}
+.receipt__row--pay span{color:var(--ink);font-weight:600;font-size:16px}
+.receipt__row--pay b{font-size:40px;letter-spacing:-.035em;line-height:1}
+.receipt .btn{margin-top:16px}
+@media (min-width:960px){.calc{grid-template-columns:1fr 1fr;gap:56px;padding:48px}.calc__left{align-self:center}}
+
+/* ═══════════════ BREAKDOWN ═══════════════ */
+.bd{display:grid;gap:36px}
+.bd__big{font-size:clamp(88px,14vw,150px);font-weight:600;letter-spacing:-.05em;line-height:.9;color:var(--green);margin:22px 0 10px}
+.bd__big small{font-size:.5em;letter-spacing:-.03em}
+.bd__text{font-size:17px;color:var(--ink-3);max-width:44ch}
+.bd__note{margin-top:18px;font-size:13.5px;color:var(--muted);max-width:44ch}
+.bd .receipt{padding:22px 30px 34px;border-radius:6px;transform:rotate(-1.5deg);box-shadow:0 40px 80px -30px rgba(27,32,40,.45),0 2px 6px rgba(27,32,40,.08);position:relative;background:#fff;font-family:var(--ff)}
+.bd .receipt::before{content:"";position:absolute;left:0;right:0;bottom:-10px;height:12px;background:linear-gradient(-45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%),linear-gradient(45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%);background-size:16px 24px;background-position:0 0}
+.bd .receipt::after{content:"";position:absolute;left:0;right:0;top:-10px;height:12px;background:linear-gradient(-45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%),linear-gradient(45deg,transparent 33.33%,#fff 33.33%,#fff 66.66%,transparent 66.66%);background-size:16px 24px;transform:rotate(180deg)}
+.bd .receipt__head{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px dashed var(--line-strong);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.bd .receipt__head img{height:16px;width:auto}
+.bd .receipt__row{border-bottom:1px dashed var(--line-strong)}
+.bd .receipt__row{padding:15px 0}
+.bd .receipt__row--sum{font-weight:600}
+.bd .receipt__row--sum span{color:var(--ink)}
+.bd .receipt__row--pay{background:var(--green-soft);margin:12px -30px 0;padding:18px 30px 20px;border-bottom:0}
+.bd .receipt__stamp{margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.bd .receipt__stamp b{display:inline-block;padding:6px 12px;border:2px solid var(--green);color:var(--green-dark);border-radius:6px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transform:rotate(-4deg);font-size:12px}
+@media (min-width:960px){.bd{grid-template-columns:5fr 7fr;gap:72px;align-items:center}}
+
+/* ═══════════════ BENTO (co je v ceně) ═══════════════ */
+.bento{display:grid;gap:14px}
+.tile{border-radius:var(--r);background:var(--paper);padding:26px 22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tile--img{padding:0;overflow:hidden;min-height:240px;position:relative}
+.tile--img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.tile--img figcaption{position:absolute;left:14px;bottom:14px;padding:6px 12px;border-radius:var(--pill);background:rgba(255,255,255,.9);font-size:12.5px;font-weight:500;color:var(--ink)}
+.tile--ink{background:var(--ink);color:rgba(255,255,255,.78)}
+.tile--ink h3,.tile--ink strong{color:#fff}
+.tile__tag{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.tile--ink .tile__tag{color:rgba(255,255,255,.55)}
+.tile h3{font-size:clamp(20px,2.2vw,24px)}
+.check-list{display:grid;gap:9px}
+.check-list li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px}
+.check-list svg{flex:none;color:var(--green-dark);margin-top:4px}
+.tile__foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tile__foot span{font-size:13.5px;color:var(--ink-3)}
+.tile__foot b{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.02em;white-space:nowrap}
+.x-list{display:grid;gap:8px 24px}
+.x-list li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px}
+.x-list svg{flex:none;color:rgba(255,255,255,.5);margin-top:4px}
+.tile--ink p{font-size:15px}
+@media (min-width:760px){
+  .bento{grid-template-columns:repeat(12,1fr);gap:18px}
+  .tile--a{grid-column:span 5;min-height:360px}.tile--b{grid-column:span 7}
+  .tile--c{grid-column:span 7}.tile--d{grid-column:span 5;min-height:320px}
+  .tile--e{grid-column:span 12;display:grid;grid-template-columns:1fr 2fr;gap:20px 40px;align-items:start}
+  .tile--e .x-list{grid-template-columns:1fr 1fr}
+  .tile{padding:32px}
+}
+
+.qs{padding:64px 0}
+.qs__in{display:grid;gap:26px}
+.qs__opts{display:grid;gap:10px}
+.qs .quick__opt{background:#fff}
+@media (min-width:960px){.qs{padding:88px 0}.qs__in{grid-template-columns:5fr 7fr;gap:64px;align-items:center}.qs__opts{grid-template-columns:1fr 1fr}}
+
+/* ═══════════════ OFFER CARD ═══════════════ */
+.offer{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh);overflow:hidden}
+.offer__head{display:grid;gap:22px;padding:26px 22px;background:var(--paper);border-bottom:1px solid var(--line)}
+.offer__badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--pill);background:var(--green-soft);color:var(--green-dark);font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.offer__head h3{font-size:clamp(24px,3vw,36px);margin-top:12px;letter-spacing:-.025em}
+.offer__head p{margin-top:10px;color:var(--ink-3);font-size:16px;max-width:46ch}
+.offer__price{display:grid;gap:4px;align-content:start}
+.offer__was{font-size:13.5px;color:var(--ink-3)}
+.offer__price b{font-size:clamp(40px,5vw,56px);font-weight:600;line-height:1;letter-spacing:-.04em;color:var(--ink)}
+.offer__pay{font-size:14px;color:var(--ink-3)}
+.offer__price .btn{margin-top:14px;justify-self:start}
+.offer__cols{display:grid;gap:26px;padding:26px 22px;position:relative}
+.offer__col{display:grid;gap:12px;align-content:start}
+.offer__col img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r-sm);margin-bottom:4px}
+.offer__col h4{font-size:20px;letter-spacing:-.02em}
+.offer__plus{display:none}
+.offer__not{padding:22px;background:var(--ink);color:rgba(255,255,255,.78);font-size:15px}
+.offer__not .tile__tag{color:rgba(255,255,255,.55);display:block;margin-bottom:8px}
+@media (min-width:760px){
+  .offer__head{grid-template-columns:1.2fr auto;align-items:end;padding:36px 40px}
+  .offer__price{text-align:right;justify-items:end}
+  .offer__cols{grid-template-columns:1fr auto 1fr;gap:32px;padding:36px 40px;align-items:start}
+  .offer__plus{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--paper);color:var(--ink);font-size:30px;font-weight:500;align-self:center}
+  .offer__not{padding:26px 40px}
+}
+
+/* ═══════════════ STATS ═══════════════ */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.stat{padding:22px 16px 22px 0;border-bottom:1px solid rgba(255,255,255,.14)}
+.stat:nth-child(odd){border-right:1px solid rgba(255,255,255,.14)}
+.stat:nth-child(even){padding-left:16px}
+.stat:nth-last-child(-n+2){border-bottom:0}
+.stat b{display:block;font-size:clamp(30px,4.6vw,56px);font-weight:600;color:#fff;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:10px;font-size:14.5px;color:rgba(255,255,255,.68);line-height:1.4;max-width:22ch}
+.stats__note{margin-top:36px;font-size:15px;color:rgba(255,255,255,.65);max-width:70ch}
+@media (min-width:900px){
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .stat{padding:8px 32px 8px 32px;border-bottom:0;border-right:1px solid rgba(255,255,255,.14)}
+  .stat:first-child{padding-left:0}.stat:last-child{border-right:0}
+}
+
+/* ═══════════════ WHY ═══════════════ */
+.why{display:grid;gap:32px}
+.why__media{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3}
+.why__media img{width:100%;height:100%;object-fit:cover}
+.why__quote{font-size:19px;color:var(--ink);font-weight:500;margin:18px 0 26px;max-width:40ch;letter-spacing:-.01em}
+.why__list li{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:18px 0;border-top:1px solid var(--line)}
+.why__list li:last-child{border-bottom:1px solid var(--line)}
+.why__list svg{color:var(--ink);margin-top:2px}
+.why__list h3{font-size:17px}
+.why__list p{grid-column:2;font-size:15px;color:var(--ink-3)}
+@media (min-width:960px){.why{grid-template-columns:5fr 7fr;gap:72px;align-items:start}.why__media{position:sticky;top:110px;aspect-ratio:4/5}}
+
+/* ═══════════════ PROCESS ═══════════════ */
+.steps{display:grid;gap:8px}
+.step{padding:22px 0 26px;border-top:1px solid var(--line-strong)}
+.step__n{display:block;font-size:14px;font-weight:600;letter-spacing:.1em;color:var(--green-dark);margin-bottom:14px}
+.step h3{font-size:20px;margin-bottom:8px}
+.step p{font-size:15.5px;color:var(--ink-3)}
+.step__time{display:inline-block;margin-top:14px;font-size:13px;font-weight:500;color:var(--ink-3);border:1px solid var(--line-strong);padding:4px 10px;border-radius:var(--pill)}
+@media (min-width:760px){.steps{grid-template-columns:repeat(4,1fr);gap:32px}.step{padding-top:26px}}
+
+/* ═══════════════ REVIEWS ═══════════════ */
+.reviews{display:grid;gap:8px}
+.review{padding:24px 0;border-top:1px solid var(--line-strong);display:grid;gap:16px;align-content:start}
+.review__stars{color:#F2B300;display:flex;gap:3px}
+.review p{font-size:17px;color:var(--ink);line-height:1.5;letter-spacing:-.01em}
+.review__who{display:flex;align-items:center;gap:12px;margin-top:auto}
+.review__avatar{width:42px;height:42px;border-radius:50%;background:var(--paper-2);color:var(--ink);display:grid;place-items:center;font-weight:600;font-size:14px;flex:none}
+.review__who b{display:block;font-size:15px;color:var(--ink)}
+.review__who span{font-size:13px;color:var(--muted)}
+.reviews__foot{margin-top:8px;font-size:14.5px;color:var(--ink-3)}
+.reviews__foot a{color:var(--ink);font-weight:500}
+.gallery{margin-top:56px;display:grid;gap:22px 16px;grid-template-columns:1fr}
+.gallery figure{margin:0;display:grid;gap:10px}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:var(--paper-2);transition:transform .3s var(--ease)}
+.gallery figure:hover img{transform:scale(1.015)}
+.gallery figcaption{display:flex;flex-direction:column;gap:2px;font-size:14px;color:var(--ink-3)}
+.gallery figcaption b{color:var(--ink);font-weight:600;font-size:15px}
+.gallery__more{margin-top:16px;font-size:14.5px;color:var(--ink-3)}
+.gallery__more a{color:var(--ink);font-weight:500}
+@media (min-width:600px){.gallery{grid-template-columns:1fr 1fr}}
+@media (min-width:760px){.reviews{grid-template-columns:repeat(3,1fr);gap:32px}}
+@media (min-width:960px){.gallery{grid-template-columns:repeat(3,1fr);gap:28px 20px}}}
+
+/* ═══════════════ FORM (lead box) ═══════════════ */
+.breakout{max-width:1920px;margin:0 auto;padding:0 20px}
+.lead-box{background:var(--ink);border-radius:var(--r-lg);padding:28px 20px;display:grid;gap:28px;color:rgba(255,255,255,.75)}
+#kalkulace.section{padding-top:40px}
+@media (min-width:960px){#kalkulace.section{padding-top:56px}}
+.lead__left h2{color:#fff;font-size:clamp(30px,3.6vw,46px)}
+.lead__text{margin-top:18px;font-size:17px;color:rgba(255,255,255,.7);max-width:40ch}
+.lead__points{display:grid;margin-top:30px}
+.lead__points li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;color:#fff;padding:12px 0;border-top:1px solid rgba(255,255,255,.14)}
+.lead__points li:last-child{border-bottom:1px solid rgba(255,255,255,.14)}
+.lead__points svg{flex:none;color:#FF4B57;margin-top:4px}
+.lead__stars{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.65)}
+.lead__stars .review__stars{color:#F2B300}
+.lead__stars b{color:#fff;font-weight:600}
+.form-card{background:#fff;border-radius:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);padding:0;min-height:420px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.form-card form,.form-card .success{padding:22px 20px 24px}
+.form-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.form-stepnum{font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.form-eta{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-3)}
+.progress{height:5px;border-radius:3px;background:var(--paper-2);overflow:hidden;margin-bottom:14px}
+.progress i{display:block;height:100%;width:100%;background:var(--red);transform-origin:left;transform:scaleX(.16);transition:transform .3s var(--ease)}
+.form-choice{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px;border-radius:12px;background:var(--red-soft);font-size:14px;color:var(--ink-3);margin-bottom:22px}
+.form-choice b{color:var(--ink);font-weight:600}
+.form-choice button{background:none;border:0;padding:0;font-weight:600;color:var(--red);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:14px}
+.form-choice[hidden]{display:none}
+.form-back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:12px 0 0;margin-top:14px;font-weight:600;font-size:15px;color:var(--ink-3);cursor:pointer;visibility:hidden}
+.form-back.is-visible{visibility:visible}
+.form-back:hover{color:var(--ink)}
+.fstep{display:none;animation:stepIn .22s var(--ease)}
+.fstep.is-active{display:block}
+@keyframes stepIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.fstep h3{font-size:clamp(22px,2.4vw,28px);margin-bottom:8px;outline:none;letter-spacing:-.025em}
+.fstep__hint{font-size:15px;color:var(--ink-3);margin-bottom:20px}
+.chips{display:grid;gap:12px;grid-template-columns:1fr}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:0;height:0}
+.chip label{display:flex;align-items:center;gap:14px;min-height:64px;padding:10px 14px 10px 10px;border:1.5px solid var(--line-strong);border-radius:16px;background:#fff;font-weight:600;font-size:16px;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s,transform .09s;user-select:none}
+.chip__box{flex:none;width:46px;height:46px;border-radius:12px;background:var(--paper);display:grid;place-items:center;color:var(--ink);transition:background .12s,color .12s}
+.chip__box--wide{width:60px}
+.chip label:hover{border-color:var(--ink)}
+.chip label:active{transform:scale(.985)}
+.chip input:checked+label{border-color:var(--red);background:var(--red-soft)}
+.chip input:checked+label .chip__box{background:var(--red);color:#fff}
+.chip input:focus-visible+label{outline:3px solid var(--red);outline-offset:2px}
+.fgroup{margin-top:24px}
+.fgroup h4{font-size:17px;margin-bottom:10px;color:var(--ink)}
+.inline-note{margin-top:14px;padding:12px 14px;border-radius:12px;background:#FFF3D6;color:#5B4300;font-size:14.5px;display:none}
+.inline-note.is-visible{display:block}
+.fields{display:grid;gap:14px}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:6px;color:var(--ink)}
+.field input{width:100%;min-height:56px;padding:12px 14px;border:1.5px solid var(--line-strong);border-radius:14px;font:inherit;font-size:16.5px;color:var(--ink);background:#fff;transition:border-color .12s}
+.field input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,32,40,.08)}
+.field.has-error input{border-color:var(--red)}
+.field__err{display:none;margin-top:6px;font-size:13.5px;color:var(--red);font-weight:500}
+.field.has-error .field__err{display:block}
+.form-next{margin-top:24px}
+.form-consent{margin-top:14px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.form-consent a{color:var(--ink-3)}
+.form-call{margin-top:12px;font-size:14px;color:var(--ink-3);text-align:center}
+.form-error{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--red-soft);color:var(--red);font-size:14.5px}
+.form-error.is-visible{display:block}
+.form-foot{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px 22px;padding:14px 20px;background:var(--paper);border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-3)}
+.form-foot span{display:inline-flex;align-items:center;gap:7px}
+.form-foot svg{color:var(--green-dark)}
+.hp{position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;overflow:hidden}
+.success{display:none;text-align:left}
+.success.is-visible{display:block}
+.success__icon{width:60px;height:60px;border-radius:50%;background:var(--green-soft);color:var(--green-dark);display:grid;place-items:center;margin-bottom:18px}
+.success h3{font-size:clamp(22px,3vw,30px);margin-bottom:10px}
+.success p{color:var(--ink-3);font-size:16px}
+.success ol{margin:20px 0 0;padding-left:0;display:grid;gap:10px;font-size:15.5px;counter-reset:s}
+.success ol li{display:flex;gap:12px;counter-increment:s}
+.success ol li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--paper-2);color:var(--ink);font-size:13px;font-weight:600;display:grid;place-items:center}
+.success__phone{margin-top:22px}
+.success small{display:block;margin-top:16px;font-size:13px;color:var(--muted)}
+.spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (min-width:600px){.chips{grid-template-columns:1fr 1fr}.chips--1{grid-template-columns:1fr}}
+@media (min-width:760px){.form-card form,.form-card .success{padding:30px 34px 30px}.fields{grid-template-columns:1fr 1fr}.fields .field--full{grid-column:1/-1}.form-foot{padding:16px 34px}}
+@media (min-width:960px){.lead-box{grid-template-columns:5fr 7fr;gap:96px;align-items:start;padding:64px 64px;border-radius:32px}.lead__left{position:sticky;top:110px}.lead__left h2{max-width:16ch}}
+@media (min-width:1400px){.lead-box{grid-template-columns:5fr 8fr;padding:88px 96px;gap:120px}.fstep h3{font-size:32px}.chips{gap:14px}.chip label{min-height:72px;font-size:17px}}
+
+.sec-cta{margin-top:40px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}
+.sec-cta__note{font-size:14px;color:var(--ink-3)}
+.section--ink .sec-cta__note{color:rgba(255,255,255,.65)}
+@media (min-width:960px){.sec-cta{margin-top:56px}}
+
+/* ═══════════════ FAQ ═══════════════ */
+.faqwrap{display:grid;gap:28px}
+.faq{display:grid}
+.faq__item{border-top:1px solid var(--line-strong)}
+.faq__item:last-child{border-bottom:1px solid var(--line-strong)}
+.faq__q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;background:none;border:0;text-align:left;font-weight:600;font-size:17px;color:var(--ink);cursor:pointer;line-height:1.35}
+.faq__q svg{flex:none;transition:transform .25s var(--ease);color:var(--ink)}
+.faq__q[aria-expanded=true] svg{transform:rotate(45deg)}
+.faq__a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s var(--ease)}
+.faq__a>div{overflow:hidden}
+.faq__a p{padding:0 40px 22px 0;font-size:15.5px;color:var(--ink-3)}
+.faq__item.is-open .faq__a{grid-template-rows:1fr}
+@media (min-width:960px){.faqwrap{grid-template-columns:5fr 7fr;gap:72px;align-items:start}.faqwrap__left{position:sticky;top:110px}}
+
+/* ═══════════════ FINAL ═══════════════ */
+.final__in{display:grid;gap:26px;max-width:820px}
+.final h2{font-size:clamp(34px,5vw,60px);letter-spacing:-.03em}
+.final p{font-size:17px;color:rgba(255,255,255,.75);max-width:52ch}
+.final__deadline{display:inline-flex;align-items:center;gap:8px;justify-self:start;padding:8px 14px;border-radius:var(--pill);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);font-size:13.5px;font-weight:500;color:#fff}
+.final__cta{display:grid;gap:12px;justify-content:start}
+.final .btn--ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.final .btn--ghost:hover{border-color:#fff}
+@media (min-width:600px){.final__cta{grid-template-columns:auto auto}}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.footer{background:var(--paper);padding:40px 0 36px;font-size:14px;color:var(--ink-3)}
+.footer__top{display:grid;gap:24px}
+.footer__brand img{height:22px;width:auto;margin-bottom:14px}
+.footer__brand p{font-size:14px;line-height:1.7}
+.footer__links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.footer__links a{color:var(--ink);text-decoration:none;font-weight:500}
+.footer__links a:hover{color:var(--green-dark)}
+.footer__legal{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.6;display:grid;gap:10px}
+.footer__legal a{color:var(--muted)}
+@media (min-width:760px){.footer__top{grid-template-columns:1.3fr 1fr;align-items:start}.footer__links{justify-content:flex-end}}
+
+/* ═══════════════ STICKY BAR ═══════════════ */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:2fr 3fr;gap:10px;transform:translateY(110%);transition:transform .2s var(--ease)}
+.sticky.is-visible{transform:none}
+.sticky .btn{min-height:52px;padding:6px 16px;font-size:15.5px;gap:8px}
+@media (min-width:960px){.sticky{display:none}body{padding-bottom:0}}
+
+/* ═══════════════ REVEAL ═══════════════ */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+
+
+.reveal{opacity:1!important;transform:none!important}
+.sticky{display:none!important}
+.hero__in{min-height:var(--ab-hero)!important}
+.lp-root{font-family:"Poppins",-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+:root{--ab-hero:760px}
+  </style>
+</helmet>
+<div class="lp-root">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 16v-4M12 8h.01" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 14.5a4.5 4.5 0 0 1 6 4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 2v6h6M9 13h6M9 17h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V9l6 4V9l6 4V5h6v16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.6 7.2.8-5.3 4.9 1.4 7.1L12 18l-6.4 3.4 1.4-7.1L1.7 9.4l7.2-.8z" fill="currentColor"/></symbol>
+  <symbol id="roof-sedlova" viewBox="0 0 48 32"><path d="M4 18 24 4l20 14M10 16v12h28V16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="roof-valbova" viewBox="0 0 48 32"><path d="M4 18 14 5h20l10 13M10 18v10h28V18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="roof-pultova" viewBox="0 0 48 32"><path d="M6 17 42 5v12M10 17v11h28V17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="roof-plocha" viewBox="0 0 48 32"><path d="M4 11h40M10 11v17h28V11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="roof-nevim" viewBox="0 0 48 32"><path d="M10 6h28v22H10z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M20 13a4 4 0 1 1 5.5 3.7c-1 .5-1.5 1.2-1.5 2.3M24 23h.01" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M3 17 17 3l4 4L7 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 12l2 2M11 9l2 2M14 6l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 4.9 4.9L21 12.6 12.6 21 3 11.4l1.4-1.4 3.1 3.1 6.2-6.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14.7 6.3 18 3l3 3-3.3 3.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-q" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 20v-6h4v6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-users2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-euro" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 9a4 4 0 1 0 0 6M7 11h6M7 13h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="container header__in">
+    <a class="header__logo" href="https://www.schlieger.cz/" aria-label="Schlieger – domů">
+      <img src="schlieger-logo.svg" alt="Schlieger" width="269" height="30">
+    </a>
+    <div class="header__right">
+      <a class="phone" href="tel:+420226223800" aria-label="Zavolat na číslo 226 223 800">
+        <span class="phone__icon"><svg width="17" height="17"><use href="#i-phone"/></svg></span>
+        <span class="phone__meta"><span>226 223 800</span><span class="phone__hours" data-hours>Po–Pá 9–16</span></span>
+      </a>
+      <a class="btn btn--primary" href="#kalkulace" data-cta="header-primary">Spočítat doplatek <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════ HERO (100 vh) ═══════════════ -->
+<section class="hero" aria-labelledby="h1">
+  <img class="hero__bg" src="hero-house-fve-960.jpg" srcset="hero-house-fve-960.jpg 960w, hero-house-fve-1920.jpg 1920w" sizes="100vw" width="1920" height="1080" fetchpriority="high" decoding="async" alt="">
+  <div class="container hero__in">
+    <div class="hero__content">
+      <div class="hero__nzu"><img src="nzu-light-logo.png" alt="Nová zelená úsporám Light" width="920" height="270"></div>
+      <h1 id="h1">Fotovoltaika i&nbsp;zateplení střechy <span class="hl">za 65&nbsp;500&nbsp;Kč</span> <span class="hero__h1b">Zbytek pokryje dotace.</span></h1>
+      <p class="hero__who"><svg width="18" height="18"><use href="#i-check"/></svg><span>Pro <strong>domácnosti s&nbsp;nižšími příjmy</strong>, seniory, OSVČ a&nbsp;lidi s&nbsp;invalidním důchodem 3.&nbsp;stupně. Dotace přijde na účet předem.</span></p>
+
+      <ul class="hero__proof">
+        <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Dotace 320&nbsp;000&nbsp;Kč přijde na účet <strong>předem</strong></span></li>
+        <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Zateplení dotované <strong>korunu za korunu</strong></span></li>
+        <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Žádost, projekt i&nbsp;revize <strong>vyřídíme za vás</strong></span></li>
+      </ul>
+      <div class="hero__cta">
+        <a class="hero__call" href="tel:+420226223800"><svg width="18" height="18"><use href="#i-phone"/></svg> Raději zavolám: <b>226&nbsp;223&nbsp;800</b></a>
+        <span class="hero__micro">Po–Pá 9–16 · nezávazně a&nbsp;zdarma</span>
+      </div>
+    </div>
+
+    <aside class="quick" aria-labelledby="quick-h">
+      <span class="quick__step">Krok 1 z 6 · necelá minuta</span>
+      <h2 id="quick-h" class="quick__h">Zjistěte za minutu, jestli máte nárok. Kdo z&nbsp;vaší domácnosti vlastní dům?</h2>
+      <div class="quick__opts">
+        <button type="button" class="quick__opt" data-quick="Starobní důchod" data-cta="hero-step-senior"><svg width="26" height="26"><use href="#i-team"/></svg><span><b>Senior</b> <small>pobírá starobní důchod</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+        <button type="button" class="quick__opt" data-quick="Invalidní důchod 3. stupně" data-cta="hero-step-invalidni"><svg width="26" height="26"><use href="#i-shield"/></svg><span><b>Invalidní důchod 3.&nbsp;stupně</b> <small>někdo z&nbsp;domácnosti</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+        <button type="button" class="quick__opt" data-quick="Superdávka" data-cta="hero-step-superdavka"><svg width="26" height="26"><use href="#i-euro"/></svg><span><b>Nízkopříjmová domácnost</b> <small>pobíráme superdávku</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+      </div>
+      <div class="quick__foot">
+        <button type="button" class="quick__link" data-quick="Nic z toho" data-cta="hero-step-nic">Nic z&nbsp;toho, chci bezúročný úvěr</button>
+        <button type="button" class="quick__link" data-quick="Nevím" data-cta="hero-step-nevim">Nevím, poraďte mi</button>
+      </div>
+      <p class="quick__note">Nezávazně a&nbsp;zdarma. Do 24 hodin zavoláme s&nbsp;výsledkem.</p>
+    </aside>
+  </div>
+</section>
+
+<div class="trust" aria-label="Proč Schlieger">
+  <ul class="container trust__in">
+    <li><b>15 let</b><span>na trhu, 4 země EU</span></li>
+    <li><b>23&nbsp;000+</b><span>instalací</span></li>
+    <li><b>80+</b><span>vlastních montážních týmů</span></li>
+    <li><b>24 h</b><span>ozveme se do jednoho dne</span></li>
+  </ul>
+</div>
+
+<!-- ═══════════════ FORM ═══════════════ -->
+<section class="section section--paper" id="kalkulace" aria-labelledby="form-h">
+  <div class="breakout">
+  <div class="lead lead-box">
+    <div class="lead__left reveal">
+      <h2 id="form-h">Ověřte si nárok na <span class="hl">dotaci předem</span>. Za minutu víte, kolik zaplatíte ze svého.</h2>
+      <p class="lead__text">Šest otázek k&nbsp;domu a&nbsp;střeše. Do 24 hodin zavoláme s&nbsp;výší dotace a&nbsp;doplatkem pro váš dům.</p>
+      <ul class="lead__points">
+        <li><svg width="18" height="18"><use href="#i-check"/></svg><span>Dotace 320&nbsp;000&nbsp;Kč přijde na účet předem, žádost podáme za vás</span></li>
+        <li><svg width="18" height="18"><use href="#i-check"/></svg><span>Bezplatné zaměření technikem u&nbsp;vás doma</span></li>
+        <li><svg width="18" height="18"><use href="#i-check"/></svg><span>Smlouva až po ověření nároku na dotaci</span></li>
+      </ul>
+      <div class="lead__stars"><span class="review__stars" aria-label="5 hvězdiček"><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg></span><b>Ověřené recenze</b><span>23&nbsp;000+ instalací</span></div>
+    </div>
+    <div class="reveal">
+      <div class="form-card" id="lead-form-host">
+        <form id="lead-form" novalidate autocomplete="on">
+          <div class="form-top">
+            <span class="form-stepnum" id="form-stepnum" aria-live="polite">Krok 1 z 6</span>
+            <span class="form-eta"><svg width="15" height="15"><use href="#i-clock"/></svg> ≈ 1 minuta</span>
+          </div>
+          <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+          <div class="form-choice" id="form-choice" hidden><span>Vaše volba</span><b id="form-choice-val"></b><button type="button" id="form-choice-change">změnit</button></div>
+
+          <fieldset class="fstep is-active" data-step="1" data-name="eligibility">
+            <legend class="sr-only">Nárok na dotaci</legend>
+            <h3 tabindex="-1">Kdo z&nbsp;vaší domácnosti je vlastníkem domu a&nbsp;co se ho týká?</h3>
+            <p class="fstep__hint">Podle toho poznáme, zda máte nárok na dotaci předem na účet, nebo na bezúročný úvěr. Výběrem pokračujete dál.</p>
+            <div class="chips">
+              <div class="chip"><input type="radio" name="eligibility" id="el1" value="Starobní důchod"><label for="el1"><i class="chip__box"><svg width="22" height="22"><use href="#i-team"/></svg></i>Pobírá starobní důchod</label></div>
+              <div class="chip"><input type="radio" name="eligibility" id="el2" value="Invalidní důchod 3. stupně"><label for="el2"><i class="chip__box"><svg width="22" height="22"><use href="#i-shield"/></svg></i>Invalidní důchod 3.&nbsp;stupně</label></div>
+              <div class="chip"><input type="radio" name="eligibility" id="el3" value="Superdávka"><label for="el3"><i class="chip__box"><svg width="22" height="22"><use href="#i-euro"/></svg></i>Pobíráme superdávku</label></div>
+              <div class="chip"><input type="radio" name="eligibility" id="el4" value="Nic z toho"><label for="el4"><i class="chip__box"><svg width="22" height="22"><use href="#i-users2"/></svg></i>Nic z&nbsp;toho</label></div>
+              <div class="chip"><input type="radio" name="eligibility" id="el5" value="Nevím"><label for="el5"><i class="chip__box"><svg width="22" height="22"><use href="#i-q"/></svg></i>Nevím, chci poradit</label></div>
+            </div>
+            <div class="inline-note" id="note-elig">Na dotaci předem pravděpodobně nárok nemáte, stát vám ale na stejnou realizaci nabízí <strong>bezúročný úvěr až 400&nbsp;000&nbsp;Kč</strong> (úroky platí stát). Spočítáme vám obě varianty.</div>
+          </fieldset>
+
+          <fieldset class="fstep" data-step="2" data-name="roof">
+            <legend class="sr-only">Typ střechy</legend>
+            <h3 tabindex="-1">Jaký typ střechy máte?</h3>
+            <p class="fstep__hint">Výběrem automaticky pokračujete dál.</p>
+            <div class="chips">
+              <div class="chip"><input type="radio" name="roof" id="r1" value="Sedlová"><label for="r1"><i class="chip__box chip__box--wide"><svg class="chip__ico" width="40" height="27"><use href="#roof-sedlova"/></svg></i>Sedlová</label></div>
+              <div class="chip"><input type="radio" name="roof" id="r2" value="Valbová"><label for="r2"><i class="chip__box chip__box--wide"><svg class="chip__ico" width="40" height="27"><use href="#roof-valbova"/></svg></i>Valbová</label></div>
+              <div class="chip"><input type="radio" name="roof" id="r3" value="Pultová"><label for="r3"><i class="chip__box chip__box--wide"><svg class="chip__ico" width="40" height="27"><use href="#roof-pultova"/></svg></i>Pultová</label></div>
+              <div class="chip"><input type="radio" name="roof" id="r4" value="Plochá"><label for="r4"><i class="chip__box chip__box--wide"><svg class="chip__ico" width="40" height="27"><use href="#roof-plocha"/></svg></i>Plochá</label></div>
+              <div class="chip"><input type="radio" name="roof" id="r5" value="Nevím"><label for="r5"><i class="chip__box chip__box--wide"><svg class="chip__ico" width="40" height="27"><use href="#roof-nevim"/></svg></i>Nevím</label></div>
+            </div>
+            <div class="inline-note" id="note-roof">Na ploché střeše se zateplení šikmé střechy neprovádí, fotovoltaiku i&nbsp;jiné formy zateplení pro vás ale vyřešíme. Pokračujte prosím dál.</div>
+          </fieldset>
+
+          <fieldset class="fstep" data-step="3" data-name="area">
+            <legend class="sr-only">Plocha střechy</legend>
+            <h3 tabindex="-1">Jakou má střecha přibližně plochu?</h3>
+            <p class="fstep__hint" id="area-hint">Stačí odhad, přesnou plochu změří technik.</p>
+            <div class="chips">
+              <div class="chip"><input type="radio" name="area" id="a1" value="do 60 m²"><label for="a1"><i class="chip__box"><svg width="22" height="22"><use href="#i-ruler"/></svg></i>do 60&nbsp;m²</label></div>
+              <div class="chip"><input type="radio" name="area" id="a2" value="60–100 m²"><label for="a2"><i class="chip__box"><svg width="22" height="22"><use href="#i-ruler"/></svg></i>60–100&nbsp;m²</label></div>
+              <div class="chip"><input type="radio" name="area" id="a3" value="100–150 m²"><label for="a3"><i class="chip__box"><svg width="22" height="22"><use href="#i-ruler"/></svg></i>100–150&nbsp;m²</label></div>
+              <div class="chip"><input type="radio" name="area" id="a4" value="nad 150 m²"><label for="a4"><i class="chip__box"><svg width="22" height="22"><use href="#i-ruler"/></svg></i>nad 150&nbsp;m²</label></div>
+              <div class="chip"><input type="radio" name="area" id="a5" value="Nevím"><label for="a5"><i class="chip__box"><svg width="22" height="22"><use href="#i-q"/></svg></i>Nevím</label></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fstep" data-step="4" data-name="condition">
+            <legend class="sr-only">Stav střechy</legend>
+            <h3 tabindex="-1">V&nbsp;jakém stavu je střecha?</h3>
+            <p class="fstep__hint">Pomůže nám to připravit realistickou nabídku.</p>
+            <div class="chips chips--1">
+              <div class="chip"><input type="radio" name="condition" id="s1" value="Novější, bez problémů"><label for="s1"><i class="chip__box"><svg width="22" height="22"><use href="#i-check"/></svg></i>Novější, bez problémů</label></div>
+              <div class="chip"><input type="radio" name="condition" id="s2" value="Starší, ale funkční"><label for="s2"><i class="chip__box"><svg width="22" height="22"><use href="#i-clock"/></svg></i>Starší, ale funkční</label></div>
+              <div class="chip"><input type="radio" name="condition" id="s3" value="Potřebuje opravu nebo novou krytinu"><label for="s3"><i class="chip__box"><svg width="22" height="22"><use href="#i-wrench"/></svg></i>Potřebuje opravu nebo novou krytinu</label></div>
+              <div class="chip"><input type="radio" name="condition" id="s4" value="Nevím"><label for="s4"><i class="chip__box"><svg width="22" height="22"><use href="#i-q"/></svg></i>Nevím</label></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fstep" data-step="5" data-name="timing">
+            <legend class="sr-only">Termín a vlastnictví</legend>
+            <h3 tabindex="-1">Kdy plánujete realizaci?</h3>
+            <p class="fstep__hint">Podle toho vám přiřadíme montážní termín.</p>
+            <div class="chips">
+              <div class="chip"><input type="radio" name="timing" id="t1" value="Co nejdřív"><label for="t1"><i class="chip__box"><svg width="22" height="22"><use href="#i-bolt"/></svg></i>Co nejdřív</label></div>
+              <div class="chip"><input type="radio" name="timing" id="t2" value="Do 3 měsíců"><label for="t2"><i class="chip__box"><svg width="22" height="22"><use href="#i-cal"/></svg></i>Do 3 měsíců</label></div>
+              <div class="chip"><input type="radio" name="timing" id="t3" value="Do 6–12 měsíců"><label for="t3"><i class="chip__box"><svg width="22" height="22"><use href="#i-cal"/></svg></i>Do 6–12 měsíců</label></div>
+              <div class="chip"><input type="radio" name="timing" id="t4" value="Zatím jen zjišťuji"><label for="t4"><i class="chip__box"><svg width="22" height="22"><use href="#i-q"/></svg></i>Zatím jen zjišťuji</label></div>
+            </div>
+            <div class="fgroup">
+              <h4>Jste majitelem nemovitosti?</h4>
+              <div class="chips">
+                <div class="chip"><input type="radio" name="owner" id="o1" value="Ano"><label for="o1"><i class="chip__box"><svg width="22" height="22"><use href="#i-home"/></svg></i>Ano</label></div>
+                <div class="chip"><input type="radio" name="owner" id="o2" value="Spoluvlastník"><label for="o2"><i class="chip__box"><svg width="22" height="22"><use href="#i-users2"/></svg></i>Spoluvlastník</label></div>
+                <div class="chip"><input type="radio" name="owner" id="o3" value="Ne"><label for="o3"><i class="chip__box"><svg width="22" height="22"><use href="#i-x"/></svg></i>Ne</label></div>
+              </div>
+              <p class="fstep__hint" style="margin:10px 0 0">Vlastnictví je jednou z&nbsp;podmínek dotace, proto se ptáme.</p>
+            </div>
+            <div class="field"><p class="field__err" id="err-step5" role="alert"></p></div>
+            <button type="button" class="btn btn--primary btn--block form-next" id="next-5">Pokračovat <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></button>
+          </fieldset>
+
+          <fieldset class="fstep" data-step="6" data-name="contact">
+            <legend class="sr-only">Kontaktní údaje</legend>
+            <h3 tabindex="-1">Kam vám máme zavolat s&nbsp;výsledkem?</h3>
+            <p class="fstep__hint">Voláme z&nbsp;čísla 226&nbsp;223&nbsp;800, Po–Pá 9–16.</p>
+            <div class="fields">
+              <div class="field field--full">
+                <label for="f-name">Jméno a&nbsp;příjmení</label>
+                <input type="text" id="f-name" name="name" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Jan Novák" aria-describedby="err-name">
+                <p class="field__err" id="err-name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="f-phone">Telefon</label>
+                <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="777 123 456" aria-describedby="err-phone">
+                <p class="field__err" id="err-phone" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="f-zip">PSČ</label>
+                <input type="text" id="f-zip" name="zip" autocomplete="postal-code" inputmode="numeric" maxlength="6" enterkeyhint="next" placeholder="250 01" aria-describedby="err-zip">
+                <p class="field__err" id="err-zip" role="alert"></p>
+              </div>
+              <div class="field field--full">
+                <label for="f-email">E-mail</label>
+                <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" spellcheck="false" autocapitalize="off" enterkeyhint="done" placeholder="jan.novak@email.cz" aria-describedby="err-email">
+                <p class="field__err" id="err-email" role="alert"></p>
+              </div>
+            </div>
+            <div class="hp" aria-hidden="true"><label>Web <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+            <button type="submit" class="btn btn--primary btn--block form-next" id="submit-btn" data-cta="form-submit">Odeslat a&nbsp;zjistit doplatek</button>
+            <div class="form-error" id="form-error" role="alert"></div>
+            <p class="form-consent">Odesláním formuláře nám předáváte své údaje, abychom vás mohli kontaktovat a&nbsp;připravit nezávaznou nabídku. Údaje zpracovává Schlieger, s.&nbsp;r.&nbsp;o. za tímto účelem, nepředáváme je třetím stranám pro jejich marketing a&nbsp;kdykoli je můžete nechat vymazat. Podrobnosti v&nbsp;<a href="https://schlieger.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener">zásadách ochrany osobních údajů</a>.</p>
+            <p class="form-call">Nechcete čekat? <a href="tel:+420226223800" style="font-weight:600;color:var(--ink)">Zavolejte 226&nbsp;223&nbsp;800</a></p>
+          </fieldset>
+          <button type="button" class="form-back" id="form-back"><svg width="18" height="18"><use href="#i-back"/></svg> Zpět</button>
+        </form>
+
+        <div class="success" id="success" aria-live="polite">
+          <div class="success__icon"><svg width="30" height="30"><use href="#i-check"/></svg></div>
+          <h3>Máme to. Ozveme se vám do 24 hodin.</h3>
+          <p>Děkujeme, <span id="s-name">–</span>. Váš požadavek jsme přijali a&nbsp;předali technikovi pro oblast <span id="s-zip">–</span>.</p>
+          <ol>
+            <li><span>Zavoláme vám z&nbsp;čísla <strong>226&nbsp;223&nbsp;800</strong> (Po–Pá 9–16). Uložte si ho prosím, ať vám hovor neproklouzne.</span></li>
+            <li><span>Po telefonu projdeme nárok na dotaci, plochu střechy, orientační cenu a&nbsp;doplatek.</span></li>
+            <li><span>Pokud bude dávat smysl pokračovat, domluvíme bezplatné zaměření technikem.</span></li>
+          </ol>
+          <a class="btn btn--ghost success__phone" href="tel:+420226223800"><svg width="18" height="18"><use href="#i-phone"/></svg> Nechcete čekat? Zavolejte 226&nbsp;223&nbsp;800</a>
+          <small>Nic jste si neobjednali a&nbsp;k&nbsp;ničemu jste se nezavázali.</small>
+        </div>
+        <div class="form-foot">
+          <span><svg width="16" height="16"><use href="#i-lock"/></svg> Nezávazně a&nbsp;zdarma</span>
+          <span><svg width="16" height="16"><use href="#i-clock"/></svg> Odpověď do 24 hodin</span>
+          <span><svg width="16" height="16"><use href="#i-shield"/></svg> Dotaci vyřídíme za vás</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ELIGIBILITY ═══════════════ -->
+<section class="section section--paper" id="pro-koho" aria-labelledby="elig-h">
+  <div class="container elig">
+    <div class="elig__left reveal">
+      <span class="label">Pro koho je nabídka</span>
+      <img class="elig__logo" src="nzu-light-logo.png" alt="Nová zelená úsporám Light" width="920" height="270">
+      <h2 id="elig-h" style="margin-top:14px"><span class="hl">Dotace předem na účet</span> je pro domácnosti s&nbsp;nižšími příjmy</h2>
+      <p class="elig__lead" style="margin-top:18px">Program Nová zelená úsporám Light vyplácí dotaci zálohově, ještě před realizací. Podmínkou je, že žadatel vlastní rodinný dům, trvale v&nbsp;něm bydlí a&nbsp;domácnost patří do jedné z&nbsp;těchto skupin.</p>
+    </div>
+    <div class="reveal">
+      <div class="elig__panel">
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Senioři</h3><p>Vlastník domu nebo jeho partner pobírá <strong>starobní důchod</strong>.</p></div>
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Invalidní důchod 3.&nbsp;stupně</h3><p>Některý z&nbsp;členů domácnosti pobírá <strong>invalidní důchod 3.&nbsp;stupně</strong>.</p></div>
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Nízkopříjmové domácnosti</h3><p>Domácnost pobírá <strong>superdávku</strong> – dávku státní sociální pomoci, která nahradila příspěvek na bydlení, na živobytí a&nbsp;přídavek na dítě.</p></div>
+      </div>
+      <div class="elig__alt">
+        <div><h3>Nepatříte do žádné skupiny?</h3><p>Stát nabízí na stejnou realizaci <strong>bezúročný úvěr až 400&nbsp;000&nbsp;Kč</strong>, úroky platí stát. Obě varianty spočítáme a&nbsp;nárok ověříme zdarma dřív, než cokoli podepíšete.</p></div>
+        <a class="btn btn--ghost" href="#kalkulace" data-cta="elig-primary">Ověřit, zda mám nárok</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CALCULATOR ═══════════════ -->
+<section class="section" id="kalkulacka" aria-labelledby="calc-h">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="label">Kalkulačka</span><h2 id="calc-h">Kolik zaplatíte vy? Posuňte jezdec.</h2></div>
+      <p>Zadejte plochu střechy a&nbsp;uvidíte cenu, dotaci i&nbsp;doplatek. Do 125&nbsp;m² zůstává doplatek stejný.</p>
+    </div>
+    <div class="calc reveal">
+      <div class="calc__left">
+        <label class="calc__label" for="m2">Plocha šikmé střechy <output for="m2" id="m2-out" class="num">100&nbsp;m²</output></label>
+        <input type="range" id="m2" min="40" max="200" step="5" value="100" aria-valuetext="100 metrů čtverečních">
+        <div class="calc__hint"><span>40&nbsp;m²</span><span>200&nbsp;m²</span></div>
+        <div class="calc__msg" id="calc-msg" aria-live="polite">
+          <svg width="20" height="20"><use href="#i-info"/></svg>
+          <span id="calc-msg-text">Zateplení je dotované korunu za korunu – ve vašem doplatku se neprojeví. Platíte jen doplatek za fotovoltaiku.</span>
+        </div>
+        <p class="calc__foot">Orientační propočet podle podmínek programu Nová zelená úsporám Light. O&nbsp;přiznání a&nbsp;výši dotace rozhoduje Státní fond životního prostředí ČR, ne Schlieger. Přesnou cenu i&nbsp;výši dotace potvrdíme po zaměření technikem.</p>
+      </div>
+      <div class="receipt" aria-live="polite">
+        <div class="receipt__row"><span>Cena celkem vč. DPH</span><b id="c-cena">385&nbsp;500&nbsp;Kč</b></div>
+        <div class="receipt__row receipt__row--sub"><span>Dotace NZÚ Light</span><b id="c-dotace">320&nbsp;000&nbsp;Kč</b></div>
+        <div class="receipt__row receipt__row--pay"><span>Váš doplatek</span><b id="c-doplatek">65&nbsp;500&nbsp;Kč</b></div>
+        <div class="cover"><div class="cover__bar"><i id="c-bar" style="width:83%"></i></div><div class="cover__legend"><span><i class="cover__dot cover__dot--g"></i>Dotace <b id="c-kryti">83</b>&nbsp;%</span><span><i class="cover__dot cover__dot--i"></i>Vy <b id="c-vy">17</b>&nbsp;%</span></div></div>
+        <a class="btn btn--primary btn--block" href="#kalkulace" data-cta="calc-primary">Ověřit nárok pro můj dům <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ BREAKDOWN ═══════════════ -->
+<section class="section section--paper" aria-labelledby="bd-h">
+  <div class="container bd">
+    <div class="reveal">
+      <span class="label">Jak to počítáme</span>
+      <h2 id="bd-h" style="margin-top:14px">Žádné kličky. Celý propočet, řádek po řádku.</h2>
+      <div class="bd__big num">83<small>&nbsp;%</small></div>
+      <p class="bd__text">zakázky pokryje dotace. Zateplení je dotované korunu za korunu, takže za něj nezaplatíte nic navíc. Ze stropu dotace na zateplení (250&nbsp;000&nbsp;Kč) vám navíc zbývá 50&nbsp;000&nbsp;Kč, například na výměnu oken.</p>
+      <p class="bd__note">Výše dotace závisí na schválení žádosti u&nbsp;Státního fondu životního prostředí ČR a&nbsp;na splnění podmínek programu. Podklady i&nbsp;žádost připravíme a&nbsp;podáme za vás.</p>
+    </div>
+    <div class="receipt reveal" aria-label="Účtenka – propočet ceny">
+      <div class="receipt__head"><img src="schlieger-logo.svg" alt="Schlieger" width="269" height="30"><span>Propočet · 100&nbsp;m²</span></div>
+      <div class="receipt__row"><span>Fotovoltaika 3,69&nbsp;kWp „do vody a&nbsp;domu“ (vč. 12&nbsp;% DPH)</span><b>185&nbsp;500&nbsp;Kč</b></div>
+      <div class="receipt__row"><span>Zateplení šikmé střechy 100&nbsp;m² × 2&nbsp;000&nbsp;Kč/m²</span><b>200&nbsp;000&nbsp;Kč</b></div>
+      <div class="receipt__row receipt__row--sum"><span>Cena celkem vč. DPH</span><b>385&nbsp;500&nbsp;Kč</b></div>
+      <div class="receipt__row receipt__row--sub"><span>Dotace NZÚ Light na fotovoltaiku s&nbsp;ohřevem vody</span><b>−&nbsp;120&nbsp;000&nbsp;Kč</b></div>
+      <div class="receipt__row receipt__row--sub"><span>Dotace NZÚ Light na zateplení střechy (100&nbsp;m² × 2&nbsp;000&nbsp;Kč)</span><b>−&nbsp;200&nbsp;000&nbsp;Kč</b></div>
+      <div class="receipt__row receipt__row--sum receipt__row--sub"><span>Dotace celkem, vyplacená předem na účet</span><b>−&nbsp;320&nbsp;000&nbsp;Kč</b></div>
+      <div class="receipt__row receipt__row--pay"><span>Váš doplatek</span><b>65&nbsp;500&nbsp;Kč</b></div>
+      <div class="receipt__stamp"><span>Dotace vyplacená předem na účet</span><b>Krytí 83&nbsp;%</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ INCLUDED (bento) ═══════════════ -->
+<section class="section" aria-labelledby="inc-h">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="label">Co je v ceně</span><h2 id="inc-h">Co dostanete za 65&nbsp;500&nbsp;Kč</h2></div>
+      <p>Dvě kompletní realizace na klíč, od jednoho dodavatele a&nbsp;s&nbsp;jednou žádostí o&nbsp;dotaci.</p>
+    </div>
+    <article class="offer reveal" aria-labelledby="offer-h">
+      <div class="offer__head">
+        <div>
+          <span class="offer__badge">Nejnižší doplatek z&nbsp;našich balíčků</span>
+          <h3 id="offer-h">Fotovoltaika + zateplení střechy</h3>
+          <p>Balíček pro rodinný dům se šikmou střechou. Jedna smlouva, jedna žádost o&nbsp;dotaci, jeden montážní tým.</p>
+        </div>
+        <div class="offer__price num">
+          <span class="offer__was">Cena 385&nbsp;500&nbsp;Kč · dotace −&nbsp;320&nbsp;000&nbsp;Kč</span>
+          <b>65&nbsp;500&nbsp;Kč</b>
+          <span class="offer__pay">váš doplatek, dotace přijde na účet předem</span>
+          <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="pkg-fve-strecha">Chci tento balíček <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+        </div>
+      </div>
+      <div class="offer__cols">
+        <div class="offer__col">
+          <img src="realizace-dum-panely.jpg" loading="lazy" decoding="async" width="1200" height="900" alt="Černé fotovoltaické panely na střeše rodinného domu">
+          <span class="tile__tag">Technologie · 185&nbsp;500&nbsp;Kč</span>
+          <h4>Fotovoltaika 3,69&nbsp;kWp „do vody a&nbsp;domu“</h4>
+          <ul class="check-list">
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>9× celočerný panel Amerisolar 410&nbsp;Wp, střídač SOFAR 4.4KTL-X</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Ohřívač vody 200&nbsp;l s&nbsp;topnou patronou, router pro řízení přebytků</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Projekt, revize, dokumentace a&nbsp;montáž vlastním týmem</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Předpokládaná výroba 3&nbsp;875&nbsp;kWh ročně</span></li>
+          </ul>
+        </div>
+        <div class="offer__plus" aria-hidden="true">+</div>
+        <div class="offer__col">
+          <img src="zatepleni-strechy.jpg" loading="lazy" decoding="async" width="1200" height="904" alt="Montáž minerální vaty mezi krokve">
+          <span class="tile__tag">Stavební část · 200&nbsp;000&nbsp;Kč</span>
+          <h4>Zateplení šikmé střechy 100&nbsp;m²</h4>
+          <ul class="check-list">
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Minerální vata mezi krokve i&nbsp;pod krokve, přerušení tepelných mostů</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Parozábrana, pojistná hydroizolace, všechny detaily a&nbsp;napojení</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Odborný posudek a&nbsp;energetické hodnocení k&nbsp;žádosti</span></li>
+            <li><svg width="16" height="16"><use href="#i-check"/></svg><span>Montáž zevnitř, krytina zůstává</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="offer__not">
+        <div>
+          <span class="tile__tag">Co v ceně není</span>
+          <p>Říkáme to rovnou: výkopové práce, sádrokartonový podhled, výměna krytiny, oprava krovu, klempířské prvky a&nbsp;lešení. Pokud bude něco z&nbsp;toho potřeba, technik to nacení při zaměření, předem.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════ QUICK START (opakování kroku 1) ═══════════════ -->
+<section class="section section--paper qs" aria-labelledby="qs-h">
+  <div class="container qs__in">
+    <div>
+      <span class="label">Začněte prvním krokem</span>
+      <h2 id="qs-h" style="margin-top:14px">Kdo z&nbsp;vaší domácnosti vlastní dům?</h2>
+      <p style="margin-top:12px;color:var(--ink-3);font-size:17px">Jedno kliknutí a&nbsp;víte, jestli máte nárok na dotaci předem, nebo na bezúročný úvěr. Zbytek zabere necelou minutu.</p>
+    </div>
+    <div class="qs__opts">
+      <button type="button" class="quick__opt" data-quick="Starobní důchod" data-cta="mid-step-senior"><svg width="26" height="26"><use href="#i-team"/></svg><span><b>Senior</b> <small>pobírá starobní důchod</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="quick__opt" data-quick="Invalidní důchod 3. stupně" data-cta="mid-step-invalidni"><svg width="26" height="26"><use href="#i-shield"/></svg><span><b>Invalidní důchod 3.&nbsp;stupně</b> <small>někdo z&nbsp;domácnosti</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="quick__opt" data-quick="Superdávka" data-cta="mid-step-superdavka"><svg width="26" height="26"><use href="#i-euro"/></svg><span><b>Nízkopříjmová domácnost</b> <small>pobíráme superdávku</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="quick__opt" data-quick="Nic z toho" data-cta="mid-step-nic"><svg width="26" height="26"><use href="#i-info"/></svg><span><b>Nic z&nbsp;toho</b> <small>chci bezúročný úvěr od státu</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ STATS ═══════════════ -->
+<section class="section section--ink" aria-labelledby="st-h">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="label">Co vám to přinese</span><h2 id="st-h">Co vám to přinese každý rok</h2></div>
+      <p>Orientační hodnoty pro modelový dům. Přesný propočet pro vaši spotřebu uděláme při konzultaci.</p>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b>12&nbsp;732&nbsp;Kč</b><span>ročně ušetříte na elektřině díky vlastní výrobě</span></div>
+      <div class="stat"><b>3&nbsp;875 kWh</b><span>vyrobí vaše fotovoltaika za rok</span></div>
+      <div class="stat"><b>320&nbsp;000&nbsp;Kč</b><span>dotace vyplacená předem na účet, ne až po realizaci</span></div>
+      <div class="stat"><b>≈ 5 let</b><span>a doplatek 65&nbsp;500&nbsp;Kč je zpět jen z&nbsp;úspory za elektřinu</span></div>
+    </div>
+    <p class="stats__note reveal">K&nbsp;tomu se přidává úspora za vytápění, teplejší podkroví v&nbsp;zimě a&nbsp;snesitelnější léto pod střechou. Hodnoty závisí na spotřebě domácnosti a&nbsp;cenách energií.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ WHY ═══════════════ -->
+<section class="section" aria-labelledby="why-h">
+  <div class="container why">
+    <div class="why__media reveal">
+      <img src="konzultace.jpg" loading="lazy" decoding="async" width="1200" height="904" alt="Technik Schlieger vysvětluje manželům u kuchyňského stolu návrh fotovoltaiky a zateplení">
+    </div>
+    <div>
+      <div class="reveal">
+        <span class="label">Proč Schlieger</span>
+        <h2 id="why-h" style="margin-top:14px">Proč to svěřit Schliegeru</h2>
+        <p class="why__quote">Jsme výrobce i&nbsp;dodavatel. Za instalací i&nbsp;za dotací si stojíme my, ne tři různé firmy.</p>
+      </div>
+      <ul class="why__list reveal">
+        <li><svg width="22" height="22"><use href="#i-clock"/></svg><h3>15 let na trhu</h3><p>Od roku 2010 v&nbsp;Česku, na Slovensku, v&nbsp;Německu a&nbsp;Rakousku.</p></li>
+        <li><svg width="22" height="22"><use href="#i-factory"/></svg><h3>Přes 23&nbsp;000 instalací</h3><p>Fotovoltaika, tepelná čerpadla i&nbsp;solární ohřev vody v&nbsp;zemích EU.</p></li>
+        <li><svg width="22" height="22"><use href="#i-team"/></svg><h3>Přes 80 vlastních montážních týmů</h3><p>Proškolení technici z&nbsp;naší akademie, ne náhodní subdodavatelé.</p></li>
+        <li><svg width="22" height="22"><use href="#i-doc"/></svg><h3>Dotaci vyřídíme za vás</h3><p>Od posudku přes žádost po vyúčtování. Vy jen podepíšete.</p></li>
+        <li><svg width="22" height="22"><use href="#i-shield"/></svg><h3>Servis, který se dovolá</h3><p>Servisní linka Po–So 9–16, neděle a&nbsp;svátky 9–13.</p></li>
+        <li><svg width="22" height="22"><use href="#i-euro"/></svg><h3>Bez placení všeho předem</h3><p>Dotace NZÚ Light chodí na účet před realizací. Záloha jen na fotovoltaiku.</p></li>
+      </ul>
+    </div>
+    <div class="sec-cta reveal">
+      <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="why-primary">Chci nezávaznou nabídku <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      <span class="sec-cta__note">Nezávazně a&nbsp;zdarma · do 24 hodin zavoláme</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROCESS ═══════════════ -->
+<section class="section section--paper" aria-labelledby="pr-h">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="label">Jak to probíhá</span><h2 id="pr-h">Od kliknutí po hotovou střechu ve čtyřech krocích</h2></div>
+      <p>Od prvního kliknutí po hotovou střechu a&nbsp;běžící elektrárnu – bez úřadů a&nbsp;bez obvolávání firem.</p>
+    </div>
+    <ol class="steps reveal">
+      <li class="step"><span class="step__n">01</span><h3>Odpovíte na 6 otázek</h3><p>Zjistíme, zda máte nárok na dotaci předem, typ a&nbsp;plochu střechy a&nbsp;vaši lokalitu.</p><span class="step__time">necelá minuta</span></li>
+      <li class="step"><span class="step__n">02</span><h3>Ozveme se do 24 hodin</h3><p>Projdeme s&nbsp;vámi po telefonu možnosti, orientační cenu i&nbsp;výši dotace. Nezávazně.</p><span class="step__time">Po–Pá 9–16</span></li>
+      <li class="step"><span class="step__n">03</span><h3>Technik přijede zaměřit</h3><p>Zdarma a&nbsp;bez závazku. Ověří stav střechy a&nbsp;krovu, navrhne rozsah a&nbsp;potvrdí přesnou cenu.</p><span class="step__time">zdarma</span></li>
+      <li class="step"><span class="step__n">04</span><h3>Vyřídíme dotaci a&nbsp;namontujeme</h3><p>Připravíme posudek i&nbsp;žádost, zajistíme montáž, revize a&nbsp;dokumentaci. Vy převezmete hotovou práci.</p><span class="step__time">na klíč</span></li>
+    </ol>
+    <div class="sec-cta reveal">
+      <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="process-primary">Začít prvním krokem <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      <span class="sec-cta__note">Nezávazně a&nbsp;zdarma · do 24 hodin zavoláme</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ REVIEWS ═══════════════ -->
+<section class="section" aria-labelledby="rv-h">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="label">Reference</span><h2 id="rv-h">Domy, kde už to funguje</h2></div>
+      <p class="reviews__foot">Ověřené recenze od skutečných zákazníků. Všechny najdete na <a href="https://schlieger.cz/recenze/" target="_blank" rel="noopener">schlieger.cz/recenze</a>.</p>
+    </div>
+    <div class="reviews reveal">
+      <article class="review">
+        <div class="review__stars" aria-label="5 z 5 hvězdiček"><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg></div>
+        <p>„Skvělá prezentace bez skrytých jinotajů, vše dokonale vysvětleno a&nbsp;hlavně nenásilná komunikace. Jedná se o&nbsp;kompletní servis, tj. technický i&nbsp;finanční.“</p>
+        <div class="review__who"><span class="review__avatar">JB</span><div><b>Juraj Brťka</b><span>19. 9. 2025 · schlieger.cz/recenze</span></div></div>
+      </article>
+      <article class="review">
+        <div class="review__stars" aria-label="5 z 5 hvězdiček"><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg></div>
+        <p>„Montážní tým 85 odvedl 100% práci. Montáž trvala 2 dny, funkční zkouška, vysvětlení a&nbsp;ukázka ovládání, revize, vše super.“</p>
+        <div class="review__who"><span class="review__avatar">OD</span><div><b>Oldřich Dumek</b><span>10. 9. 2025 · schlieger.cz/recenze</span></div></div>
+      </article>
+      <article class="review">
+        <div class="review__stars" aria-label="5 z 5 hvězdiček"><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg><svg width="16" height="16"><use href="#i-star"/></svg></div>
+        <p>„Montážníci po sobě pěkně uklidili a&nbsp;vše uvedli do původního stavu. Při revizi mi pan technik vysvětlil, jak zařízení ovládat, a&nbsp;vše nainstaloval i&nbsp;do mobilu. Naprostá spokojenost, vřele doporučuji.“</p>
+        <div class="review__who"><span class="review__avatar">VA</span><div><b>Václav Adam</b><span>15. 9. 2025 · schlieger.cz/recenze</span></div></div>
+      </article>
+    </div>
+    <div class="gallery reveal" aria-label="Fotografie realizací Schlieger">
+      <figure><img src="realizace-brandov-0.jpg" loading="lazy" decoding="async" width="1200" height="900" alt="Rodinný dům v Brandově s fotovoltaikou na pálené krytině"><figcaption><b>Brandov</b><span>Ústecký kraj · 7,7&nbsp;kWp</span></figcaption></figure>
+      <figure><img src="realizace-zbraslavice-0.jpg" loading="lazy" decoding="async" width="1200" height="900" alt="Rodinný dům ve Zbraslavicích s černými panely"><figcaption><b>Zbraslavice</b><span>Středočeský kraj · 9,9&nbsp;kWp</span></figcaption></figure>
+      <figure><img src="realizace-spindleruv-mlyn-0.jpg" loading="lazy" decoding="async" width="1200" height="900" alt="Fotovoltaika na střeše horské chalupy ve Špindlerově Mlýně"><figcaption><b>Špindlerův Mlýn</b><span>Královéhradecký kraj · 9,9&nbsp;kWp</span></figcaption></figure>
+      <figure><img src="realizace-turany-0.jpg" loading="lazy" decoding="async" width="1200" height="750" alt="Fotovoltaické panely na střeše domu v Tuřanech"><figcaption><b>Tuřany</b><span>Jihomoravský kraj · 5,5&nbsp;kWp</span></figcaption></figure>
+      <figure><img src="realizace-dron-1.jpg" loading="lazy" decoding="async" width="1200" height="675" alt="Rodinný dům s fotovoltaikou a solárními kolektory, letecký snímek"><figcaption><b>Fotovoltaika + ohřev vody</b><span>realizace Schlieger</span></figcaption></figure>
+      <figure><img src="realizace-vratimov-0.jpg" loading="lazy" decoding="async" width="1200" height="900" alt="Fotovoltaika na střeše domu ve Vratimově"><figcaption><b>Vratimov</b><span>Moravskoslezský kraj · 9,9&nbsp;kWp</span></figcaption></figure>
+    </div>
+    <p class="gallery__more reveal">Přes 23&nbsp;000 instalací. Další realizace a&nbsp;jejich detaily najdete na <a href="https://schlieger.cz/realizace" target="_blank" rel="noopener">schlieger.cz/realizace</a>.</p>
+    <div class="sec-cta reveal">
+      <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="reviews-primary">Chci to taky, ověřit nárok <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      <span class="sec-cta__note">Nezávazně a&nbsp;zdarma · do 24 hodin zavoláme</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section class="section" aria-labelledby="faq-h">
+  <div class="container faqwrap">
+    <div class="faqwrap__left reveal">
+      <span class="label">Nejčastější dotazy</span>
+      <h2 id="faq-h" style="margin-top:14px">Než nám zavoláte</h2>
+      <p style="margin-top:18px;color:var(--ink-3);font-size:17px">Nenašli jste odpověď? Zavolejte na <a href="tel:+420226223800" style="color:var(--ink);font-weight:600;text-decoration:none">226&nbsp;223&nbsp;800</a>, Po–Pá 9–16.</p>
+    </div>
+    <div class="faq reveal" id="faq">
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Mám na dotaci nárok?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Dotaci vyplacenou předem na účet dostávají v&nbsp;programu NZÚ Light domácnosti, kde vlastník domu pobírá starobní důchod, invalidní důchod 3.&nbsp;stupně nebo kde domácnost pobírá superdávku. Dům musí být v&nbsp;ČR a&nbsp;sloužit k&nbsp;trvalému bydlení. Ostatní domácnosti mají nárok na bezúročný úvěr až 400&nbsp;000&nbsp;Kč, kde úroky platí stát. Nárok neposuzujeme my, ale Státní fond životního prostředí ČR. Zdarma vám ale předem ověříme, zda podmínky splňujete, a&nbsp;řekneme vám to na rovinu i&nbsp;v&nbsp;případě, že ne.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Kdy dostanu dotaci – musím platit všechno předem?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Ne. V&nbsp;programu NZÚ Light se dotace vyplácí zálohově na účet ještě před realizací, takže celou zakázku nefinancujete ze svého. U&nbsp;fotovoltaiky se hradí záloha 30&nbsp;%, zbytek podle smluvního harmonogramu. Konkrétní podmínky čerpání dotace i&nbsp;splatnost vám ukážeme ještě před podpisem smlouvy, abyste přesně věděli, kdy z&nbsp;vašeho účtu odejde jaká částka. Žádost o&nbsp;dotaci podáváme a&nbsp;vyřizujeme za vás.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Co když má moje střecha jinou plochu než 100&nbsp;m²?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Pak se změní cena i&nbsp;dotace, ale váš doplatek většinou zůstane stejný. Zateplení stojí 2&nbsp;000&nbsp;Kč/m² a&nbsp;dotace je také 2&nbsp;000&nbsp;Kč/m² – u&nbsp;plochy do 125&nbsp;m² se tedy ve vašem doplatku neprojeví. Nad 125&nbsp;m² je vyčerpán strop dotace na zateplení (250&nbsp;000&nbsp;Kč) a&nbsp;každý další metr je už za plnou cenu. Přesnou plochu určí technik při zaměření.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Co není v&nbsp;ceně?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>V&nbsp;ceně nejsou výkopové práce, sádrokartonový podhled, výměna střešní krytiny, oprava krovu, klempířské prvky a&nbsp;lešení. Pokud bude cokoli z&nbsp;toho u&nbsp;vás potřeba, dozvíte se to při zaměření a&nbsp;naceníme to samostatně – vždy předem.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Jak dlouho trvá realizace?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Samotná montáž fotovoltaiky zabere typicky dva dny, zateplení střechy podle plochy a&nbsp;přístupu několik dní. Průměrná doba realizace u&nbsp;Schliegeru je 30 dní od podpisu smlouvy, u&nbsp;kombinace s&nbsp;dotací počítejte navíc s&nbsp;lhůtou pro vyřízení žádosti. Konkrétní termín potvrdíme ve smlouvě.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Musím měnit krytinu?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Ve většině případů ne. Zateplení šikmé střechy děláme zevnitř – mezi krokve a&nbsp;pod krokve – takže krytinu nesundáváme. Pokud je ale krytina na konci životnosti nebo zatéká, dává smysl ji vyměnit dřív, než střechu zateplíte. Technik vám při zaměření řekne, jak na tom jste, a&nbsp;případnou výměnu naceníme zvlášť.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Co když mám azbestovou krytinu nebo starý krov?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Řekněte nám to rovnou, poradíme si s&nbsp;tím. Azbestová krytina vyžaduje odbornou likvidaci podle zákona a&nbsp;řeší se samostatně. Napadený nebo poddimenzovaný krov je potřeba nejdřív opravit – oprava krovu není součástí ceny. V&nbsp;obou případech vám technik při zaměření navrhne postup a&nbsp;nacenění, aby se zateplení nedělalo na špatném podkladu.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Jak funguje fotovoltaika „do vody a&nbsp;domu“?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Panely vyrábějí elektřinu, kterou přednostně spotřebuje váš dům. Přebytek automaticky putuje do topné patrony v&nbsp;zásobníku o&nbsp;objemu 200&nbsp;l a&nbsp;ohřívá vám teplou vodu místo toho, aby se posílal zadarmo do sítě. V&nbsp;létě tak máte teplou vodu prakticky bez nákladů a&nbsp;po zbytek roku snižujete spotřebu ze sítě.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Kolik reálně ušetřím?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Fotovoltaika 3,69&nbsp;kWp vyrobí zhruba 3&nbsp;875&nbsp;kWh ročně, což odpovídá úspoře přibližně 12&nbsp;732&nbsp;Kč za rok. Zateplení střechy k&nbsp;tomu přidá úsporu na vytápění a&nbsp;hlavně stabilnější teplotu v&nbsp;podkroví. Skutečná úspora závisí na vaší spotřebě, na tom, kdy elektřinu odebíráte, a&nbsp;na cenách energií – proto ji berte jako orientační. Konkrétní propočet pro váš dům uděláme při konzultaci.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Co když se dotaci nepodaří získat?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Nárok ověřujeme dřív, než cokoli podepíšete – právě proto, aby k&nbsp;tomu nedocházelo. Pokud by žádost přesto neprošla, nejste nuceni do realizace za plnou cenu: podmínky pro tento případ máme popsané ve smlouvě a&nbsp;projdeme je s&nbsp;vámi ještě před podpisem. Rozhodnutí o&nbsp;dotaci vydává Státní fond životního prostředí ČR, proto ji nemůže garantovat žádná firma – a&nbsp;kdo vám ji garantuje, tomu nevěřte.</p></div></div></div>
+    </div>
+    <div class="sec-cta reveal">
+      <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="faq-primary">Ověřit nárok na dotaci <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      <span class="sec-cta__note">Nezávazně a&nbsp;zdarma · do 24 hodin zavoláme</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FINAL CTA ═══════════════ -->
+<section class="section section--ink final" aria-labelledby="fin-h">
+  <div class="container final__in">
+    <span class="label">Poslední krok</span>
+    <h2 id="fin-h">Zjistěte, kolik zaplatíte ze svého.</h2>
+    <p>Odpovíte na 6 otázek, my vám do 24 hodin (Po–Pá 9–16) zavoláme s&nbsp;orientační cenou a&nbsp;výší dotace pro váš dům. Nezávazně, zdarma a&nbsp;bez nátlaku.</p>
+    <span class="final__deadline" data-deadline-wrap><svg width="16" height="16"><use href="#i-clock"/></svg> Uvedené ceny platí do <b data-deadline-text>24. 9. 2026</b></span>
+    <div class="final__cta">
+      <a class="btn btn--primary btn--lg" href="#kalkulace" data-cta="final-primary">Spočítat můj doplatek <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+      <a class="btn btn--ghost btn--lg" href="tel:+420226223800"><svg width="18" height="18"><use href="#i-phone"/></svg> Zavolat 226&nbsp;223&nbsp;800</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="schlieger-logo.svg" alt="Schlieger" width="269" height="30">
+        <p>Schlieger, s.&nbsp;r.&nbsp;o. · IČ 28787803 · DIČ CZ28787803<br>Obchodní 103, 251 01 Čestlice · pobočka Brno: Tuřanka 1519/115a<br><a href="mailto:info@schlieger.cz">info@schlieger.cz</a> · <a href="tel:+420226223800">226 223 800</a> (Po–Pá 9–16)</p>
+      </div>
+      <nav class="footer__links" aria-label="Právní odkazy">
+        <a href="https://schlieger.cz/podminky-ochrany-osobnich-udaju/" target="_blank" rel="noopener">Ochrana osobních údajů</a>
+        <a href="#" data-consent-open>Nastavení cookies</a>
+        <a href="https://schlieger.cz/reklamacni-a-zarucni-rad/" target="_blank" rel="noopener">Reklamační a záruční řád</a>
+        <a href="https://schlieger.cz/recenze/" target="_blank" rel="noopener">Recenze</a>
+        <a href="https://schlieger.cz/dotace/nzu/" target="_blank" rel="noopener">Dotace NZÚ</a>
+      </nav>
+    </div>
+    <div class="footer__legal">
+      <p>Uvedené ceny, úspory a&nbsp;výše dotace jsou orientační, platí pro modelový rodinný dům se šikmou střechou o&nbsp;ploše 100&nbsp;m² a&nbsp;nejsou nabídkou ve smyslu §&nbsp;1732 odst.&nbsp;2 občanského zákoníku. Konečnou cenu i&nbsp;rozsah prací stanovíme po zaměření technikem. O&nbsp;přiznání dotace z&nbsp;programu Nová zelená úsporám Light rozhoduje Státní fond životního prostředí ČR na základě podané žádosti a&nbsp;splnění podmínek programu. Sazby dotace vycházejí z&nbsp;podmínek programu platných od 25.&nbsp;6.&nbsp;2026. <span data-deadline-wrap>Ceny uvedené na této stránce platí do <span data-deadline-text>24. 9. 2026</span>.</span></p>
+      <p>Chráněno reCAPTCHA – platí <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ochrana soukromí</a> a <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Smluvní podmínky</a> Google.</p>
+      <p>© Schlieger <span data-year>2026</span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════ STICKY MOBILE BAR ═══════════════ -->
+<div class="sticky" id="sticky">
+  <a class="btn btn--ghost" href="tel:+420226223800"><svg width="18" height="18"><use href="#i-phone"/></svg> Zavolat</a>
+  <a class="btn btn--primary" href="#kalkulace" data-cta="mobile-sticky">Spočítat doplatek</a>
+</div>
+
+
+</div>
+</x-dc>
+</body>
+</html>
