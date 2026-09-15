@@ -36,13 +36,13 @@ Směr „teplý papírový editorial“ podle researche moderních energy LP (`d
 
 ## Verze 3 (15. 9. 2026 večer, po auditu)
 
-Zapracován design/UX/CRO audit (`docs/audit.md`) a pravidla z nainstalovaných skillů (`.claude/skills/`: taste-skill v2, redesign-skill, Anthropic frontend-design, Vercel web-design-guidelines, ui-ux-pro-max, mobile-app-ui-design). Hlavní změny: hero 86 vh se stropem 820 px, bez štítků nad nadpisy, bez fade-in animací, formulář jako 3. sekce a zkrácený na 4 kroky (nárok → střecha typ+plocha → stav+vlastnictví → kontakt), kalkulačka sloučená s účtenkou (účtenka se přepočítává živě), nabídková karta přestavěná (tmavá hlavička, bílá účtenka 65 500 Kč, zelený pás 83 %, A + B obsah), plovoucí trust karta, kontrast drobného textu na AA, cookie lišta odsunutá nad sticky lištu, každá sekce končí CTA.
+Zapracován design/UX/CRO audit (`docs/audit.md`) a pravidla z nainstalovaných skillů (`.claude/skills/`: taste-skill v2, redesign-skill, Anthropic frontend-design, Vercel web-design-guidelines, ui-ux-pro-max, mobile-app-ui-design). Hlavní změny: hero 86 vh se stropem 820 px, bez štítků nad nadpisy, bez fade-in animací, formulář jako 3. sekce a zkrácený na 6 kroků (nárok → střecha typ+plocha → stav+vlastnictví → kontakt), kalkulačka sloučená s účtenkou (účtenka se přepočítává živě), nabídková karta přestavěná (tmavá hlavička, bílá účtenka 65 500 Kč, zelený pás 83 %, A + B obsah), plovoucí trust karta, kontrast drobného textu na AA, cookie lišta odsunutá nad sticky lištu, každá sekce končí CTA.
 
 ## Struktura stránky
 
-Header (logo, telefon s otevírací dobou, CTA) → Hero 86 vh (logo NZÚ Light, H1, cílovka, telefon, karta krok 1 se 3 CTA, skleněný pás s čísly 15 let / 23 000+ / 80+ / 24 h) → Pro koho (bílý panel se 3 skupinami) → Nabídková karta „Co dostanete za 65 500 Kč“ → Formulář (4 kroky, 20 px od okrajů okna) → Kalkulačka (kompaktní karta, živý propočet) → Čísla → Proč Schlieger → Proces → Reference + galerie → FAQ → Finální CTA → Footer. (Starší popis níže platí jen orientačně.)
+Header (logo, telefon s otevírací dobou, CTA) → Hero 86 vh (logo NZÚ Light, H1, cílovka, telefon, karta krok 1 se 3 CTA, skleněný pás s čísly 15 let / 23 000+ / 80+ / 24 h) → Pro koho (bílý panel se 3 skupinami) → Nabídková karta „Co dostanete za 65 500 Kč“ → Formulář (6 kroků, 20 px od okrajů okna) → Kalkulačka (kompaktní karta, živý propočet) → Čísla → Proč Schlieger → Proces → Reference + galerie → FAQ → Finální CTA → Footer. (Starší popis níže platí jen orientačně.)
 
-Původní popis: Header (tmavá fotka, H1 se zeleným blokem „za 65 500 Kč“, cenová karta 385 500 → −320 000 → 65 500 + lišta krytí 83 %, CTA, telefon) → trust strip → **Formulář** `#kalkulace` (6 kroků) → **Pro koho je nabídka** → Kalkulačka doplatku (slider 40–200 m², živý přepočet, hláška o stropu nad 125 m²) → Jak to počítáme (účtenka + callout 83 %) → Co je v ceně (2 karty + „Co v ceně není“) → Čísla (tmavá sekce) → Proč Schlieger (fotka + 6 faktů) → Jak to probíhá (4 kroky) → Reference (3 reálné recenze ze schlieger.cz/recenze + 3 fotky realizací Schlieger) → FAQ (10) → Finální CTA s datem platnosti → Footer (IČ, právní disclaimer, cookies, reCAPTCHA text) + sticky mobilní lišta.
+Původní popis: Header (tmavá fotka, H1 se zeleným blokem „za 65 500 Kč“, cenová karta 385 500 → −320 000 → 65 500 + lišta krytí 83 %, CTA, telefon) → trust strip → **Formulář** `#kalkulace` (6 kroků) → **Pro koho je nabídka** → Kalkulačka doplatku (slider 40–200 m², živý přepočet, hláška o stropu nad 125 m²) → Jak to počítáme (účtenka + callout 83 %) → Co je v ceně (2 karty + „Co v ceně není“) → Čísla (tmavá sekce) → Proč Schlieger (fotka + 6 faktů) → Jak to probíhá (6 kroků) → Reference (3 reálné recenze ze schlieger.cz/recenze + 3 fotky realizací Schlieger) → FAQ (10) → Finální CTA s datem platnosti → Footer (IČ, právní disclaimer, cookies, reCAPTCHA text) + sticky mobilní lišta.
 
 Konstanty (ceny, sazby, strop, datum platnosti, otevírací doba) jsou v jednom objektu `CONFIG` na začátku skriptu v `index.html`. Po `deadline` se prvky s `[data-deadline-wrap]` samy skryjí.
 
@@ -50,7 +50,7 @@ Konstanty (ceny, sazby, strop, datum platnosti, otevírací doba) jsou v jednom 
 
 Headless Chrome full-page screenshot: `?qa=1` vypne 100vh hera (jinak hero zabere celé vysoké okno). Řezy přes `sips -c H W --cropOffset y 0` s offsetem ≥ 1.
 
-## Formulář (4 kroky, dřív 6)
+## Formulář (6 kroků, dřív 6)
 
 1. Nárok na dotaci (starobní důchod / ID 3. st. / superdávka / nic z toho / nevím) – „nic z toho“ zobrazí větev bezúročný úvěr a pokračuje
 2. Typ střechy (ikony) – „plochá“ zobrazí upozornění
