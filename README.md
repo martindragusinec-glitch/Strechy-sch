@@ -97,3 +97,5 @@ Hero + zateplení + konzultace: generováno přes Higgsfield MCP (kredity vyčer
 2. První krok kvízu přímo v hero
 3. CTA „Spočítat můj doplatek“ vs. „Ověřit nárok na dotaci“
 4. Kalkulačka nahoře vs. pod „Co je v ceně“
+- Sdílecí náhled (og:image) je `assets/img/og-image.jpg` 1200×630, vyrenderovaný z hero fotky s logem a titulkem. Po nasazení zkontrolujte absolutní URL v `<meta property="og:image">`.
+- Hero na mobilu je zkrácený: bez řádku „Raději zavolám“ (telefon je v hlavičce i ve sticky liště), menší logo NZÚ a kompaktnější karta prvního kroku.
