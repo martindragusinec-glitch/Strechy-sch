@@ -1,0 +1,6 @@
+docs/
+design/
+tools/
+*.md
+.DS_Store
+schlieger-lp-pro-claude-design.html
