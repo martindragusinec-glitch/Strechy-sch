@@ -1,14 +1,20 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   LP TRACKING MODUL — DomiDomi / Schlieger skupina · v2.0 (2026-09-07)
-   Atribuce z URL (jen v paměti) → souhlas z CMP → záloha do Make → Lead Gateway
-   (x-gateway-key) → dataLayer eventy. Pixel i GA běží VÝHRADNĚ z GTM (žádné fbq/gtag zde).
+   LP TRACKING MODUL — DomiDomi / Schlieger skupina · v2.1 (2026-09-18)
+   Atribuce z URL → sessionStorage hned při načtení (lp_attr_first / lp_attr_last) → cookies po marketingovém
+   souhlasu → záloha do Make → Lead Gateway (x-gateway-key, plný eventDetails dle README §5.1) → dataLayer eventy.
+   Pixel i GA běží VÝHRADNĚ z GTM (žádné fbq/gtag zde).
+
+   v2.1: plná atribuce v eventDetails (leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId/adsetId/adId,
+   sourcePlatform, utm*, gclid/gbraid/wbraid/fbclid/msclkid/sznclid, gaClientId, device, firstTouch, consent);
+   sessionStorage vrstva atribuce před souhlasem (README §4.1); nové config klíče attribution_session_storage,
+   send_ga_client_id, attribution_only. Tvar form_sent / leadCapture beze změny.
 
    dataLayer eventy (jen tyto): view_form, begin_form, form_step, form_error, cta_click,
    phone_click, scroll_depth, form_sent (při odchodu POSTu do gateway), leadCapture (po odpovědi).
 
    Konfigurace: window.LP_TRACKING_CONFIG (definovat PŘED načtením modulu).
    API: LPTracking.sendLead(answers, hooks) · LPTracking.observeForm(host) · LPTracking.formStep(n, name)
-        LPTracking.formError(field) · LPTracking.pushDL(event, data) · LPTracking.getConsent()
+        LPTracking.formError(field) · LPTracking.pushDL(event, data) · LPTracking.getConsent() · LPTracking.getAttribution()
    CMP: Cookiebot (window.Cookiebot) nebo LPConsent (lp-consent.js); jinak vše = denied.
    ═══════════════════════════════════════════════════════════════════════════ */
 window.LPTracking = (function () {
@@ -38,8 +44,14 @@ window.LPTracking = (function () {
     recaptcha_timeout_ms: 3000,
     hard_timeout_ms: 7000,
     consent_adapter: null,           // volitelně: function () { return { known, marketing, analytics }; }
+    attribution_session_storage: true, // v2.1: atribuce do sessionStorage hned při načtení (README §4.1); false = jen paměť stránky (v2.0)
+    send_ga_client_id: true,         // v2.1: gaClientId z cookie _ga do gateway/Make (jen při analytickém souhlasu, README §8)
+    attribution_only: false,         // v2.1: true na stránkách bez formuláře — jen sběr atribuce + CTA/scroll eventy
+    ss_first_key: 'lp_attr_first',
+    ss_last_key: 'lp_attr_last',
     utm_keys: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_content', 'utm_term'],
     click_keys: ['gclid', 'fbclid', 'msclkid', 'ttclid', 'sznclid', 'gbraid', 'wbraid'],
+    gw_click_keys: ['gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'sznclid'], // do gateway (ttclid jen do Make)
     ad_keys: ['campaignId', 'adsetId', 'adId', 'campaign_id', 'adset_id', 'ad_id']
   };
   var C = {};
@@ -62,6 +74,16 @@ window.LPTracking = (function () {
     } catch (e) { return null; }
   }
   function _allKeys() { return C.utm_keys.concat(C.click_keys, C.ad_keys); }
+
+  /* ─── sessionStorage (v2.1) — atribuce probíhající návštěvy, zapisuje se i před souhlasem (README §4.1) ─── */
+  function _ssGet(key) {
+    if (!C.attribution_session_storage) return null;
+    try { var v = window.sessionStorage.getItem(key); return v ? JSON.parse(v) : null; } catch (e) { return null; }
+  }
+  function _ssSet(key, obj) {
+    if (!C.attribution_session_storage) return;
+    try { window.sessionStorage.setItem(key, JSON.stringify(obj)); } catch (e) {}
+  }
 
   /* ─── SOUHLAS — zdroj pravdy je API CMP na stránce; volat při submitu, ne při načtení ─── */
   var UNKNOWN = { known: false, marketing: false, analytics: false };
@@ -107,39 +129,59 @@ window.LPTracking = (function () {
     check();
   }
 
-  /* ─── ATRIBUCE — při načtení jen v JS proměnných, cookies až po marketingovém souhlasu ─── */
+  /* ─── ATRIBUCE (v2.1, README §4.1) ───
+     Při načtení: touch z URL (nebo z externího referreru) → paměť + sessionStorage (lp_attr_last; lp_attr_first jen pokud
+     ještě neexistuje ani v cookie). Cookies _attribution_first (90 d) / _attribution_last (30 d) až po marketingovém souhlasu.
+     Pravý direct (bez parametrů a bez externího referreru) last touch NEPŘEPISUJE. */
   var _urlTouch = null;
-  var _landingUrl = window.location.href;
-  var _landingReferrer = document.referrer || '';
   var _lastCta = 'none';
 
   function _emptyTouch() {
-    var t = { timestamp: null, raw_query_string: null };
+    var t = { timestamp: null, raw_query_string: null, landing_url: null, referrer: null };
     _allKeys().forEach(function (k) { t[k] = null; });
     return t;
+  }
+  function _parse(raw) { if (raw) { try { return JSON.parse(raw); } catch (e) {} } return null; }
+  function _host(u) {
+    if (!u) return '';
+    try { return new URL(u).hostname.replace(/^www\./, '').toLowerCase(); } catch (e) { return ''; }
+  }
+  function _isExternalReferrer(ref) {
+    var h = _host(ref);
+    return !!h && h !== _host(window.location.href);
   }
   function captureAttribution() {
     try {
       var params = new URLSearchParams(window.location.search);
       var keys = _allKeys();
-      if (!keys.some(function (k) { return params.has(k); })) return;
-      _urlTouch = { timestamp: new Date().toISOString(), raw_query_string: window.location.search || null };
-      keys.forEach(function (k) { _urlTouch[k] = params.get(k); });
+      var hasParams = keys.some(function (k) { return params.has(k); });
+      var ref = document.referrer || '';
+      var external = _isExternalReferrer(ref);
+      if (!hasParams && !external) return;                     /* pravý direct / interní navigace → last se nemění */
+      var t = _emptyTouch();
+      t.timestamp = new Date().toISOString();
+      t.raw_query_string = hasParams ? (window.location.search || null) : null;
+      t.landing_url = window.location.href;
+      t.referrer = ref || null;
+      if (hasParams) keys.forEach(function (k) { if (params.has(k)) t[k] = params.get(k); });
+      _urlTouch = t;
+      _ssSet(C.ss_last_key, t);
+      if (!_getCookie('_attribution_first') && !_ssGet(C.ss_first_key)) _ssSet(C.ss_first_key, t);
     } catch (e) {}
   }
   function persistAttribution() {
-    if (!_urlTouch) return;
     if (!getConsent().marketing) return;
-    var json = JSON.stringify(_urlTouch);
-    var existing = _getCookie('_attribution_first');
-    _setCookie('_attribution_first', existing || json, C.attr_first_days);
-    _setCookie('_attribution_last', json, C.attr_last_days);
+    var last = _urlTouch || _ssGet(C.ss_last_key);
+    var first = _ssGet(C.ss_first_key) || last;
+    if (!last && !first) return;
+    if (!_getCookie('_attribution_first') && first) _setCookie('_attribution_first', JSON.stringify(first), C.attr_first_days);
+    if (last) _setCookie('_attribution_last', JSON.stringify(last), C.attr_last_days);
   }
-  function _parse(raw) { if (raw) { try { return JSON.parse(raw); } catch (e) {} } return null; }
   function _readTouch(which) {
-    if (which === 'last') return _urlTouch || _parse(_getCookie('_attribution_last')) || _emptyTouch();
-    return _parse(_getCookie('_attribution_first')) || _urlTouch || _emptyTouch();
+    if (which === 'last') return _urlTouch || _ssGet(C.ss_last_key) || _parse(_getCookie('_attribution_last')) || _emptyTouch();
+    return _parse(_getCookie('_attribution_first')) || _ssGet(C.ss_first_key) || _urlTouch || _emptyTouch();
   }
+  function getAttribution() { return { first: _readTouch('first'), last: _readTouch('last') }; }
   /* _fbc: NIKDY nevytvářet vlastním kódem, jen číst cookie, kterou nastaví pixel z GTM */
   function _getFbp() { return _getCookie('_fbp') || null; }
   function _getFbc() { return _getCookie('_fbc') || null; }
@@ -169,6 +211,28 @@ window.LPTracking = (function () {
     if (!u) return null;
     try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return null; }
   }
+  function _origin(u) {
+    if (!u) return '';
+    try { return new URL(u).origin + '/'; } catch (e) { return ''; }
+  }
+  /* gaClientId (v2.1): cookie _ga "GA1.1.1234567890.1712345678" → "1234567890.1712345678"; jen při analytickém souhlasu */
+  function _gaClientId(consent) {
+    if (!C.send_ga_client_id || !consent.analytics) return '';
+    var raw = _getCookie('_ga');
+    if (!raw) return '';
+    var p = String(raw).split('.');
+    return p.length >= 4 ? p.slice(2).join('.') : '';
+  }
+  /* device (v2.1): hrubá kategorie z UA — do gateway nejde plný user agent */
+  function _device() {
+    try {
+      var ua = navigator.userAgent || '';
+      if (/tablet|ipad|playbook|silk/i.test(ua) || (/android/i.test(ua) && !/mobile/i.test(ua))) return 'tablet';
+      if (/mobi|iphone|ipod|android|phone|blackberry|opera mini/i.test(ua)) return 'mobile';
+      if (navigator.userAgentData && navigator.userAgentData.mobile) return 'mobile';
+    } catch (e) {}
+    return 'desktop';
+  }
   /* touch ořezaný podle souhlasu: click ID a raw_query_string jen s marketingovým souhlasem */
   function _trimTouch(t, consent) {
     var out = {};
@@ -176,29 +240,33 @@ window.LPTracking = (function () {
       var marketingOnly = (C.click_keys.indexOf(k) !== -1) || k === 'raw_query_string';
       out[k] = (marketingOnly && !consent.marketing) ? null : t[k];
     });
+    if (!consent.marketing) {
+      out.landing_url = t.landing_url ? _stripQuery(t.landing_url) : null;
+      out.referrer = t.referrer ? (_origin(t.referrer) || null) : null;
+    }
     return out;
   }
-  /* camelCase atribuce (kořen payloadu i leadCapture) — click ID a plné URL jen s marketingovým souhlasem */
-  function buildAttribution(consent) {
-    consent = consent || getConsent();
-    var touch = _readTouch('last'), params = null;
-    try { params = new URLSearchParams(window.location.search); } catch (e) {}
+  /* camelCase atribuce z jednoho touche (README §5.1) — click ID a plné URL jen s marketingovým souhlasem.
+     params (URL aktuální stránky) se používá jen jako fallback pro last touch, nikdy pro first. */
+  function _touchCamel(touch, params, consent) {
     var mk = consent.marketing;
     var d = {
-      campaignId: _firstVal(touch, params, ['campaignId', 'campaign_id', 'utm_id']),
-      adsetId: _firstVal(touch, params, ['adsetId', 'adset_id']),
-      adId: _firstVal(touch, params, ['adId', 'ad_id']),
-      sourcePlatform: '',
       utmSource: _firstVal(touch, params, ['utm_source']),
       utmMedium: _firstVal(touch, params, ['utm_medium']),
       utmCampaign: _firstVal(touch, params, ['utm_campaign']),
       utmContent: _firstVal(touch, params, ['utm_content']),
       utmTerm: _firstVal(touch, params, ['utm_term']),
-      gclid: mk ? _firstVal(touch, params, ['gclid']) : '',
-      fbclid: mk ? _firstVal(touch, params, ['fbclid']) : '',
-      landingUrl: mk ? _landingUrl : _stripQuery(_landingUrl),
-      referrer: mk ? _landingReferrer : (_domain(_landingReferrer) || '')
+      campaignId: _firstVal(touch, params, ['campaignId', 'campaign_id', 'utm_id']),
+      adsetId: _firstVal(touch, params, ['adsetId', 'adset_id']),
+      adId: _firstVal(touch, params, ['adId', 'ad_id']),
+      sourcePlatform: ''
     };
+    C.gw_click_keys.forEach(function (k) { d[k] = mk ? _firstVal(touch, params, [k]) : ''; });
+    var lu = (touch && touch.landing_url) || '';
+    var rf = (touch && touch.referrer) || '';
+    d.landingUrl = mk ? lu : _stripQuery(lu);
+    d.referrer = mk ? rf : _origin(rf);
+    d.timestamp = (touch && touch.timestamp) || null;
     /* platforma se určí z plných dat (i bez souhlasu — do payloadu jde jen název platformy, ne ID) */
     d.sourcePlatform = _sourcePlatform({
       utmSource: d.utmSource,
@@ -208,6 +276,20 @@ window.LPTracking = (function () {
       msclkid: _firstVal(touch, params, ['msclkid'])
     });
     return d;
+  }
+  /* kořen payloadu = LAST touch (kompatibilní s v2.0, navíc gbraid/wbraid/msclkid/sznclid) */
+  function buildAttribution(consent) {
+    consent = consent || getConsent();
+    var params = null;
+    try { params = new URLSearchParams(window.location.search); } catch (e) {}
+    var d = _touchCamel(_readTouch('last'), params, consent);
+    delete d.timestamp;
+    return d;
+  }
+  /* firstTouch objekt do eventDetails (README §5.1) — bez fallbacku na aktuální URL */
+  function buildFirstTouch(consent) {
+    consent = consent || getConsent();
+    return _touchCamel(_readTouch('first'), null, consent);
   }
 
   /* ─── util ─── */
@@ -245,37 +327,66 @@ window.LPTracking = (function () {
     return C.note_prefix + (parts.length ? ' ' + parts.join('---') : '');
   }
 
-  /* ─── eventDetails — přesně dle spec Lead Gateway ─── */
-  function buildEventDetails(answers, attribution) {
+  /* ─── eventDetails — přesně dle README §5.1 (v2.1: plná atribuce, consent gating dle §5.1a) ───
+     ctx: { leadId, submittedAt, consent } */
+  function buildEventDetails(answers, attribution, ctx) {
+    ctx = ctx || {};
+    var consent = ctx.consent || getConsent();
     var n = _splitName(answers.name);
-    return {
-      adId: attribution.adId,
-      note: _buildNote(answers),
+    var cb = consentBlock(consent);
+    var ed = {
       tenantId: C.tenant_id,
-      userData: {
-        zip: _extractPsc(answers.zip || answers.location) || '',
-        city: answers.city || 'neznáme',
-        name: n.first || '',
-        email: answers.email ? String(answers.email).trim().toLowerCase() : '',
-        phone: answers.phone ? String(answers.phone).trim() : '',
-        address: answers.address || 'neznáme',
-        surname: n.last || ''
-      },
       leadSource: C.gw_lead_source,
       customerType: C.gw_customer_type,
-      leadProducts: C.gw_lead_products.slice()
+      leadProducts: C.gw_lead_products.slice(),
+      note: _buildNote(answers),
+      userData: {
+        name: n.first || '',
+        surname: n.last || '',
+        email: answers.email ? String(answers.email).trim().toLowerCase() : '',
+        phone: answers.phone ? String(answers.phone).trim() : '',
+        zip: _extractPsc(answers.zip || answers.location) || '',
+        city: answers.city || 'neznáme',
+        address: answers.address || 'neznáme'
+      },
+      leadId: ctx.leadId || '',
+      submittedAt: ctx.submittedAt || new Date().toISOString(),
+      formId: C.form_id,
+      pageUrl: _stripQuery(window.location.href),
+      landingUrl: attribution.landingUrl || '',
+      referrer: attribution.referrer || '',
+      campaignId: attribution.campaignId || '',
+      adsetId: attribution.adsetId || '',
+      adId: attribution.adId || '',
+      sourcePlatform: attribution.sourcePlatform || '',
+      utmSource: attribution.utmSource || '',
+      utmMedium: attribution.utmMedium || '',
+      utmCampaign: attribution.utmCampaign || '',
+      utmContent: attribution.utmContent || '',
+      utmTerm: attribution.utmTerm || ''
     };
+    C.gw_click_keys.forEach(function (k) { ed[k] = attribution[k] || ''; });
+    ed.gaClientId = _gaClientId(consent);
+    ed.device = _device();
+    ed.firstTouch = buildFirstTouch(consent);
+    ed.consent = {
+      status: cb.consent_status,
+      marketing: !!consent.marketing,
+      analytics: !!consent.analytics,
+      timestamp: cb.consent_timestamp
+    };
+    return ed;
   }
 
   /* ─── plný payload (Make) — řez podle souhlasu se dělá TADY, ne v Make ─── */
-  function buildLeadPayload(answers, recaptchaToken, consent, leadUuid) {
+  function buildLeadPayload(answers, recaptchaToken, consent, leadUuid, submittedAt) {
     consent = consent || getConsent();
     var uuid = leadUuid || _genUuid(), now = new Date(), n = _splitName(answers.name);
     var mk = consent.marketing;
     var attribution = buildAttribution(consent);
     var lastTouch = _trimTouch(_readTouch('last'), consent);
     var payload = {
-      eventDetails: buildEventDetails(answers, attribution),
+      eventDetails: buildEventDetails(answers, attribution, { leadId: uuid, submittedAt: submittedAt || now.toISOString(), consent: consent }),
       lead_uuid: uuid,
       event_id: uuid,
       event_time_iso: now.toISOString(),
@@ -306,12 +417,12 @@ window.LPTracking = (function () {
       },
       page: {
         url: mk ? window.location.href : _stripQuery(window.location.href),
-        landing_page_url: mk ? _landingUrl : _stripQuery(_landingUrl),
+        landing_page_url: attribution.landingUrl || null,
         referrer_url: mk ? (document.referrer || null) : null,
         referrer_domain: _domain(document.referrer)
       },
-      /* session.client_id / session_id se do Make neposílají — párování s GA přes lead_id v BigQuery */
-      session: { user_agent: mk ? navigator.userAgent : null },
+      /* v2.1: client_id z _ga jen při analytickém souhlasu; session_id se dál neposílá (párování přes lead_id v BigQuery) */
+      session: { user_agent: mk ? navigator.userAgent : null, client_id: _gaClientId(consent) || null, device: _device() },
       consent: consentBlock(consent),
       security: { recaptcha_token: recaptchaToken || null },
       recaptchaToken: recaptchaToken || ''
@@ -456,13 +567,14 @@ window.LPTracking = (function () {
     var consent = getConsent();
     if (!_pending) _pending = { uuid: _genUuid(), formSent: false };
     var lead = _pending;
+    lead.submittedAt = new Date().toISOString();   /* v2.1: čas kliku daného pokusu (leadId zůstává) */
     var finished = false;
     function done(ok, gw, payload) {
       if (finished) return; finished = true;
       if (ok && gw && gw.result === 'success') _pending = null; /* další submit = nový lead */
       try { var fn = ok ? hooks.onSuccess : hooks.onError; if (fn) fn(gw, payload); } catch (e) {}
     }
-    var payload = buildLeadPayload(answers, null, consent, lead.uuid);
+    var payload = buildLeadPayload(answers, null, consent, lead.uuid, lead.submittedAt);
     var hard = setTimeout(function () { done(true, { gatewayId: '', ok: false, result: 'fallback' }, payload); }, C.hard_timeout_ms);
 
     /* Make webhook (fire-and-forget); keepalive → request přežije i okamžité zavření okna */
@@ -547,14 +659,16 @@ window.LPTracking = (function () {
     } else { go(null); }
   }
 
-  /* ─── init při načtení: atribuce jen do paměti; cookies až po marketingovém souhlasu ─── */
+  /* ─── init při načtení: atribuce → paměť + sessionStorage; cookies až po marketingovém souhlasu ───
+     attribution_only: true → stejný init, jen se nečeká gateway config (stránky bez formuláře) */
   captureAttribution();
   onMarketingConsent(persistAttribution);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindCta); else bindCta();
 
   return {
     config: C, sendLead: sendLead, observeForm: observeForm, trackViewForm: trackViewForm, trackBeginForm: trackBeginForm,
-    formStep: formStep, formError: formError, pushDL: pushDL, getConsent: getConsent,
-    buildLeadPayload: buildLeadPayload, buildAttribution: buildAttribution, extractGatewayResult: extractGatewayResult
+    formStep: formStep, formError: formError, pushDL: pushDL, getConsent: getConsent, getAttribution: getAttribution,
+    buildLeadPayload: buildLeadPayload, buildAttribution: buildAttribution, buildFirstTouch: buildFirstTouch,
+    buildEventDetails: buildEventDetails, extractGatewayResult: extractGatewayResult
   };
 })();

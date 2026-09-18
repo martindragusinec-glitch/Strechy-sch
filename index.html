@@ -33,8 +33,8 @@
 <!-- 3) konfigurace měření + modul -->
 <script>
 window.LP_TRACKING_CONFIG = {
-  gateway_url: 'https://cwertkgbliffhzrynrxt.supabase.co/functions/v1/make-server-9924f985/lead-gateway/ingest',
-  gateway_key: '',                 // DOPLNIT (x-gateway-key, od správce gateway)
+  gateway_url: 'https://vdgvdjdjsdbncudzzibx.supabase.co/functions/v1/make-server-9924f985/lead-gateway/ingest', // DEV (marketing-manual §1.2); PROD = https://cwertkgbliffhzrynrxt.supabase.co/functions/v1/make-server-9924f985/lead-gateway/ingest až po ověření
+  gateway_key: '',                 // DOPLNIT (X-Gateway-Key pro dané prostředí, lead-gateway.env mimo git)
   make_webhook_url: '',            // DOPLNIT: Make webhook této LP (záloha + log)
   log_gateway_result: true,
   recaptcha_site_key: '',          // DOPLNIT: reCAPTCHA v3 site key pro doménu LP
@@ -43,10 +43,14 @@ window.LP_TRACKING_CONFIG = {
   product_type: 'fotovoltaika_zatepleni_strechy',
   form_name: 'kontakt-fve-strecha-schlieger',
   form_id: 'MULTI_STEP_FORM_FVE_STRECHA',   // POTVRDIT s analytikou (ať se neliší mezi LP)
-  tenant_id: '',                   // DOPLNIT (správce CRM)
+  tenant_id: 'fve_nove',           // marketing-manual §1.3: fve_nove = Schlieger FVE (v manuálu „odvozeno z názvu – ověřit“ se správcem CRM)
   gw_lead_source: '',              // DOPLNIT (kód zdroje leadu od CRM)
   gw_customer_type: 'B2C',
-  gw_lead_products: ['FVE', 'ZAT'] // POTVRDIT produktové kódy s CRM
+  gw_lead_products: ['FVE', 'ZAT'], // POTVRDIT produktové kódy s CRM
+  /* v2.1 (standard 18. 9. 2026) */
+  attribution_session_storage: true, // atribuce do sessionStorage před souhlasem (README §4.1)
+  send_ga_client_id: false,          // zapnout až budou zásady ochrany OÚ zmiňovat spojení měřicího identifikátoru s poptávkou (README §8)
+  attribution_only: false
 };
 </script>
 <script src="lp-tracking.js"></script>

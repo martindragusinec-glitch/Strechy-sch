@@ -7,7 +7,7 @@ Lokální statická landing page pro www.schlieger.cz. Zdroj nabídky: interní 
 | Soubor | K čemu |
 |---|---|
 | `index.html` | celá LP (inline CSS + JS), jediný soubor k úpravám |
-| `lp-tracking.js`, `lp-consent.js` | měřicí standard v2.0, **beze změny** zkopírovaný z kořene repozitáře |
+| `lp-tracking.js`, `lp-consent.js` | měřicí standard **v2.1** (18. 9. 2026), **beze změny** zkopírovaný z `Schlieger-org/marketing-playbook/lp-tracking-standard/`; kopie README standardu v `docs/lp-tracking-standard-v2.1.md` |
 | `assets/img/` | hero + fotky (viz `docs/IMAGES.md`), logo SVG (barevné i bílé), favicon |
 | `assets/fonts/` | Poppins 400/500/600/700 (latin + latin-ext), self-hosted kvůli GDPR |
 | `tools/serve.js` | lokální server: `node tools/serve.js 8766` → http://localhost:8766 |
@@ -63,29 +63,45 @@ Odeslání jde výhradně přes `LPTracking.sendLead` (žádný vlastní fetch, 
 
 ## Měření – stav
 
-`LP_TRACKING_CONFIG` v `<head>`: company `schlieger`, product `FVE`, product_type `fotovoltaika_zatepleni_strechy`, form_id `MULTI_STEP_FORM_FVE_STRECHA`, gw_lead_products `['FVE','ZAT']`. GTM: `GTM-NWL639K` (kontejner webu schlieger.cz), **na localhost se GTM nenačítá** (kontejner odpaluje Ads konverze i při lokálním testu).
+`LP_TRACKING_CONFIG` v `<head>`: company `schlieger`, product `FVE`, product_type `fotovoltaika_zatepleni_strechy`, form_id `MULTI_STEP_FORM_FVE_STRECHA`, tenant_id `fve_nove` (marketing-manual §1.3, Schlieger FVE; v manuálu označeno „odvozeno z názvu – ověřit“), gw_lead_products `['FVE','ZAT']`, gateway **DEV** (`vdgvdjdjsdbncudzzibx`, manual §1.2: PROD až po ověřeném testovacím leadu). GTM: `GTM-NWL639K` (kontejner webu schlieger.cz), **na localhost se GTM nenačítá**.
 
-Test dle §6 (15. 9. 2026, podstrčený fetch) prošel: pořadí `cta_click → form_step… → view_form → begin_form → form_sent → leadCapture`, `form_sent` bez gatewayID, stejné `lead_id`, `leadCapture.eventDetails.result = "success"`, `adId = "333"`, `gatewayID = "TEST-GW-ID"`, gateway dostává jen `{ eventDetails }` s hlavičkou `x-gateway-key`, `typeof fbq` i `gtag` = `undefined`.
+**Standard v2.1 (playbook 18. 9. 2026)** je nasazený: `lp-tracking.js` vyměněný 1:1, API stejné (`sendLead(answers, hooks)`), v configu přidáno `attribution_session_storage: true`, `send_ga_client_id: false` (viz DOPLNIT), `attribution_only: false`.
+
+Test dle §6 (18. 9. 2026, podstrčený fetch, URL s utm + campaign_id/adset_id/ad_id + fbclid=TEST, souhlas přes LPConsent.acceptAll): `form_sent → leadCapture`, stejné `lead_id` = `eventDetails.leadId`; gateway (DEV URL) dostává jen `{ eventDetails }` s hlavičkou `x-gateway-key` a **plným tvarem §5.1** (31 klíčů: tenantId, leadSource, customerType, leadProducts, note, userData, leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId=111, adsetId=222, adId=333, sourcePlatform=META, utm*, gclid/gbraid/wbraid/fbclid=TEST/msclkid/sznclid, gaClientId="", device=desktop, firstTouch, consent.status=granted). `sessionStorage.lp_attr_first/last` zapsané hned při načtení, cookies `_attribution_first/last` až po souhlasu. `typeof fbq` i `gtag` = `undefined`.
 
 ## DOPLNIT před nasazením
 
-- [ ] `gateway_key` (PROD i DEV) – od správce gateway, po souhlasu vlastníka LP (§8)
-- [ ] `tenant_id` – správce CRM
-- [ ] `gw_lead_source` – kód zdroje leadu (CRM)
-- [ ] `gw_lead_products` – potvrdit kódy `FVE` + `ZAT` (nebo jiný kód pro zateplení)
-- [ ] `form_id` / `form_name` – potvrdit s analytikou (web používá `MULTI_STEP_FORM_FVE`, `_TEPELKO`, `_SOLAR`, `_GENERIC`)
-- [ ] `make_webhook_url` – Make webhook této LP + Router podle `type`
-- [ ] `recaptcha_site_key` – reCAPTCHA v3 pro doménu (načítá se líně až v kroku 4+)
-- [ ] **CMP:** schlieger.cz načítá Cookiebot přes GTM (domain group `d9a57f9f-eeb3-4af2-9d35-a107ee14014a`). Pokud LP poběží na schlieger.cz, **odstranit `lp-consent.js`** a nechat Cookiebot (modul ho detekuje sám). Na samostatné doméně zůstává `lp-consent.js`.
-- [ ] `<link rel="canonical">` a `og:image` – finální URL LP
-- [ ] `CONFIG.deadline` – platnost cen (v podkladu 24. 9. 2026 pro FVE)
-- [ ] Otevírací doba: kontakt na webu uvádí Po–Pá 9–16, patička jinde 8–16 – sjednotit (LP má 9–16)
-- [ ] Zateplení střechy není na schlieger.cz jako produkt – potvrdit, kdo stavební část realizuje a fakturuje (LP říká „od jednoho dodavatele“)
-- [ ] Ověřit aktuální sazby/stropy NZÚ Light ke dni spuštění (program se v roce 2026 měnil vícekrát)
-- [ ] DEV lead → `status: completed` → přepnout na PROD (§3 krok 7), GTM triggery `form_sent` + `leadCapture` (analytika)
-- [ ] **OSVČ v cílovce** (hero) je na přání klienta; podle pravidel NZÚ Light rozhoduje status domácnosti (superdávka / důchod), ne OSVČ jako takové – ověřit formulaci s právníkem
-- [ ] Fotka v sekci Proč Schlieger (`konzultace.jpg`) je generovaná; nahradit reálnou fotkou technika/týmu Schlieger
-- [ ] Právník: znění FAQ 2 a 10 (platby, neschválení dotace) podle reálné smlouvy; záruky na montáž/panely (na LP záměrně nejsou čísla)
+Podle `Schlieger-org/marketing-playbook` (AGENTS.md, docs/marketing-manual.md, docs/gtm-tracking-manual.md, lp-tracking-standard v2.1):
+
+**Rozhodnutí vlastníka**
+- [ ] **Hero fotka je AI** (Higgsfield, `docs/IMAGES.md`). Playbook AGENTS.md §0 a GTM manuál §7: „Hero vizuál = reálné foto realizace, ne AI“. Nahradit reálnou fotkou z databáze realizací (v `assets/img/realizace-*.jpg` je 7 reálných, žádná ale nemá zateplení + montáž). Stejně `zatepleni-strechy.jpg` a `konzultace.jpg`.
+- [ ] **Umístění repa**: AGENTS.md §2 chce každou LP v `marketing-playbook/landing-pages/<slug>/`. LP je zatím v samostatném repu `Schlieger-org/fve-strecha-nzulight` – buď přesunout, nebo repo v playbooku odkázat.
+- [ ] **GTM pro subdoménu** (GTM manuál §10.0): (a) měřit společně se schlieger.cz = nechat `GTM-NWL639K` + property `G-CTSNDPMX5P` (LP takto nastavená), nebo (b) vlastní kontejner + property pro samostatné konverze.
+- [ ] **CMP**: s `GTM-NWL639K` naběhne Cookiebot z kontejneru (manuál §6: „nepřepisuj souhlas vlastním řešením“). Na subdoméně schlieger.cz proto **odstranit `lp-consent.js`** + jeho `LP_CONSENT_CONFIG` a `[data-consent-open]` napojit na `Cookiebot.renew()`; v Cookiebot přidat subdoménu do domain group `d9a57f9f-eeb3-4af2-9d35-a107ee14014a`. `lp-consent.js` nechat jen při samostatné doméně bez Cookiebotu.
+
+**Hodnoty od správců**
+- [ ] `gateway_key` DEV → test → PROD klíč + přepnout `gateway_url` na PROD (`cwertkgbliffhzrynrxt`); klíče z `lead-gateway.env`, nikdy do repa
+- [ ] `tenant_id` `fve_nove` potvrdit se správcem CRM (alternativa `nzu_schlieger_nove`, pokud má NZÚ Light LP jít do NZÚ kampaně)
+- [ ] `gw_lead_source` – kód zdroje leadu (CRM); `gw_lead_products` – potvrdit `FVE` + `ZAT`
+- [ ] `form_id` / `form_name` – potvrdit s analytikou
+- [ ] `make_webhook_url` – Make webhook + Router podle `type` (`lead` / `gateway_result`), reCAPTCHA siteverify jen v Make
+- [ ] `recaptcha_site_key` pro finální doménu
+- [ ] **Správce gateway musí namapovat nová pole v2.1** (leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId, adsetId, sourcePlatform, utm*, click IDs, device, firstTouch, consent) do CRM – gateway je jinak jen zaloguje (README standardu §5.1). Ověřit DEV leadem, že v CRM dorazila atribuce.
+- [ ] `send_ga_client_id` je **vypnuté**. Zapnout až zásady ochrany OÚ na schlieger.cz zmíní, že měřicí identifikátor (cookie `_ga`) spojujeme s poptávkou kvůli vyhodnocení zdrojů (README standardu §8, podmínka 2). Odkaz v souhlasu formuláře míří na `schlieger.cz/podminky-ochrany-osobnich-udaju/`.
+- [ ] `attribution_session_storage: true` (zápis atribuce do sessionStorage před souhlasem) – právník potvrdí výklad „nezbytné pro službu“, jinak přepnout na `false` (README §8).
+
+**Kampaň a nasazení**
+- [ ] Google Ads: zapnutý **auto-tagging** (gclid/gbraid); v Meta se `fbclid` nepíše ručně (README §4)
+- [ ] Žádný redirect na subdoméně nesmí zahazovat query string (`_redirects` má jen `/index.html → /`)
+- [ ] UTM podle `konvence-nazvoslovi-kreativ.md`: `utm_campaign` = `sch-fve-lead-YYYYMM`, `utm_content` = kód kreativy `sch-fve-{publikum}-{format}-{YYYYMM}-vNN`, název reklamy = stejný kód
+- [ ] Custom doména v Cloudflare (Worker `fve-strecha-nzulight`, účet Cloudflare@schlieger.cz), pak `<link rel="canonical">` a absolutní `og:image`
+- [ ] Po nasazení GTM Preview / GA4 DebugView: `form_sent` + `leadCapture` dorazí (GTM manuál §8)
+- [ ] `CONFIG.deadline` – platnost cen (v podkladu 24. 9. 2026)
+- [ ] Otevírací doba: LP má Po–Pá 9–16, patička webu jinde 8–16 – sjednotit
+- [ ] Zateplení střechy není na schlieger.cz jako produkt – potvrdit, kdo stavební část realizuje a fakturuje
+- [ ] Ověřit sazby/stropy NZÚ Light ke dni spuštění
+- [ ] **OSVČ v cílovce** (hero) – podle pravidel NZÚ Light rozhoduje status domácnosti, ověřit formulaci s právníkem
+- [ ] Právník: FAQ 2 a 10 (platby, neschválení dotace) podle reálné smlouvy; 93 % spokojenosti v sekci Proč Schlieger ověřit
 
 ## Obrázky
 
