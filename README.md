@@ -7,7 +7,7 @@ Lokální statická landing page pro www.schlieger.cz. Zdroj nabídky: interní 
 | Soubor | K čemu |
 |---|---|
 | `index.html` | celá LP (inline CSS + JS), jediný soubor k úpravám |
-| `lp-tracking.js`, `lp-consent.js` | měřicí standard **v2.1** (18. 9. 2026), **beze změny** zkopírovaný z `Schlieger-org/marketing-playbook/lp-tracking-standard/`; kopie README standardu v `docs/lp-tracking-standard-v2.1.md` |
+| `lp-tracking.js`, `lp-consent.js` | měřicí standard **v2.2** (19. 9. 2026), **beze změny** zkopírovaný z `Schlieger-org/marketing-playbook/lp-tracking-standard/`; kopie README standardu v `docs/lp-tracking-standard-v2.1.md` |
 | `assets/img/` | hero + fotky (viz `docs/IMAGES.md`), logo SVG (barevné i bílé), favicon |
 | `assets/fonts/` | Poppins 400/500/600/700 (latin + latin-ext), self-hosted kvůli GDPR |
 | `tools/serve.js` | lokální server: `node tools/serve.js 8766` → http://localhost:8766 |
@@ -65,11 +65,13 @@ Odeslání jde výhradně přes `LPTracking.sendLead` (žádný vlastní fetch, 
 
 `LP_TRACKING_CONFIG` v `<head>`: company `schlieger`, product `FVE`, product_type `fotovoltaika_zatepleni_strechy`, form_id `MULTI_STEP_FORM_FVE_STRECHA`, tenant_id `fve_nove` (marketing-manual §1.3, Schlieger FVE; v manuálu označeno „odvozeno z názvu – ověřit“), gw_lead_products `['FVE','ZAT']`, gateway **DEV** (`vdgvdjdjsdbncudzzibx`, manual §1.2: PROD až po ověřeném testovacím leadu). GTM: `GTM-NWL639K` (kontejner webu schlieger.cz), **na localhost se GTM nenačítá**.
 
-**Standard v2.1 (playbook 18. 9. 2026)** je nasazený: `lp-tracking.js` vyměněný 1:1, API stejné (`sendLead(answers, hooks)`), v configu přidáno `attribution_session_storage: true`, `send_ga_client_id: false` (viz DOPLNIT), `attribution_only: false`.
+**Standard v2.2 (playbook 19. 9. 2026)** je nasazený: `lp-tracking.js` vyměněný 1:1 (v2.2 přidává jen přepínač `lead_target` pro náborové LP, gateway větev je proti v2.1 beze změny), API stejné (`sendLead(answers, hooks)`), v configu přidáno `attribution_session_storage: true`, `send_ga_client_id: false` (viz DOPLNIT), `attribution_only: false`.
 
 Test dle §6 (18. 9. 2026, podstrčený fetch, URL s utm + campaign_id/adset_id/ad_id + fbclid=TEST, souhlas přes LPConsent.acceptAll): `form_sent → leadCapture`, stejné `lead_id` = `eventDetails.leadId`; gateway (DEV URL) dostává jen `{ eventDetails }` s hlavičkou `x-gateway-key` a **plným tvarem §5.1** (31 klíčů: tenantId, leadSource, customerType, leadProducts, note, userData, leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId=111, adsetId=222, adId=333, sourcePlatform=META, utm*, gclid/gbraid/wbraid/fbclid=TEST/msclkid/sznclid, gaClientId="", device=desktop, firstTouch, consent.status=granted). `sessionStorage.lp_attr_first/last` zapsané hned při načtení, cookies `_attribution_first/last` až po souhlasu. `typeof fbq` i `gtag` = `undefined`.
 
 ## DOPLNIT před nasazením
+
+> Kompletní audit měření proti playbooku (co máme / co chybí, včetně dvou rozporů mezi standardem a GTM manuálem) je v **[`docs/mereni-stav.md`](docs/mereni-stav.md)**.
 
 Podle `Schlieger-org/marketing-playbook` (AGENTS.md, docs/marketing-manual.md, docs/gtm-tracking-manual.md, lp-tracking-standard v2.1):
 

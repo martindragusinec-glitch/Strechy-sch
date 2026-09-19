@@ -1,16 +1,24 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   LP TRACKING MODUL — DomiDomi / Schlieger skupina · v2.1 (2026-09-18)
+   LP TRACKING MODUL — DomiDomi / Schlieger skupina · v2.2 (2026-09-19)
    Atribuce z URL → sessionStorage hned při načtení (lp_attr_first / lp_attr_last) → cookies po marketingovém
-   souhlasu → záloha do Make → Lead Gateway (x-gateway-key, plný eventDetails dle README §5.1) → dataLayer eventy.
+   souhlasu → záloha do Make → CÍL LEADU → dataLayer eventy.
+   Cíl leadu (config lead_target):
+     'gateway' (default) — Lead Gateway CRM (x-gateway-key, plný eventDetails dle README §5.1) — produktové LP
+     'draive'            — Draive ATS /api/careers/make-intake (X-API-Key, Idempotency-Key = lead_id) — náborové LP (README §12)
    Pixel i GA běží VÝHRADNĚ z GTM (žádné fbq/gtag zde).
+
+   v2.2: náborová varianta (lead_target: 'draive'): místo produktu se řeší pozice (position / position_code / region /
+   candidate_source), payload dle Draive API (fullName, email, phone, position, region, candidateSource, adId,
+   yearsExperience, driversLicense, note, raw); plná atribuce + consent jde do raw. Konverzní event se jmenuje
+   jobs_form_sent (stejný tvar jako form_sent), leadCapture beze změny (gatewayID = candidateId). Gateway větev beze změny oproti v2.1.
 
    v2.1: plná atribuce v eventDetails (leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId/adsetId/adId,
    sourcePlatform, utm*, gclid/gbraid/wbraid/fbclid/msclkid/sznclid, gaClientId, device, firstTouch, consent);
    sessionStorage vrstva atribuce před souhlasem (README §4.1); nové config klíče attribution_session_storage,
-   send_ga_client_id, attribution_only. Tvar form_sent / leadCapture beze změny.
+   send_ga_client_id, attribution_only.
 
    dataLayer eventy (jen tyto): view_form, begin_form, form_step, form_error, cta_click,
-   phone_click, scroll_depth, form_sent (při odchodu POSTu do gateway), leadCapture (po odpovědi).
+   phone_click, scroll_depth, form_sent (produkt) / jobs_form_sent (nábor) při odchodu POSTu do cíle, leadCapture (po odpovědi).
 
    Konfigurace: window.LP_TRACKING_CONFIG (definovat PŘED načtením modulu).
    API: LPTracking.sendLead(answers, hooks) · LPTracking.observeForm(host) · LPTracking.formStep(n, name)
@@ -22,18 +30,28 @@ window.LPTracking = (function () {
 
   /* ─── CONFIG (defaults; přepisuje window.LP_TRACKING_CONFIG) ─── */
   var DEFAULTS = {
+    lead_target: 'gateway',          // v2.2: 'gateway' (CRM Lead Gateway, produktové LP) | 'draive' (ATS Draive, náborové LP — README §12)
     gateway_url: 'https://cwertkgbliffhzrynrxt.supabase.co/functions/v1/make-server-9924f985/lead-gateway/ingest',
     gateway_key: '',                 // x-gateway-key — DOPLNIT (od správce gateway)
+    /* ── Draive (jen lead_target: 'draive') ── */
+    draive_url: 'https://backend-production-4d94f.up.railway.app/api/careers/make-intake',
+    draive_key: '',                  // X-API-Key — DOPLNIT (od správce Draive); veřejně čitelný ve zdrojáku LP, viz README §12.6
+    position: '',                    // POVINNÉ: název pozice v Draive (max 255) — neexistující pozice se založí jako DRAFT
+    position_code: '',               // krátký kód pozice do GTM (form_sent.product_variant), např. RM-MORAVA
+    region: '',                      // POVINNÉ: region volným textem (max 255), např. Morava
+    candidate_source: 'Web',         // Draive candidateSource (max 100), např. LP-Schlieger-RMmorava-0926
+    form_sent_event: '',             // název konverzního eventu; '' = 'form_sent' (gateway) / 'jobs_form_sent' (draive)
+    /* ── společné ── */
     make_webhook_url: '',            // Make webhook: záloha leadu hned po submitu + log výsledku ('' = vypnuto)
-    log_gateway_result: true,        // druhá zpráva do Make (type: "gateway_result")
+    log_gateway_result: true,        // druhá zpráva do Make (type: "gateway_result", pole target = gateway | draive)
     recaptcha_site_key: '',          // reCAPTCHA v3 site key ('' = bez reCAPTCHA)
     company: '',                     // značka (domidomi / schlieger / ciperka / warmteo)
-    product: '',                     // produktový kód (REK / FVE / TC / ZAT / NZU)
+    product: '',                     // produktový kód (REK / FVE / TC / ZAT / NZU); u náboru se nevyplňuje (použije se position_code)
     form_name: '',                   // název formuláře (view_form / begin_form)
-    form_id: '',                     // formId (form_sent / leadCapture), např. MULTI_STEP_FORM_REK
-    product_type: '',                // productType (form_sent / leadCapture), např. rekonstrukce
-    tenant_id: '',                   // eventDetails.tenantId (manuál §1.3)
-    gw_lead_source: '',              // eventDetails.leadSource
+    form_id: '',                     // formId (form_sent / leadCapture), např. MULTI_STEP_FORM_REK / HIRING_FORM_RM_MORAVA
+    product_type: '',                // productType (form_sent / leadCapture), např. rekonstrukce; u náboru 'recruiting'
+    tenant_id: '',                   // eventDetails.tenantId (manuál §1.3); u náboru prázdné
+    gw_lead_source: '',              // eventDetails.leadSource; u náboru prázdné → použije se candidate_source
     gw_customer_type: 'B2C',
     gw_lead_products: [],            // eventDetails.leadProducts, např. ['REK']
     lead_source: 'website',
@@ -58,6 +76,21 @@ window.LPTracking = (function () {
   Object.keys(DEFAULTS).forEach(function (k) { C[k] = DEFAULTS[k]; });
   var USER = window.LP_TRACKING_CONFIG || {};
   Object.keys(USER).forEach(function (k) { C[k] = USER[k]; });
+
+  /* ─── režim (v2.2) ─── */
+  var IS_DRAIVE = C.lead_target === 'draive';
+  /* lead_source do GTM eventů: CRM kód (gateway) / candidate_source (draive) */
+  function _leadSourceCode() { return C.gw_lead_source || (IS_DRAIVE ? C.candidate_source : ''); }
+  function _productCode() { return C.product || (IS_DRAIVE ? C.position_code : ''); }
+  /* konverzní event: produktové LP 'form_sent', náborové LP 'jobs_form_sent' (GTM má pro nábor vlastní trigger) */
+  var FORM_SENT_EVENT = C.form_sent_event || (IS_DRAIVE ? 'jobs_form_sent' : 'form_sent');
+  if (IS_DRAIVE && !C.attribution_only) {
+    try {
+      if (!C.position) console.warn('[LPTracking] lead_target=draive: chybí config.position (povinné pole Draive)');
+      if (!C.region) console.warn('[LPTracking] lead_target=draive: chybí config.region (povinné pole Draive)');
+      if (!C.draive_key) console.warn('[LPTracking] lead_target=draive: chybí config.draive_key (X-API-Key) — Draive vrátí 401');
+    } catch (e) {}
+  }
 
   /* ─── cookies (jen čtení + zápis atribuce po souhlasu) ─── */
   function _setCookie(name, value, days) {
@@ -336,7 +369,7 @@ window.LPTracking = (function () {
     var cb = consentBlock(consent);
     var ed = {
       tenantId: C.tenant_id,
-      leadSource: C.gw_lead_source,
+      leadSource: _leadSourceCode(),
       customerType: C.gw_customer_type,
       leadProducts: C.gw_lead_products.slice(),
       note: _buildNote(answers),
@@ -376,6 +409,86 @@ window.LPTracking = (function () {
       timestamp: cb.consent_timestamp
     };
     return ed;
+  }
+
+  /* ─── DRAIVE (v2.2, README §12) — POST {draive_url}, hlavičky X-API-Key + Idempotency-Key = lead_id ───
+     Root smí obsahovat JEN pole z API (jinak 400): fullName, email, phone, position, region, candidateSource,
+     adId, yearsExperience, driversLicense, note, raw. Vše ostatní (atribuce, consent, odpovědi kvízu) → raw. */
+  var DRAIVE_MAX = { fullName: 200, position: 255, region: 255, phone: 50, candidateSource: 100, adId: 100, yearsExperience: 200, driversLicense: 50, note: 5000 };
+  function _cut(v, n) { if (v === undefined || v === null) return ''; v = String(v).trim(); return v.length > n ? v.slice(0, n) : v; }
+  function _fullName(answers) {
+    if (answers.name) return String(answers.name).replace(/\s+/g, ' ').trim();
+    return [answers.first_name, answers.last_name].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  }
+  function _driversLicense(v) {
+    if (v === undefined || v === null || v === '') return null;
+    if (v === true) return 'B';
+    if (v === false) return 'ne';
+    return _cut(v, DRAIVE_MAX.driversLicense) || null;
+  }
+  /* note = prefix + odpovědi kvízu (note_fields) + krátké shrnutí zdroje pro recruitera (Draive nemá atribuční pole) */
+  function _buildDraiveNote(answers, ed) {
+    var base = _buildNote(answers);
+    var src = [];
+    if (ed.sourcePlatform) src.push('Zdroj: ' + ed.sourcePlatform);
+    if (ed.utmCampaign) src.push('Kampaň: ' + ed.utmCampaign);
+    if (ed.utmContent) src.push('Reklama: ' + ed.utmContent);
+    src.push('leadId: ' + ed.leadId);
+    return _cut(base + (src.length ? '---' + src.join('---') : ''), DRAIVE_MAX.note);
+  }
+  /* raw = audit: vše, co není v root polích — plná atribuce (ořezaná dle souhlasu na LP), consent, device, odpovědi kvízu */
+  function _buildDraiveRaw(answers, ed, payload) {
+    var raw = {};
+    Object.keys(ed).forEach(function (k) {
+      if (k === 'tenantId' || k === 'leadSource' || k === 'customerType' || k === 'leadProducts' || k === 'userData' || k === 'note') return;
+      raw[k] = ed[k];
+    });
+    raw.formName = C.form_name;
+    raw.company = C.company;
+    raw.positionCode = C.position_code;
+    raw.leadCta = _lastCta;
+    raw.attempt = payload && payload.attempt ? payload.attempt : 1;
+    raw.recaptchaToken = payload ? (payload.recaptchaToken || '') : '';
+    var ans = {};
+    if (answers.note_fields && typeof answers.note_fields === 'object') Object.keys(answers.note_fields).forEach(function (k) { ans[k] = answers.note_fields[k]; });
+    if (answers.extra && typeof answers.extra === 'object') Object.keys(answers.extra).forEach(function (k) { ans[k] = answers.extra[k]; });
+    raw.answers = ans;
+    return raw;
+  }
+  function buildDraivePayload(answers, ed, payload) {
+    var email = answers.email ? String(answers.email).trim().toLowerCase() : '';
+    var phone = _cut(answers.phone, DRAIVE_MAX.phone);
+    var d = {
+      fullName: _cut(_fullName(answers), DRAIVE_MAX.fullName),
+      position: _cut(C.position, DRAIVE_MAX.position),
+      region: _cut(C.region, DRAIVE_MAX.region),
+      candidateSource: _cut(C.candidate_source, DRAIVE_MAX.candidateSource),
+      adId: ed.adId ? _cut(ed.adId, DRAIVE_MAX.adId) : null,
+      yearsExperience: _cut(answers.years_experience, DRAIVE_MAX.yearsExperience) || '0',
+      driversLicense: _driversLicense(answers.drivers_license),
+      note: _buildDraiveNote(answers, ed),
+      raw: _buildDraiveRaw(answers, ed, payload)
+    };
+    /* email NEBO phone — prázdné pole raději neposílat než poslat "" (validace formátu) */
+    if (email) d.email = email;
+    if (phone) d.phone = phone;
+    return d;
+  }
+  /* odpověď Draive: 201 nový / 200 duplicate (Idempotency-Key) → oba = success; candidateId → gatewayID */
+  function extractDraiveResult(res, httpStatus) {
+    var out = { gatewayId: '', ok: false, duplicate: false };
+    try {
+      var r = res;
+      if (Array.isArray(r)) r = r[0];
+      if (!r || typeof r !== 'object') return out;
+      var d = (r.data && typeof r.data === 'object') ? r.data : r;
+      if (d.candidateId) out.gatewayId = String(d.candidateId);
+      out.duplicate = !!d.duplicate;
+      out.candidateNumber = d.candidateNumber || '';
+      out.positionCreated = !!d.positionCreated;
+      out.ok = (httpStatus === 201 || httpStatus === 200) && !!d.candidateId;
+    } catch (e) {}
+    return out;
   }
 
   /* ─── plný payload (Make) — řez podle souhlasu se dělá TADY, ne v Make ─── */
@@ -431,6 +544,19 @@ window.LPTracking = (function () {
     if (answers.extra && typeof answers.extra === 'object') {
       Object.keys(answers.extra).forEach(function (k) { payload.user_data['custom_' + k] = answers.extra[k]; });
     }
+    /* v2.2 nábor: pozice místo produktu + hotový Draive payload (Make ho vidí 1:1 v záloze, klíč "draive") */
+    if (IS_DRAIVE) {
+      payload.target = 'draive';
+      payload.position = C.position;
+      payload.position_code = C.position_code;
+      payload.region = C.region;
+      payload.candidate_source = C.candidate_source;
+      payload.user_data.custom_years_experience = answers.years_experience || null;
+      payload.user_data.custom_drivers_license = (answers.drivers_license === undefined) ? null : answers.drivers_license;
+      payload.draive = buildDraivePayload(answers, payload.eventDetails, payload);
+    } else {
+      payload.target = 'gateway';
+    }
     return payload;
   }
 
@@ -459,15 +585,15 @@ window.LPTracking = (function () {
     electricConsumption: { unit: 'null', amount: 'null', period: 'null', cost: 'null' },
     contactTime: { callTime: 'none', meetTime: 'none' }
   };
-  /* form_sent — konverzní event, bez PII, bez gatewayID; 1× na lead_id */
+  /* form_sent / jobs_form_sent — konverzní event, bez PII, bez gatewayID; 1× na lead_id */
   function pushFormSent(payload) {
-    pushDL('form_sent', {
+    pushDL(FORM_SENT_EVENT, {
       lead_id: payload.lead_uuid,
-      lead_source: C.gw_lead_source,
+      lead_source: _leadSourceCode(),
       form_id: C.form_id,
       tenant_id: C.tenant_id,
       product_type: C.product_type,
-      product_variant: payload.user_data.custom_type || 'null',
+      product_variant: IS_DRAIVE ? (C.position_code || 'null') : (payload.user_data.custom_type || 'null'),
       lead_cta: _lastCta,
       timestamp: new Date().toISOString()
     });
@@ -490,7 +616,19 @@ window.LPTracking = (function () {
         result: gw.result,
         timestamp: new Date().toISOString()
       },
-      productDetail: _merge({
+      productDetail: _merge(IS_DRAIVE ? {
+        /* nábor: pozice místo produktu, tvar klíčů zůstává (GTM beze změny) */
+        productType: C.product_type || 'recruiting',
+        productVariant: C.position_code || 'null',
+        currency: 'null',
+        price: 'null',
+        productParameters: {
+          position: C.position || 'null',
+          region: C.region || 'null',
+          yearsExperience: ud.custom_years_experience || 'null',
+          driversLicense: (ud.custom_drivers_license === null || ud.custom_drivers_license === undefined) ? 'null' : String(ud.custom_drivers_license)
+        }
+      } : {
         productType: C.product_type,
         productVariant: ud.custom_type || 'null',
         currency: 'null',
@@ -511,12 +649,12 @@ window.LPTracking = (function () {
   var _viewed = false, _begun = false;
   function trackViewForm() {
     if (_viewed) return; _viewed = true;
-    pushDL('view_form', { form_name: C.form_name, form_id: C.form_id, company: C.company, product: C.product });
+    pushDL('view_form', { form_name: C.form_name, form_id: C.form_id, company: C.company, product: _productCode() });
   }
   function trackBeginForm() {
     if (_begun) return; _begun = true;
     trackViewForm();
-    pushDL('begin_form', { form_name: C.form_name, form_id: C.form_id, company: C.company, product: C.product });
+    pushDL('begin_form', { form_name: C.form_name, form_id: C.form_id, company: C.company, product: _productCode() });
   }
   function observeForm(host) {
     if (!host) return;
@@ -594,32 +732,71 @@ window.LPTracking = (function () {
       if (!C.log_gateway_result) return;
       postToMake({
         type: 'gateway_result',
+        target: payload.target,                                  /* v2.2: 'gateway' | 'draive' */
         lead_uuid: payload.lead_uuid, event_id: payload.event_id, attempt: lead.attempt,
         tenantId: payload.eventDetails.tenantId,
+        position: IS_DRAIVE ? C.position : '', candidate_source: IS_DRAIVE ? C.candidate_source : '',
         email: payload.eventDetails.userData.email, phone: payload.eventDetails.userData.phone,
-        gateway_log_id: gw.gatewayId || '', recaptcha_token: payload.recaptchaToken || '',
+        gateway_log_id: gw.gatewayId || '', candidate_number: gw.candidateNumber || '', duplicate: !!gw.duplicate,
+        recaptcha_token: payload.recaptchaToken || '',
         result: gw.result, http_status: gw.httpStatus || 0, error: gw.error || '', response_raw: (gw.raw || '').slice(0, 2000),
         page_url: _stripQuery(window.location.href), timestamp: new Date().toISOString()
       });
     }
 
+    /* ─── cíl leadu (v2.2): URL, hlavičky, tělo a parser odpovědi podle lead_target ─── */
+    function _sinkRequest() {
+      if (IS_DRAIVE) {
+        return {
+          url: C.draive_url,
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': C.draive_key, 'Idempotency-Key': payload.lead_uuid },
+          body: payload.draive,
+          parse: function (data, status) {
+            var gw = extractDraiveResult(data, status);
+            /* 4xx = data/klíč → error (retry se stejnými daty nepomůže); 5xx = server → fallback (lead je v Make, retry tam) */
+            if (gw.ok) gw.result = 'success';
+            else if (status >= 500 || status === 0) gw.result = 'fallback';
+            else gw.result = 'error';
+            if (!gw.ok) {
+              var msg = data && (data.message || data.error || (data.errors && JSON.stringify(data.errors)));
+              gw.error = status === 401 ? 'HTTP 401: špatný X-API-Key' : (msg ? String(msg) : ('HTTP ' + status));
+            }
+            return gw;
+          }
+        };
+      }
+      return {
+        url: C.gateway_url,
+        headers: { 'Content-Type': 'application/json', 'x-gateway-key': C.gateway_key },
+        body: { eventDetails: payload.eventDetails },
+        parse: function (data, status) {
+          var gw = extractGatewayResult(data);
+          gw.result = gw.ok ? 'success' : 'error';
+          if (!gw.ok) gw.error = (data && (data.error || data.message)) ? String(data.error || data.message) : ('HTTP ' + status);
+          return gw;
+        }
+      };
+    }
+
     function go(token) {
       payload.security.recaptcha_token = token || null;
       payload.recaptchaToken = token || '';
+      if (IS_DRAIVE && payload.draive && payload.draive.raw) { payload.draive.raw.attempt = lead.attempt; payload.draive.raw.recaptchaToken = token || ''; }
       var fired = false;
       function fireLeadCapture(gw) {
         if (fired) return; fired = true;
         pushLeadCapture(payload, gw, answers);
       }
-      /* 1) form_sent ve stejném okamžiku, kdy odchází POST do gateway (1× na lead_id) */
+      /* 1) form_sent ve stejném okamžiku, kdy odchází POST do cíle (1× na lead_id) */
       if (!lead.formSent) { lead.formSent = true; pushFormSent(payload); }
       var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
       var ft = setTimeout(function () { if (ctrl) ctrl.abort(); }, C.fetch_timeout_ms);
       var httpStatus = 0, raw = '';
-      fetch(C.gateway_url, {
+      var req = _sinkRequest();
+      fetch(req.url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-gateway-key': C.gateway_key },
-        body: JSON.stringify({ eventDetails: payload.eventDetails }),
+        headers: req.headers,
+        body: JSON.stringify(req.body),
         signal: ctrl ? ctrl.signal : undefined,
         keepalive: true
       })
@@ -629,18 +806,16 @@ window.LPTracking = (function () {
       })
       .then(function (data) {
         clearTimeout(hard);
-        /* 2) gateway odpověděla → 3) leadCapture: success (success && accepted) / error (odpověděla, ale odmítla) */
-        var gw = extractGatewayResult(data);
+        /* 2) cíl odpověděl → 3) leadCapture: success / error (odmítl) / fallback (5xx u Draive — lead je v Make) */
+        var gw = req.parse(data, httpStatus);
         gw.httpStatus = httpStatus; gw.raw = raw;
-        gw.result = gw.ok ? 'success' : 'error';
-        if (!gw.ok) gw.error = (data && (data.error || data.message)) ? String(data.error || data.message) : ('HTTP ' + httpStatus);
         fireLeadCapture(gw);
         logGatewayResult(gw);
-        done(gw.ok, gw, payload);
+        done(gw.ok || gw.result === 'fallback', gw, payload);
       })
       .catch(function (err) {
         clearTimeout(ft); clearTimeout(hard);
-        /* gateway neodpověděla (timeout / síť / CORS) → fallback: lead je v Make (záloha z kroku 0), gatewayID prázdné */
+        /* cíl neodpověděl (timeout / síť / CORS) → fallback: lead je v Make (záloha z kroku 0), gatewayID prázdné */
         var gw = { gatewayId: '', ok: false, result: 'fallback', httpStatus: httpStatus, raw: raw,
           error: (err && err.name === 'AbortError') ? 'timeout' : ('network: ' + (err && err.message ? err.message : 'unknown')) };
         fireLeadCapture(gw);
@@ -669,6 +844,7 @@ window.LPTracking = (function () {
     config: C, sendLead: sendLead, observeForm: observeForm, trackViewForm: trackViewForm, trackBeginForm: trackBeginForm,
     formStep: formStep, formError: formError, pushDL: pushDL, getConsent: getConsent, getAttribution: getAttribution,
     buildLeadPayload: buildLeadPayload, buildAttribution: buildAttribution, buildFirstTouch: buildFirstTouch,
-    buildEventDetails: buildEventDetails, extractGatewayResult: extractGatewayResult
+    buildEventDetails: buildEventDetails, extractGatewayResult: extractGatewayResult,
+    buildDraivePayload: buildDraivePayload, extractDraiveResult: extractDraiveResult, isDraive: IS_DRAIVE
   };
 })();
