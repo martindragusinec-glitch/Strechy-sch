@@ -13,6 +13,7 @@ Jen formáty **1080×1080 (feed)** a **1080×1920 (Stories/Reels)**. Ve Stories 
 | `sch-fve-osvc-…-v01` | OSVČ s nižšími příjmy | **Jste OSVČ s nižšími příjmy?** | živnostník před domem |
 | `sch-fve-broad-…-v01` | široké cílení, bez lidí | **Fotovoltaika i zateplení střechy za 65 500 Kč** (= H1 z LP, message match) + řádek pro koho | dům s panely (stejný motiv jako hero LP) |
 | `sch-fve-pozor-…-v01` | široké cílení, bez lidí | **POZOR! FOTOVOLTAIKA SE ZATEPLENÍM STŘECHY POUZE ZA 65 500 Kč** – zpravodajský styl (červený štítek, verzálky, ticker „Aktuálně“) | dům s panely |
+| `sch-fve-ultrapozor-…-v01` | široké cílení, bez fotky | **ULTRA POZOR** – čistě typografický: červená plocha, výstražná páska, obří POZOR!, bílý box s cenou, bílé CTA | žádná |
 
 Společné prvky (stejné jako na LP): dvě dlaždice **Fotovoltaika + Zateplení střechy** se zeleným plus (nabídka je vidět, ne jen napsaná), řádek „Obojí za **65 500 Kč**“ + cenovka „místo 385 500 Kč“, žlutá nálepka „Dotace předem 320 000 Kč na účet“ (jediný prvek mimo paletu webu, záměrně na pozornost), červené CTA, důvěra „Do 24 h víte, zda máte nárok · 23 000+ instalací · nezávazně“.
 
@@ -23,7 +24,7 @@ Starší obecná sada (v01–v04, 4 koncepty) zůstala jako `template-v1-obecne.
 - `out/` – hotové PNG, název = kód kreativy podle `konvence-nazvoslovi-kreativ.md`
 - `template.html` + `render.py` – zdroj; změna copy = objekt `T` v šabloně, `python3 banners/render.py` (běžící `node tools/serve.js 8766`)
 - `src/` – fotky z Higgsfieldu (gpt_image_2_5, 2k): `couple-story`, `mother-story`, `osvc-story`, `attic`, `house-sq`, `house-story` (+ starší `couple`, `kitchen`, `install`, `house-story`)
-- Figma: **Schlieger NZÚ Light – bannery** (tým Galosoft) – editovatelné rámy s texty, stránka „Meta – cílené (v2)“
+- Figma: **Schlieger NZÚ Light – bannery** (tým Galosoft): stránka 1 = editovatelné rámy (6 variant × 1:1, 9:16, každá ve své sekci), 2 = PNG exporty, 3 = zdroje, 4 = archiv obecné sady v1
 
 ## UTM a název reklamy (směrnice kampaní)
 
