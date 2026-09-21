@@ -61,3 +61,18 @@ Vyrobit **A ve třech hook verzích** (senior / superdávka / OSVČ) jako hlavn�
 - **Zvuk**: verze bez VO (titulky nesou vše) + verze s klidným mužským VO v češtině (Higgsfield TTS) pro placement se zvukem.
 - **Formáty**: 1080×1920 master, ořez 1080×1350 a 1080×1080 pro feed (text držet v safe zónách už v masteru).
 - **Název kreativy**: `sch-fve-{publikum}-video15-{YYYYMM}-vNN`, stejné jako u bannerů, `utm_content` = název reklamy.
+
+## Verze OSVČ (v07) – vlastní scénář
+
+Hlavní námitka OSVČ: „na dotaci jako podnikatel nedosáhnu“. Proto druhá věta hned řeší nárok, teprve pak nabídka.
+
+| Čas | Obraz | VO | Text v obraze |
+|---|---|---|---|
+| 0–2,4 s | živnostník před domem | Jste OSVČ s nižšími příjmy? | Jste OSVČ [s nižšími příjmy?] |
+| 2,4–6,6 s | živnostník v dílně (potemnělé), panel „Kdo má nárok“: ✕ Podle živnosti (škrt), ✓ Podle příjmu domácnosti | Živnost vám nárok nebere. Rozhoduje příjem domácnosti. | titulky |
+| 6,6–10,8 s | dron nad střechou → půda; počítadlo 0 → 320 000 Kč, dlaždice FVE + zateplení | Dotace 320 000 Kč na fotovoltaiku i zateplení střechy. | titulky |
+| 10,8–14,3 s | živnostník u stolu s fakturami, úleva; nálepka „Dotace předem 320 000 Kč na účet“ | A peníze přijdou na účet předem, ještě před montáží. | titulky |
+| 14,3–17,7 s | karta: 385 500 Kč přeškrtnuté → 65 500 Kč | Vy doplatíte jen 65 500 Kč. | titulky |
+| 17,7–21 s | dům, CTA s kliknutím | Ověřte si nárok zdarma. Zabere to minutu. | CTA |
+
+Nové záběry (Higgsfield, identita z `osvc-story.jpg` přes image_references): `clips/5-osvc-work.mp4`, `clips/6-osvc-kitchen.mp4`.

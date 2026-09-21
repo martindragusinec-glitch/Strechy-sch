@@ -15,10 +15,12 @@ const VO: Record<string, {file: string; words: string; dur: number}> = {
   l3: {file: 'audio/l3-produkt.mp3', words: 'Na fotovoltaiku i zateplení střechy.', dur: 2.51},
   l4: {file: 'audio/l4-predem.mp3', words: 'A peníze přijdou na účet předem, ještě před montáží.', dur: 3.32},
   l5: {file: 'audio/l5-doplatek.mp3', words: 'Vy doplatíte jen 65 500 Kč.', dur: 3.24},
-  l6: {file: 'audio/l6-cta.mp3', words: 'Ověřte si nárok zdarma. Zabere to minutu.', dur: 2.8},
+  l6: {file: 'audio/l6-cta.mp3', words: 'Ověřte si nárok zdarma. Zabere to minutu.', dur: 2.85},
+  o2: {file: 'audio/o2-zivnost.mp3', words: 'Živnost vám nárok nebere. Rozhoduje příjem domácnosti.', dur: 4.05},
+  o3: {file: 'audio/o3-dotace.mp3', words: 'Dotace 320 000 Kč na fotovoltaiku i zateplení střechy.', dur: 4.05},
 };
 const GAP = 0.18; // mezera mezi větami
-export const timeline = (a: Audience) => { const keys = [`hook-${a}`, 'l2', 'l3', 'l4', 'l5', 'l6']; let t = 0.3; return keys.map((k) => { const st = t; t += VO[k].dur + GAP; return {k, start: st, end: t - GAP}; }); };
+export const timeline = (a: Audience) => { const keys = a === 'osvc' ? [`hook-${a}`, 'o2', 'o3', 'l4', 'l5', 'l6'] : [`hook-${a}`, 'l2', 'l3', 'l4', 'l5', 'l6']; let t = 0.3; return keys.map((k) => { const st = t; t += VO[k].dur + GAP; return {k, start: st, end: t - GAP}; }); };
 export const totalFrames = (a: Audience) => Math.ceil((timeline(a)[5].end + 0.8) * FPS);
 
 /* titulky slovo po slovu: čas slova ~ podíl znaků ve větě */
@@ -92,6 +94,8 @@ const CardDotace: React.FC = () => { const f = useCurrentFrame(); return (<>
   <div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div>
   <div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={160} /></div>
   <div style={{opacity: interpolate(f, [30, 40], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}), fontSize: 50, lineHeight: 1.25, fontWeight: 500, color: 'rgba(255,255,255,.9)'}}>Máte na ni <b>nárok</b>.</div></>); };
+const ZivnostCard: React.FC = () => { const a = useSpring(3), b = useSpring(18), x = useSpring(10, {damping: 9, stiffness: 260}); const Row = (p: number, ok: boolean, t: string) => (<div style={{opacity: p, transform: `translateX(${(1 - p) * 60}px)`, display: 'flex', alignItems: 'center', gap: 26, fontSize: 56, fontWeight: 600, letterSpacing: '-.02em'}}><div style={{width: 84, height: 84, borderRadius: 42, flex: 'none', background: ok ? GREEN : RED, display: 'grid', placeItems: 'center'}}><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">{ok ? <path d="M5 12.5l4.5 4.5L19 7" /> : <path d="M6 6l12 12M18 6L6 18" />}</svg></div><span style={{position: 'relative'}}>{t}{!ok && <span style={{position: 'absolute', left: -4, right: -4, top: '52%', height: 6, marginTop: -3, background: RED, borderRadius: 3, transform: `scaleX(${x})`, transformOrigin: 'left'}} />}</span></div>);
+  return (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 26, background: 'rgba(27,32,40,.55)', padding: '34px 44px', borderRadius: 28}}><div style={{fontSize: 38, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500, alignSelf: 'center'}}>Kdo má nárok</div>{Row(a, false, 'Podle živnosti')}{Row(b, true, 'Podle příjmu domácnosti')}</div>); };
 const CenterInCard: React.FC<{children: React.ReactNode}> = ({children}) => (<div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40, textAlign: 'center'}}>{children}</div>);
 const HookCentered: React.FC<{a: Audience}> = ({a}) => { const [w1, w2] = HOOK[a]; const p = useSpring(3), q = useSpring(9); return (<div style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18}}>
   <div style={{opacity: p, transform: `translateY(${(1 - p) * 50}px)`, fontSize: 108, fontWeight: 600, letterSpacing: '-.03em', lineHeight: 1.05, textShadow: '0 6px 40px rgba(0,0,0,.7)'}}>{w1}</div>
@@ -146,10 +150,16 @@ export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
   return (
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
     {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none"><Shade h={55} /><Center bottom><HookCentered a={audience} /></Center></Sequence>
+    {audience === 'osvc' ? (<>
+    <Clip src="clips/5-osvc-work.mp4" from={sc(l2.start)} dur={sc(l3.start - l2.start)} zoom={[1.02, 1.1]} /><Sequence from={sc(l2.start)} durationInFrames={sc(l3.start - l2.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.72)'}} /><Center gap={44}><ZivnostCard /><Captions k="o2" start={0} size={66} /></Center></Sequence>
+    <Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
+    <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center gap={30}><div style={{color: YEL}}><Counter to={320000} delay={3} dur={30} size={150} /></div><Tiles /><Captions k="o3" start={0} size={66} /></Center></Sequence>
+    </>) : (<>
     {/* l2 dotace */}<Card from={sc(l2.start)} dur={sc(l3.start - l2.start)}><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div><Captions k="l2" start={0} /></CenterInCard></Card>
     {/* l3 produkt */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
     <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><Tiles /><Captions k="l3" start={0} /></Center></Sequence>
-    {/* l4 předem */}<Clip src="clips/4-house.mp4" from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><StickerCentered /><Captions k="l4" start={0} /></Center></Sequence>
+    </>)}
+    {/* l4 předem */}<Clip src={audience === 'osvc' ? 'clips/6-osvc-kitchen.mp4' : 'clips/4-house.mp4'} from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><StickerCentered /><Captions k="l4" start={0} /></Center></Sequence>
     {/* l5 doplatek */}<Card from={sc(l5.start)} dur={sc(l6.start - l5.start)}><CenterInCard><PriceCentered /><Captions k="l5" start={0} /></CenterInCard></Card>
     {/* l6 CTA */}<Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><Captions k="l6" start={0} /><CtaCentered /></Center></Sequence>
     {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
