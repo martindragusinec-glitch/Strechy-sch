@@ -1,0 +1,87 @@
+<!doctype html><meta charset="utf-8"><title>banner</title>
+<style>
+@font-face{font-family:P;src:url(../assets/fonts/poppins-400-latin-ext.woff2) format("woff2");font-weight:400;unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}
+@font-face{font-family:P;src:url(../assets/fonts/poppins-400-latin.woff2) format("woff2");font-weight:400}
+@font-face{font-family:P;src:url(../assets/fonts/poppins-500-latin-ext.woff2) format("woff2");font-weight:500;unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}
+@font-face{font-family:P;src:url(../assets/fonts/poppins-500-latin.woff2) format("woff2");font-weight:500}
+@font-face{font-family:P;src:url(../assets/fonts/poppins-600-latin-ext.woff2) format("woff2");font-weight:600;unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}
+@font-face{font-family:P;src:url(../assets/fonts/poppins-600-latin.woff2) format("woff2");font-weight:600}
+:root{--red:#DA000F;--green:#24A531;--green-dark:#1B7C25;--ink:#1B2028;--ink-3:#5c636b;--paper:#F6F5F1}
+html,body{margin:0;background:#12161C;font-family:P,system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.b{position:relative;overflow:hidden;width:var(--w);height:var(--h);isolation:isolate}
+.bg{position:absolute;inset:0;background:var(--img) var(--pos,50% 50%)/cover no-repeat;z-index:-2}
+.ov{position:absolute;inset:0;z-index:-1;background:var(--ov)}
+.in{position:absolute;inset:0;padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between}
+.b.photo-top .in{justify-content:flex-end;gap:var(--gap)}
+.b.photo-top .top{position:absolute;left:var(--pad);right:var(--pad);top:var(--pad)}
+.b.photo-top .mid{margin-bottom:calc(var(--gap)*.6)}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.nzu{height:var(--logo);width:auto;display:block}
+.sch{height:calc(var(--logo)*.42);width:auto;display:block;margin-top:calc(var(--logo)*.22)}
+.mid{display:flex;flex-direction:column;gap:var(--gap)}
+h1{margin:0;font-size:var(--h1);line-height:1.04;letter-spacing:-.03em;font-weight:600;text-wrap:balance;max-width:var(--h1w,100%)}
+.hl{display:inline-block;background:var(--green);color:#fff;padding:.02em .28em .06em;border-radius:.22em;white-space:nowrap}
+.tag{display:inline-grid;grid-template-columns:auto auto;align-items:baseline;column-gap:.35em;position:relative;background:#fff;color:var(--ink);font-size:calc(var(--h1)*.36);font-weight:600;line-height:1;padding:.5em .65em .5em 1.45em;border-radius:6px 10px 10px 6px;clip-path:polygon(.9em 0,100% 0,100% 100%,.9em 100%,0 50%);transform:rotate(-4deg);white-space:nowrap;margin-left:.45em;vertical-align:middle}
+.tag i{position:absolute;left:.55em;top:50%;width:.36em;height:.36em;margin-top:-.18em;border-radius:50%;background:#12161C}
+.tag u{text-decoration:none;font-size:.7em;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.tag s{position:relative;text-decoration:none}
+.tag s::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:.12em;background:var(--red);transform:rotate(-8deg)}
+.sub{font-size:var(--sub);line-height:1.35;color:rgba(255,255,255,.86);font-weight:500;max-width:var(--subw,100%);text-wrap:balance}
+.sub b{font-weight:600;color:#fff}
+.who{font-size:calc(var(--sub)*.78);color:rgba(255,255,255,.72);line-height:1.4}
+.who .hl{font-size:1em;padding:.04em .3em}
+.bot{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.cta{display:inline-flex;align-items:center;gap:.5em;background:var(--red);color:#fff;font-weight:600;font-size:var(--cta);padding:.7em 1.1em;border-radius:12px;white-space:nowrap}
+.cta svg{width:1em;height:1em}
+.trust{font-size:calc(var(--sub)*.7);color:rgba(255,255,255,.7);text-align:right;line-height:1.35}
+.trust b{color:#fff;font-weight:600}
+/* offer-card koncept (D) */
+.card{background:#fff;color:var(--ink);border-radius:22px;padding:var(--cpad);box-shadow:0 40px 80px -34px rgba(0,0,0,.7);max-width:var(--cw)}
+.card .k{font-size:calc(var(--sub)*.62);font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.card .eq{margin-top:.5em;font-size:calc(var(--sub)*.85);color:var(--ink-3)}
+.card .eq s{color:#9aa0a6}.card .eq b{color:var(--green-dark);font-weight:600;margin-left:.4em}
+.card .amt{font-size:calc(var(--h1)*1.35);font-weight:600;letter-spacing:-.05em;line-height:.95;margin-top:.1em}
+.card .amt i{font-style:normal;font-size:.4em;letter-spacing:-.02em;margin-left:.15em}
+.card .n{margin-top:.6em;font-size:calc(var(--sub)*.78);line-height:1.4;color:var(--ink-3)}
+.card .cta{display:flex;justify-content:space-between;margin-top:.9em}
+</style>
+<div class="b" id="b"><div class="bg"></div><div class="ov"></div><div class="in" id="in"></div></div>
+<script>
+const Q=new URLSearchParams(location.search), F=Q.get('f')||'1080x1350', C=Q.get('c')||'a';
+const [W,H]=F.split('x').map(Number); const r=document.documentElement.style, b=document.getElementById('b');
+r.setProperty('--w',W+'px'); r.setProperty('--h',H+'px');
+const S = W/1080; // měřítko podle šířky
+const tall = H/W>1.5, wide = W/H>1.5, square = Math.abs(H/W-1)<.05;
+const base = wide ? {pad:48,logo:46,h1:56,sub:24,cta:24,gap:18} : tall ? {pad:72,logo:72,h1:92,sub:36,cta:36,gap:28} : square ? {pad:64,logo:62,h1:74,sub:31,cta:31,gap:22} : {pad:64,logo:64,h1:80,sub:33,cta:33,gap:24};
+for (const k in base) r.setProperty('--'+k, (base[k]*(wide?W/1200:S))+'px');
+r.setProperty('--cpad', (wide?22:36)*S+'px'); r.setProperty('--cw', (wide?440:640)*S+'px');
+const NZU='<img class="nzu" src="../assets/img/nzu-light-logo-dark.png">', SCH='<img class="sch" src="../assets/img/schlieger-logo-white.svg">';
+const ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const cta=(t)=>`<span class="cta">${t}${ARROW}</span>`;
+const TRUST='<div class="trust"><b>23 000+</b> instalací<br><b>15 let</b> na trhu</div>';
+const IMG={a:['../assets/img/hero-house-fve-1920.jpg','62% 55%'],b:['src/kitchen.jpg','50% 18%'],c:['src/couple-r.jpg','50% 25%'],d:['../assets/img/realizace-brandov-0.jpg','50% 50%'],e:['src/house-story.jpg','50% 60%']};
+const c=Q.get('img')||C; const [img,pos]=IMG[c]||IMG.a;
+r.setProperty('--img',`url(${img})`); r.setProperty('--pos',pos);
+const OV = wide ? 'linear-gradient(90deg,rgba(18,22,28,.94) 0%,rgba(18,22,28,.72) 55%,rgba(18,22,28,.25) 100%)' : 'linear-gradient(180deg,rgba(18,22,28,.72) 0%,rgba(18,22,28,.35) 38%,rgba(18,22,28,.55) 62%,rgba(18,22,28,.94) 100%)';
+const PT = (C==='b'||C==='c') && !wide;
+if(PT){ b.classList.add('photo-top'); }
+r.setProperty('--ov', PT ? 'linear-gradient(180deg,rgba(18,22,28,.55) 0%,rgba(18,22,28,.05) 22%,rgba(18,22,28,.15) 45%,rgba(18,22,28,.88) 68%,rgba(18,22,28,.97) 100%)' : OV);
+const TAG='<span class="tag"><i></i><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span>';
+const T={
+ a:{h:`Fotovoltaika i&nbsp;zateplení střechy <span class="hl">za 65&nbsp;500&nbsp;Kč</span>${TAG}`, sub:'Zbytek zaplatí dotace NZÚ&nbsp;Light, <b>přijde předem na&nbsp;účet.</b>', who:'Pro <span class="hl">nízkopříjmové domácnosti,</span> seniory, OSVČ a&nbsp;invalidní důchodce 3.&nbsp;stupně', cta:'Spočítat doplatek'},
+ b:{h:`Dotace <span class="hl">320&nbsp;000&nbsp;Kč</span> přijde na&nbsp;účet ještě před montáží.`, sub:'Fotovoltaika i&nbsp;zateplení střechy, <b>váš doplatek jen 65&nbsp;500&nbsp;Kč.</b>', who:'Pro <span class="hl">nízkopříjmové domácnosti,</span> seniory, OSVČ a&nbsp;invalidní důchodce 3.&nbsp;stupně', cta:'Ověřit nárok zdarma'},
+ c:{h:`Pobíráte důchod nebo superdávku?`, sub:'Máte nárok na dotaci <b>320&nbsp;000&nbsp;Kč předem na účet.</b> Fotovoltaika i&nbsp;zateplení střechy vás vyjde na <b>65&nbsp;500&nbsp;Kč.</b>', who:'Dotaci vyřídíme za vás, nezávazně a&nbsp;zdarma', cta:'Ověřit nárok za minutu'},
+ d:{h:`Fotovoltaika <span style="color:#24A531">+</span> zateplení střechy`, sub:'Kompletní balíček od výrobce s&nbsp;<b>23&nbsp;000 instalacemi</b>. Jedna smlouva, jedna žádost o&nbsp;dotaci.', card:true, cta:'Chci tento balíček'}
+};
+const t=T[C];
+let html=`<div class="top">${NZU}${SCH}</div>`;
+if(t.card){
+  html+=`<div class="mid" style="${wide?'justify-content:center;flex:1;max-width:56%':''}"><h1>${t.h}</h1><div class="sub" style="max-width:${wide?'100%':'80%'}">${t.sub}</div>${wide?'<div class="trust" style="text-align:left"><b>23 000+</b> instalací · <b>15 let</b> na trhu</div>':''}</div>`;
+  html+=`<div class="bot" style="align-items:flex-end${wide?';position:absolute;right:var(--pad);top:var(--pad);bottom:var(--pad);flex-direction:column;justify-content:center':''}"><div class="card"${wide?' style="--cw:400px;padding:22px 24px"':''}><div class="k">Váš doplatek po dotaci</div><div class="eq"><s>385&nbsp;500&nbsp;Kč</s><b>− 320&nbsp;000&nbsp;Kč dotace</b></div><div class="amt">65&nbsp;500<i>Kč</i></div>${wide?'':'<div class="n">Vč. DPH. Dotace přijde na účet předem, ještě před montáží.</div>'}${cta(t.cta)}</div>${wide?'':TRUST}</div>`;
+}else{
+  html+=`<div class="mid"><h1 style="max-width:${wide?'60%':'100%'}">${t.h}</h1><div class="sub" style="max-width:${wide?'56%':'88%'}">${t.sub}</div>${t.who?`<div class="who">${t.who}</div>`:''}</div>`;
+  html+=`<div class="bot">${cta(t.cta)}${TRUST}</div>`;
+}
+document.getElementById('in').innerHTML=html;
+document.title=`sch-fve-${C}-${F}`;
+</script>
