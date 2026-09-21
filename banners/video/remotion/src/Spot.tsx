@@ -1,11 +1,42 @@
 import React from 'react';
-import {AbsoluteFill, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, Easing} from 'remotion';
+import {AbsoluteFill, Audio, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, Easing} from 'remotion';
 
 export type Audience = 'senior' | 'nizkoprijmove' | 'osvc';
 const FPS = 30; const S = (s: number) => Math.round(s * FPS);
 const RED = '#DA000F', GREEN = '#24A531', INK = '#1B2028', YEL = '#FFD23F';
 const HOOK: Record<Audience, string[]> = {senior: ['Pobíráte', 'starobní důchod?'], nizkoprijmove: ['Pobíráte', 'superdávku?'], osvc: ['Jste OSVČ', 's nižšími příjmy?']};
 const PX = 72, PT = 290, PB = 380;
+/* VO (ElevenLabs, cs): délky v s, změřeno ffmpeg. Scény začínají s větou. */
+const VO: Record<string, {file: string; words: string; dur: number}> = {
+  'hook-senior': {file: 'audio/hook-senior.mp3', words: 'Pobíráte starobní důchod?', dur: 1.72},
+  'hook-nizkoprijmove': {file: 'audio/hook-nizkoprijmove.mp3', words: 'Pobíráte superdávku?', dur: 1.72},
+  'hook-osvc': {file: 'audio/hook-osvc.mp3', words: 'Jste OSVČ s nižšími příjmy?', dur: 2.19},
+  l2: {file: 'audio/l2-dotace.mp3', words: 'Pak máte nárok na dotaci 320 000 Kč.', dur: 3.32},
+  l3: {file: 'audio/l3-produkt.mp3', words: 'Na fotovoltaiku i zateplení střechy.', dur: 2.51},
+  l4: {file: 'audio/l4-predem.mp3', words: 'A peníze přijdou na účet předem, ještě před montáží.', dur: 3.32},
+  l5: {file: 'audio/l5-doplatek.mp3', words: 'Vy doplatíte jen 65 500 Kč.', dur: 3.24},
+  l6: {file: 'audio/l6-cta.mp3', words: 'Ověřte si nárok zdarma. Zabere to minutu.', dur: 2.8},
+};
+const GAP = 0.18; // mezera mezi větami
+export const timeline = (a: Audience) => { const keys = [`hook-${a}`, 'l2', 'l3', 'l4', 'l5', 'l6']; let t = 0.3; return keys.map((k) => { const st = t; t += VO[k].dur + GAP; return {k, start: st, end: t - GAP}; }); };
+export const totalFrames = (a: Audience) => Math.ceil((timeline(a)[5].end + 0.8) * FPS);
+
+/* titulky slovo po slovu: čas slova ~ podíl znaků ve větě */
+const Captions: React.FC<{k: string; start: number; size?: number}> = ({k, start, size = 76}) => {
+  const f = useCurrentFrame(); const t = f / FPS - start; const v = VO[k]; const words = v.words.split(' ');
+  const total = words.reduce((n, w) => n + w.length + 1, 0); let acc = 0;
+  const times = words.map((w) => { const s0 = (acc / total) * v.dur; acc += w.length + 1; return s0; });
+  const idx = times.filter((x) => t >= x - 0.05).length - 1;
+  return (
+    <div style={{textAlign: 'center', fontSize: size, fontWeight: 600, lineHeight: 1.18, textShadow: '0 6px 30px rgba(0,0,0,.9)', textWrap: 'balance' as any, maxWidth: 936}}>
+      {words.map((w, i) => { const on = i <= idx; const isNum = /\d/.test(w) || w === 'Kč.' || w === 'Kč'; return <span key={i} style={{display: 'inline-block', margin: '0 .16em', color: isNum && on ? '#FFD23F' : '#fff', opacity: on ? 1 : 0.3, transform: `scale(${i === idx ? 1.1 : 1})`, textTransform: 'uppercase', letterSpacing: '-.01em'}}>{w}</span>; })}
+    </div>
+  );
+};
+/* středový sloupec: vizuál nahoře, titulky pod ním, celé vertikálně na střed bezpečné zóny */
+const Center: React.FC<{children: React.ReactNode; gap?: number}> = ({children, gap = 40}) => (
+  <div style={{position: 'absolute', left: PX, right: PX, top: PT + 90, bottom: PB, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap}}>{children}</div>
+);
 const font = ['600','500','400'].map(w=>`@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin-ext.woff2`)}) format("woff2");font-weight:${w};unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin.woff2`)}) format("woff2");font-weight:${w}}`).join('');
 
 const useSpring = (delay: number, cfg = {damping: 12, stiffness: 180, mass: 0.7}) => { const f = useCurrentFrame(); const {fps} = useVideoConfig(); return spring({frame: f - delay, fps, config: cfg}); };
@@ -20,7 +51,7 @@ const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, nu
 const Card: React.FC<{from: number; dur: number; children: React.ReactNode; bg?: string}> = ({from, dur, children, bg = INK}) => (
   <Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{background: bg}}>
     <AbsoluteFill style={{background: 'repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 1px,transparent 1px 9px)'}} />
-    <AbsoluteFill style={{padding: `${PT}px ${PX}px ${PB}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 28}}>{children}</AbsoluteFill>
+    <AbsoluteFill style={{padding: `${PT + 90}px ${PX}px ${PB}px`, position: 'relative'}}><div style={{position: 'relative', width: '100%', height: '100%'}}>{children}</div></AbsoluteFill>
   </AbsoluteFill></Sequence>
 );
 const Shade: React.FC<{h?: number; top?: boolean}> = ({h = 55, top = false}) => (<AbsoluteFill style={{background: top ? `linear-gradient(180deg, rgba(27,32,40,.75) 0%, rgba(27,32,40,0) ${h}%)` : `linear-gradient(180deg, rgba(27,32,40,0) ${100 - h}%, rgba(27,32,40,.92) 100%)`}} />);
@@ -57,11 +88,35 @@ const CardZat: React.FC = () => { const p = useSpring(2, {damping: 10, stiffness
   <div style={{display: 'flex', alignItems: 'center', gap: 28}}><div style={{width: 120, height: 120, borderRadius: 60, background: GREEN, display: 'grid', placeItems: 'center', fontSize: 92, fontWeight: 600, transform: `scale(${p}) rotate(${(1 - p) * 90}deg)`}}>+</div><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>navíc</div></div>
   <div style={{opacity: q, transform: `translateX(${(1 - q) * 80}px)`, fontSize: 124, fontWeight: 600, lineHeight: .98, letterSpacing: '-.04em'}}>Zateplení<br />střechy</div>
   <div style={{opacity: q, fontSize: 44, color: 'rgba(255,255,255,.8)', fontWeight: 500}}>100 m² · mezi krokve</div></>); };
-const CardDotace: React.FC = () => { const p = useSpring(2, {damping: 8, stiffness: 260}); const f = useCurrentFrame(); return (<>
-  <div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Stát zaplatí předem</div>
-  <div style={{color: YEL}}><Counter to={320000} delay={4} dur={26} size={150} /></div>
-  <div style={{opacity: p, transform: `rotate(${-14 + 10 * p}deg) scale(${0.5 + 0.5 * p})`, transformOrigin: 'left center', alignSelf: 'flex-start', background: YEL, color: INK, fontWeight: 600, fontSize: 38, lineHeight: 1.05, textAlign: 'center', padding: '.5em .8em', borderRadius: 14, textTransform: 'uppercase', letterSpacing: '.02em', boxShadow: '0 20px 40px -14px rgba(0,0,0,.8)'}}>Dotace předem<b style={{display: 'block', fontSize: 58, letterSpacing: '-.02em'}}>na účet</b></div>
-  <div style={{opacity: interpolate(f, [30, 40], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}), fontSize: 46, lineHeight: 1.3, fontWeight: 500, color: 'rgba(255,255,255,.9)'}}>Přijde na účet <b>ještě před montáží.</b></div></>); };
+const CardDotace: React.FC = () => { const f = useCurrentFrame(); return (<>
+  <div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div>
+  <div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={160} /></div>
+  <div style={{opacity: interpolate(f, [30, 40], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}), fontSize: 50, lineHeight: 1.25, fontWeight: 500, color: 'rgba(255,255,255,.9)'}}>Máte na ni <b>nárok</b>.</div></>); };
+const CenterInCard: React.FC<{children: React.ReactNode}> = ({children}) => (<div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40, textAlign: 'center'}}>{children}</div>);
+const HookCentered: React.FC<{a: Audience}> = ({a}) => { const [w1, w2] = HOOK[a]; const p = useSpring(3), q = useSpring(9); return (<div style={{textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18}}>
+  <div style={{opacity: p, transform: `translateY(${(1 - p) * 50}px)`, fontSize: 108, fontWeight: 600, letterSpacing: '-.03em', lineHeight: 1.05, textShadow: '0 6px 40px rgba(0,0,0,.7)'}}>{w1}</div>
+  <div style={{opacity: q, transform: `scale(${0.7 + 0.3 * q})`}}><Pill size={a === 'osvc' ? 84 : 96}>{w2}</Pill></div></div>); };
+const Tiles: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2), b = useSpring(6), c = useSpring(10); const T = (src: string, t: string, s2: string, st: number, pos = 'center') => (<div style={{opacity: st, transform: `scale(${0.8 + 0.2 * st})`, position: 'relative', borderRadius: 24, overflow: 'hidden', width: 420, height: 300, boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)'}}><Img src={staticFile(src)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: pos}} /><div style={{position: 'absolute', left: 0, right: 0, bottom: 0, padding: '14px 18px', fontSize: 32, fontWeight: 600, lineHeight: 1.15, background: 'linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.85))'}}>{t}<span style={{display: 'block', fontWeight: 400, fontSize: 24, color: 'rgba(255,255,255,.85)'}}>{s2}</span></div></div>);
+  return (<div style={{display: 'flex', alignItems: 'center', gap: 22}}>{T('img/realizace-zbraslavice-1.jpg', 'Fotovoltaika', '3,69 kWp', a)}<div style={{opacity: b, transform: `scale(${b}) rotate(${(1 - b) * 90}deg)`, width: 74, height: 74, borderRadius: 37, background: GREEN, display: 'grid', placeItems: 'center', fontSize: 54, fontWeight: 600, flex: 'none', boxShadow: '0 0 0 10px rgba(18,22,28,.9)'}}>+</div>{T('img/attic.jpg', 'Zateplení střechy', '100 m²', c, 'center 30%')}</div>); };
+const StickerCentered: React.FC = () => { const p = useSpring(3, {damping: 8, stiffness: 260}); return (<div style={{opacity: p, transform: `rotate(${-14 + 10 * p}deg) scale(${0.5 + 0.5 * p})`, background: YEL, color: INK, fontWeight: 600, fontSize: 48, lineHeight: 1.05, textAlign: 'center', padding: '.5em .9em', borderRadius: 18, textTransform: 'uppercase', letterSpacing: '.02em', boxShadow: '0 24px 50px -14px rgba(0,0,0,.8)'}}>Dotace předem<b style={{display: 'block', fontSize: 84, letterSpacing: '-.02em'}}>320 000 Kč</b>na účet</div>); };
+const PriceCentered: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2); const line = interpolate(f, [16, 28], [0, 100], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const b = useSpring(34, {damping: 9, stiffness: 240}); return (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16}}>
+  <div style={{opacity: a, fontSize: 36, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Cena celkem</div>
+  <div style={{opacity: a, position: 'relative', fontSize: 96, fontWeight: 600, letterSpacing: '-.04em', lineHeight: 1, color: 'rgba(255,255,255,.8)'}}>385 500 Kč<div style={{position: 'absolute', left: -6, top: '50%', height: 9, marginTop: -4, width: `${line}%`, background: RED, borderRadius: 4}} /></div>
+  <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`, fontSize: 40, fontWeight: 500, marginTop: 8}}>Vy doplatíte jen</div>
+  <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`}}><Pill size={150}>65 500 Kč</Pill></div></div>); };
+const CtaCentered: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(8); const pulse = 1 + 0.04 * Math.sin(Math.max(0, f - 20) / 4); return (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, opacity: a}}>
+  <div style={{transform: `scale(${pulse})`, display: 'inline-flex', alignItems: 'center', gap: '.5em', background: RED, fontWeight: 600, fontSize: 52, padding: '.7em 1.2em', borderRadius: 18, boxShadow: '0 24px 50px -16px rgba(218,0,15,.8)'}}>Ověřit nárok zdarma <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></div>
+  <div style={{fontSize: 30, color: 'rgba(255,255,255,.9)', lineHeight: 1.4, textAlign: 'center'}}><b>Do 24 h</b> víte, zda máte nárok · <b>23 000+</b> instalací · nezávazně</div></div>); };
+const Sticker: React.FC = () => { const p = useSpring(3, {damping: 8, stiffness: 260}); const q = useSpring(16); return (
+  <div style={{position: 'absolute', left: PX, right: PX, bottom: PB, display: 'flex', flexDirection: 'column', gap: 26}}>
+    <div style={{opacity: p, transform: `rotate(${-16 + 12 * p}deg) scale(${0.5 + 0.5 * p})`, transformOrigin: 'left center', alignSelf: 'flex-start', background: YEL, color: INK, fontWeight: 600, fontSize: 44, lineHeight: 1.05, textAlign: 'center', padding: '.5em .8em', borderRadius: 16, textTransform: 'uppercase', letterSpacing: '.02em', boxShadow: '0 24px 50px -14px rgba(0,0,0,.8)'}}>Dotace předem<b style={{display: 'block', fontSize: 70, letterSpacing: '-.02em'}}>320 000 Kč</b>na účet</div>
+    <div style={{opacity: q, transform: `translateY(${(1 - q) * 40}px)`, fontSize: 56, fontWeight: 600, lineHeight: 1.15, textShadow: '0 6px 40px rgba(0,0,0,.7)'}}>Ještě <span style={{color: YEL}}>před montáží.</span></div>
+  </div>); };
+const PriceCard: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2); const line = interpolate(f, [16, 28], [0, 100], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const b = useSpring(34, {damping: 9, stiffness: 240}); return (<>
+    <div style={{opacity: a, fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Cena celkem</div>
+    <div style={{opacity: a, position: 'relative', alignSelf: 'flex-start', fontSize: 104, fontWeight: 600, letterSpacing: '-.04em', lineHeight: 1, color: 'rgba(255,255,255,.8)'}}>385 500 Kč<div style={{position: 'absolute', left: -6, top: '50%', height: 9, marginTop: -4, width: `${line}%`, background: RED, borderRadius: 4}} /></div>
+    <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`, transformOrigin: 'left center', fontSize: 44, fontWeight: 500, marginTop: 10}}>Vy doplatíte jen</div>
+    <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`, transformOrigin: 'left center', alignSelf: 'flex-start'}}><Pill size={150}>65 500 Kč</Pill></div></>); };
 const Price: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2); const line = interpolate(f, [14, 24], [0, 100], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const b = useSpring(26, {damping: 9, stiffness: 240}); return (
   <div style={{position: 'absolute', left: PX, right: PX, bottom: PB, display: 'flex', flexDirection: 'column', gap: 22}}>
     <div style={{opacity: a, fontSize: 44, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.7)', fontWeight: 500}}>Cena celkem</div>
@@ -76,16 +131,20 @@ const Cta: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2
     <div style={{opacity: a, fontSize: 30, color: 'rgba(255,255,255,.85)', lineHeight: 1.4}}><b>Do 24 h</b> víte, zda máte nárok · <b>23 000+</b> instalací · nezávazně</div>
   </div>); };
 
-export const Spot: React.FC<{audience: Audience}> = ({audience}) => (
+export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
+  const tl = timeline(audience); const [h, l2, l3, l4, l5, l6] = tl; const END = tl[5].end + 0.8; const sc = (x: number) => S(x);
+  const mid3 = l3.start + (l3.end - l3.start) * 0.55;
+  return (
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
-    {/* 0–2.4 hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={S(2.4)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={S(2.4)} layout="none"><Shade h={60} /><Hook a={audience} /></Sequence>
-    {/* 2.4–3.8 karta FVE */}<Card from={S(2.4)} dur={S(1.4)}><CardFve /></Card>
-    {/* 3.8–5.8 dron + dlaždice */}<Clip src="clips/2-drone.mp4" from={S(3.8)} dur={S(2)} zoom={[1, 1.08]} /><Sequence from={S(3.8)} durationInFrames={S(2)} layout="none"><Shade h={50} /><div style={{position: 'absolute', left: PX, bottom: PB}}><Slide delay={2} dir="l"><Tile src="img/realizace-zbraslavice-1.jpg" t="Fotovoltaika" s="3,69 kWp, ohřev vody" /></Slide></div></Sequence>
-    {/* 5.8–7.2 karta ZAT */}<Card from={S(5.8)} dur={S(1.4)}><CardZat /></Card>
-    {/* 7.2–9.2 půda + dlaždice */}<Clip src="clips/3-attic.mp4" from={S(7.2)} dur={S(2)} zoom={[1.05, 1.15]} bright={1.3} /><Sequence from={S(7.2)} durationInFrames={S(2)} layout="none"><Shade h={50} /><div style={{position: 'absolute', left: PX, bottom: PB}}><Slide delay={2} dir="r"><Tile src="img/attic.jpg" t="Zateplení střechy" s="100 m², mezi krokve" pos="center 30%" /></Slide></div></Sequence>
-    {/* 9.2–11.4 karta dotace */}<Card from={S(9.2)} dur={S(2.2)}><CardDotace /></Card>
-    {/* 11.4–13.4 dům + cena */}<Clip src="clips/4-house.mp4" from={S(11.4)} dur={S(2)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={S(11.4)} durationInFrames={S(2)} layout="none"><Shade h={70} /><Price /></Sequence>
-    {/* 13.4–15 CTA */}<Clip src="clips/4-house.mp4" from={S(13.4)} dur={S(1.6)} zoom={[1.16, 1.2]} pos="center 30%" /><Sequence from={S(13.4)} durationInFrames={S(1.6)} layout="none"><Shade h={75} /><Cta /></Sequence>
+    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.45)'}} /><Center><HookCentered a={audience} /></Center></Sequence>
+    {/* l2 dotace */}<Card from={sc(l2.start)} dur={sc(l3.start - l2.start)}><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div><Captions k="l2" start={0} /></CenterInCard></Card>
+    {/* l3 produkt */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
+    <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><Tiles /><Captions k="l3" start={l3.start} /></Center></Sequence>
+    {/* l4 předem */}<Clip src="clips/4-house.mp4" from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><StickerCentered /><Captions k="l4" start={l4.start} /></Center></Sequence>
+    {/* l5 doplatek */}<Card from={sc(l5.start)} dur={sc(l6.start - l5.start)}><CenterInCard><PriceCentered /><Captions k="l5" start={0} /></CenterInCard></Card>
+    {/* l6 CTA */}<Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><Captions k="l6" start={0} /><CtaCentered /></Center></Sequence>
+    {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
+    <Audio src={staticFile('audio/bed.mp3')} volume={0.35} />
     <Logos />
-  </AbsoluteFill>
-);
+  </AbsoluteFill>);
+};
