@@ -34,6 +34,9 @@ html,body{margin:0;background:#12161C;font-family:P,system-ui,sans-serif;color:#
 .tag s::after{content:"";position:absolute;left:-.1em;right:-.1em;top:50%;height:.11em;margin-top:-.05em;background:var(--red);border-radius:2px}
 .sub{font-size:var(--sub);line-height:1.35;color:rgba(255,255,255,.86);font-weight:500;text-wrap:balance}
 .sub b{color:#fff;font-weight:600}
+.who{font-size:calc(var(--sub)*.82);line-height:1.4;color:rgba(255,255,255,.8)}
+.who em{font-style:normal;background:var(--green);color:#fff;padding:.04em .3em;border-radius:.2em}
+.sub .tag{font-size:.78em}
 .bot{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:calc(var(--gap)*.3)}
 .cta{display:inline-flex;align-items:center;gap:.5em;background:var(--red);color:#fff;font-weight:600;font-size:var(--cta);padding:.72em 1.1em;border-radius:12px;white-space:nowrap}
 .cta svg{width:1em;height:1em}
@@ -53,13 +56,15 @@ const tall = H/W>1.5;
 const v = tall ? {pt:250+40,pb:340+40,px:72,logo:70,q:92,hf:60,sub:33,cta:38,gap:28,tg:24,tr:24,ta:'16/9',tp:'14px 20px',tf:29,plus:70,sf:24,bgs:'145%',dark:'50%'}
                : {pt:64,pb:64,px:64,logo:60,q:66,hf:44,sub:26,cta:31,gap:18,tg:18,tr:18,ta:'2/1',tp:'10px 16px',tf:23,plus:54,sf:20,bgs:'cover',dark:'44%'};
 for (const k in v) r.setProperty('--'+k, typeof v[k]==='number' ? v[k]+'px' : v[k]);
-const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%']};
+const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%'],broad:[tall?'src/house-story.jpg':'src/house-sq.jpg',tall?'50% 0%':'50% 0%']};
+if(A==='broad'){ r.setProperty('--bgs', tall?'118%':'cover'); r.setProperty('--dark', tall?'52%':'46%'); }
 const [img,pos]=IMG[A]; r.setProperty('--img',`url(${img})`); r.setProperty('--pos',pos);
 const ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const T={
  senior:{q:'Pobíráte <em>starobní důchod?</em>', sub:'Dotace <b>320&nbsp;000&nbsp;Kč přijde na účet předem</b>, ještě před montáží. Vyřídíme ji za vás.', cta:'Ověřit nárok zdarma'},
  nizkoprijmove:{q:'Pobíráte <em>superdávku?</em>', sub:'Stát zaplatí <b>320&nbsp;000&nbsp;Kč předem na účet.</b> Vy doplatíte jen zbytek, nic nepředplácíte.', cta:'Ověřit nárok za minutu'},
- osvc:{q:'Jste OSVČ <em>s&nbsp;nižšími příjmy?</em>', sub:'Na dotaci <b>320&nbsp;000&nbsp;Kč předem na účet</b> máte nárok i&nbsp;jako živnostník.', cta:'Spočítat můj doplatek'}
+ osvc:{q:'Jste OSVČ <em>s&nbsp;nižšími příjmy?</em>', sub:'Na dotaci <b>320&nbsp;000&nbsp;Kč předem na účet</b> máte nárok i&nbsp;jako živnostník.', cta:'Spočítat můj doplatek'},
+ broad:{q:'Fotovoltaika i&nbsp;zateplení střechy <em>za 65&nbsp;500&nbsp;Kč</em>', noPrice:true, sub:'Zbytek zaplatí dotace NZÚ&nbsp;Light, <b>přijde předem na účet.</b>', who:'Pro <em>nízkopříjmové domácnosti,</em> seniory, OSVČ a&nbsp;invalidní důchodce 3.&nbsp;stupně', cta:'Spočítat doplatek'}
 };
 const t=T[A];
 document.getElementById('top').innerHTML='<img class="nzu" src="../assets/img/nzu-light-logo-dark.png"><img class="sch" src="../assets/img/schlieger-logo-white.svg">';
@@ -71,8 +76,8 @@ document.getElementById('in').innerHTML=`
     <div class="plus">+</div>
     <div class="tile"><img src="src/attic.jpg"><span>Zateplení střechy<small>100 m², mezi krokve</small></span></div>
   </div>
-  <div class="price"><span class="lbl">Obojí za</span><span class="amt">65&nbsp;500&nbsp;Kč</span><span class="tag"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span></div>
-  <div class="sub">${t.sub}</div>
+  ${t.noPrice?'':'<div class="price"><span class="lbl">Obojí za</span><span class="amt">65&nbsp;500&nbsp;Kč</span><span class="tag"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span></div>'}
+  <div class="sub">${t.sub}${t.noPrice?' <span class="tag" style="vertical-align:middle;margin-left:.3em"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span>':''}</div>${t.who?`<div class="who">${t.who}</div>`:''}
   <div class="bot"><span class="cta">${t.cta}${ARROW}</span><div class="trust"><b>Do 24 h</b> víte, zda máte nárok<br><b>23 000+</b> instalací · nezávazně</div></div>`;
 if (Q.get('safe') && tall){ for (const [top,h] of [[0,250],[H-340,340]]){ const d=document.createElement('div'); d.className='safe'; d.style.top=top+'px'; d.style.height=h+'px'; b.appendChild(d);} }
 document.title=`sch-fve-${A}-${F}`;
