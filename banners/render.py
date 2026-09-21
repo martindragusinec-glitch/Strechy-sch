@@ -3,7 +3,7 @@
 Výstup: banners/out/sch-fve-<publikum>-<WxH>-<YYYYMM>-v01.png"""
 import subprocess, datetime, os, shutil, sys
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; PORT=8766; YM=datetime.date.today().strftime('%Y%m')
-AUD=['senior','nizkoprijmove','osvc','broad']; FORMATS=['1080x1080','1080x1920']
+AUD=['senior','nizkoprijmove','osvc','broad','pozor']; FORMATS=['1080x1080','1080x1920']
 args=[a for a in sys.argv[1:] if not a.startswith('--')]; safe='--safe' in sys.argv
 os.makedirs('banners/out',exist_ok=True)
 for a in AUD:

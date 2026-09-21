@@ -44,6 +44,18 @@ html,body{margin:0;background:#12161C;font-family:P,system-ui,sans-serif;color:#
 .trust b{color:#fff;font-weight:600}
 .stick{position:absolute;right:var(--px);top:calc(var(--pt) + var(--logo)*1.35);background:#FFD23F;color:#1B2028;font-weight:600;font-size:var(--sf);line-height:1.05;text-align:center;padding:.5em .8em;border-radius:12px;transform:rotate(-6deg);box-shadow:0 14px 34px -12px rgba(0,0,0,.7);text-transform:uppercase;letter-spacing:.02em}
 .stick b{display:block;font-size:1.35em;letter-spacing:-.02em}
+/* POZOR! – zpravodajský styl */
+.alert{display:inline-flex;align-items:center;gap:.45em;background:var(--red);color:#fff;font-weight:600;font-size:calc(var(--q)*.42);letter-spacing:.06em;text-transform:uppercase;padding:.28em .7em .3em;border-radius:8px;line-height:1}
+.alert i{width:.5em;height:.5em;border-radius:50%;background:#fff;box-shadow:0 0 0 .18em rgba(255,255,255,.35)}
+.b.pozor .q{text-transform:uppercase;letter-spacing:-.01em;line-height:1.02;font-size:calc(var(--q)*.92)}
+.b.pozor .q em{background:none;padding:0;color:#fff;border-radius:0}
+.only{display:flex;align-items:center;gap:.45em;flex-wrap:wrap}
+.only .lbl{font-size:calc(var(--sub)*1.05);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.only .amt{font-size:calc(var(--hf)*1.3);font-weight:600;letter-spacing:-.04em;line-height:1;background:var(--green);padding:.06em .32em .12em;border-radius:.2em;white-space:nowrap}
+.ticker{display:flex;align-items:stretch;border-radius:10px;overflow:hidden;background:#fff;color:var(--ink);font-size:calc(var(--sub)*.8);font-weight:500;line-height:1.2}
+.ticker b{flex:none;display:flex;align-items:center;background:var(--red);color:#fff;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:0 .9em;font-size:.85em}
+.ticker span{padding:.6em .9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticker span em{font-style:normal;color:var(--red);padding:0 .35em}
 .safe{position:absolute;left:0;right:0;background:rgba(255,0,0,.25);z-index:9;pointer-events:none}
 </style>
 <div class="b" id="b"><div class="bg"></div><div class="ov"></div><div class="top" id="top"></div><div class="in" id="in"></div></div>
@@ -56,28 +68,33 @@ const tall = H/W>1.5;
 const v = tall ? {pt:250+40,pb:340+40,px:72,logo:70,q:92,hf:60,sub:33,cta:38,gap:28,tg:24,tr:24,ta:'16/9',tp:'14px 20px',tf:29,plus:70,sf:24,bgs:'145%',dark:'50%'}
                : {pt:64,pb:64,px:64,logo:60,q:66,hf:44,sub:26,cta:31,gap:18,tg:18,tr:18,ta:'2/1',tp:'10px 16px',tf:23,plus:54,sf:20,bgs:'cover',dark:'44%'};
 for (const k in v) r.setProperty('--'+k, typeof v[k]==='number' ? v[k]+'px' : v[k]);
-const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%'],broad:[tall?'src/house-story.jpg':'src/house-sq.jpg',tall?'50% 0%':'50% 0%']};
-if(A==='broad'){ r.setProperty('--bgs', tall?'118%':'cover'); r.setProperty('--dark', tall?'52%':'46%'); }
+const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%'],broad:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%'],pozor:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%']};
+if(A==='broad'||A==='pozor'){ r.setProperty('--bgs', tall?'118%':'cover'); r.setProperty('--dark', tall?'52%':'46%'); }
 const [img,pos]=IMG[A]; r.setProperty('--img',`url(${img})`); r.setProperty('--pos',pos);
 const ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const T={
  senior:{q:'Pobíráte <em>starobní důchod?</em>', sub:'Dotace <b>320&nbsp;000&nbsp;Kč přijde na účet předem</b>, ještě před montáží. Vyřídíme ji za vás.', cta:'Ověřit nárok zdarma'},
  nizkoprijmove:{q:'Pobíráte <em>superdávku?</em>', sub:'Stát zaplatí <b>320&nbsp;000&nbsp;Kč předem na účet.</b> Vy doplatíte jen zbytek, nic nepředplácíte.', cta:'Ověřit nárok za minutu'},
  osvc:{q:'Jste OSVČ <em>s&nbsp;nižšími příjmy?</em>', sub:'Na dotaci <b>320&nbsp;000&nbsp;Kč předem na účet</b> máte nárok i&nbsp;jako živnostník.', cta:'Spočítat můj doplatek'},
+ pozor:{alert:true, noPrice:true, q:'Fotovoltaika se&nbsp;zateplením střechy', sub:'Dotace <b>320&nbsp;000&nbsp;Kč přijde na účet předem.</b> Doplatek jen za zbytek.', cta:'Ověřit nárok zdarma'},
  broad:{q:'Fotovoltaika i&nbsp;zateplení střechy <em>za 65&nbsp;500&nbsp;Kč</em>', noPrice:true, sub:'Zbytek zaplatí dotace NZÚ&nbsp;Light, <b>přijde předem na účet.</b>', who:'Pro <em>nízkopříjmové domácnosti,</em> seniory, OSVČ a&nbsp;invalidní důchodce 3.&nbsp;stupně', cta:'Spočítat doplatek'}
 };
 const t=T[A];
 document.getElementById('top').innerHTML='<img class="nzu" src="../assets/img/nzu-light-logo-dark.png"><img class="sch" src="../assets/img/schlieger-logo-white.svg">';
 const st=document.createElement('div'); st.className='stick'; st.innerHTML='Dotace předem<b>320 000 Kč</b>na účet'; if(tall){st.style.top='calc(var(--pt) + var(--logo)*1.6)';} b.appendChild(st);
+if(t.alert){ b.classList.add('pozor'); }
 document.getElementById('in').innerHTML=`
+  ${t.alert?'<div><span class="alert"><i></i>Pozor!</span></div>':''}
   <div class="q">${t.q}</div>
+  ${t.alert?'<div class="only"><span class="lbl">pouze za</span><span class="amt">65&nbsp;500&nbsp;Kč</span><span class="tag"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span></div>':''}
   <div class="tiles">
     <div class="tile"><img src="../assets/img/realizace-zbraslavice-1.jpg"><span>Fotovoltaika<small>3,69 kWp, ohřev vody</small></span></div>
     <div class="plus">+</div>
     <div class="tile"><img src="src/attic.jpg"><span>Zateplení střechy<small>100 m², mezi krokve</small></span></div>
   </div>
   ${t.noPrice?'':'<div class="price"><span class="lbl">Obojí za</span><span class="amt">65&nbsp;500&nbsp;Kč</span><span class="tag"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span></div>'}
-  <div class="sub">${t.sub}${t.noPrice?' <span class="tag" style="vertical-align:middle;margin-left:.3em"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span>':''}</div>${t.who?`<div class="who">${t.who}</div>`:''}
+  <div class="sub">${t.sub}${(t.noPrice&&!t.alert)?' <span class="tag" style="vertical-align:middle;margin-left:.3em"><u>místo</u><s>385&nbsp;500&nbsp;Kč</s></span>':''}</div>${t.who?`<div class="who">${t.who}</div>`:''}
+  ${t.alert?'<div class="ticker"><b>Aktuálně</b><span>Pro důchodce, OSVČ a nízkopříjmové domácnosti <em>▪</em> Dotaci vyřídíme za vás</span></div>':''}
   <div class="bot"><span class="cta">${t.cta}${ARROW}</span><div class="trust"><b>Do 24 h</b> víte, zda máte nárok<br><b>23 000+</b> instalací · nezávazně</div></div>`;
 if (Q.get('safe') && tall){ for (const [top,h] of [[0,250],[H-340,340]]){ const d=document.createElement('div'); d.className='safe'; d.style.top=top+'px'; d.style.height=h+'px'; b.appendChild(d);} }
 document.title=`sch-fve-${A}-${F}`;
