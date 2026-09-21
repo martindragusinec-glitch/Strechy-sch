@@ -26,14 +26,14 @@ Kontrola proti `Schlieger-org/marketing-playbook` ke dni **19. 9. 2026** (commit
 | Plný `eventDetails` dle §5.1 (v2.1) | ano, **31 polí** včetně `leadId`, `submittedAt`, `formId`, `pageUrl`, `landingUrl`, `referrer`, `campaignId/adsetId/adId`, `sourcePlatform`, `utm*`, `gclid/gbraid/wbraid/fbclid/msclkid/sznclid`, `gaClientId`, `device`, `firstTouch`, `consent` |
 | Atribuce v `sessionStorage` před souhlasem, cookies až po souhlasu | ano (`lp_attr_first` / `lp_attr_last` → `_attribution_first` / `_attribution_last`) |
 | `tenantId` camelCase uvnitř `eventDetails` | ano, `fve_nove` |
-| Gateway míří na DEV | ano (`vdgvdjdjsdbncudzzibx`), PROD až po ověřeném leadu |
+| Gateway | v repu DEV bez klíče; **nasazená kopie PROD s klíčem** (od 21. 9.) |
 | Žádný redirect nezahazuje query string | `_redirects` má jen `/index.html → /` |
 
 ## Chybí – hodnoty od správců
 
 | Co | Kdo | Poznámka |
 |---|---|---|
-| `gateway_key` DEV, pak PROD | správce gateway | klíče z `lead-gateway.env`, do repa nikdy |
+| ~~`gateway_key`~~ | hotovo 21. 9. | PROD klíč v `deploy/secrets.env` (mimo git), vkládá `deploy/publish.sh`; klíč pro DEV neexistuje, test jde rovnou do PROD |
 | Potvrdit `tenant_id` | správce CRM | teď `fve_nove`; alternativa `nzu_schlieger_nove`, pokud má NZÚ Light LP patřit do NZÚ kampaně |
 | `gw_lead_source` | CRM | teď prázdné → prázdné je i `form_sent.lead_source` a `leadCapture.eventDetails.leadSource` |
 | Potvrdit `gw_lead_products` `['FVE','ZAT']` | CRM | zateplení jako samostatný produktový kód |

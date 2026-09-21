@@ -92,7 +92,7 @@ Podle `Schlieger-org/marketing-playbook` (AGENTS.md, docs/marketing-manual.md, d
 - [ ] **CMP**: s `GTM-NWL639K` naběhne Cookiebot z kontejneru (manuál §6: „nepřepisuj souhlas vlastním řešením“). Na subdoméně schlieger.cz proto **odstranit `lp-consent.js`** + jeho `LP_CONSENT_CONFIG` a `[data-consent-open]` napojit na `Cookiebot.renew()`; v Cookiebot přidat subdoménu do domain group `d9a57f9f-eeb3-4af2-9d35-a107ee14014a`. `lp-consent.js` nechat jen při samostatné doméně bez Cookiebotu.
 
 **Hodnoty od správců**
-- [ ] `gateway_key` DEV → test → PROD klíč + přepnout `gateway_url` na PROD (`cwertkgbliffhzrynrxt`); klíče z `lead-gateway.env`, nikdy do repa
+- [x] `gateway_key` + `gateway_url` **PROD** jsou v nasazené kopii (21. 9. 2026). Klíč je v `deploy/secrets.env` (gitignore), `deploy/publish.sh` ho vloží při nasazení; v repu zůstává prázdný. Dodaný klíč platí jen pro PROD (DEV ho odmítá), krok „DEV lead“ z manuálu §1.2 proto neproběhl – první ostrý test jde rovnou do PROD CRM
 - [ ] `tenant_id` `fve_nove` potvrdit se správcem CRM (alternativa `nzu_schlieger_nove`, pokud má NZÚ Light LP jít do NZÚ kampaně)
 - [ ] `gw_lead_source` – kód zdroje leadu (CRM); `gw_lead_products` – potvrdit `FVE` + `ZAT`
 - [ ] `form_id` / `form_name` – potvrdit s analytikou
