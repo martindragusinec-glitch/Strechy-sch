@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fotovoltaika + zateplení střechy za 65 500 Kč s dotací NZÚ Light | Schlieger</title>
 <meta name="description" content="Kompletní fotovoltaika 3,69 kWp s ohřevem vody a zateplení šikmé střechy 100 m². Cena 385 500 Kč, dotace NZÚ Light 320 000 Kč vyplacená předem na účet. Váš doplatek 65 500 Kč. Dotaci vyřídíme za vás.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.schlieger.cz/fotovoltaika-a-zatepleni-strechy/">
+<meta name="robots" content="noindex, nofollow"><!-- PŘED SPUŠTĚNÍM: změnit na "index, follow" (viz README) -->
+<link rel="canonical" href="https://nzulight.schlieger.cz/">
 <link rel="icon" href="assets/img/favicon-32x32.png" sizes="32x32">
 <meta property="og:title" content="Fotovoltaika i zateplení střechy za 65 500 Kč. Zbytek pokryje dotace.">
 <meta property="og:description" content="Zakázka za 385 500 Kč, dotace NZÚ Light 320 000 Kč předem na účet. Z vašich peněz jde 65 500 Kč. Zateplení je dotované korunu za korunu.">
-<meta property="og:image" content="https://www.schlieger.cz/fotovoltaika-a-zatepleni-strechy/assets/img/og-image.jpg">
+<meta property="og:url" content="https://nzulight.schlieger.cz/">
+<meta property="og:image" content="https://nzulight.schlieger.cz/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -50,7 +51,15 @@ window.LP_TRACKING_CONFIG = {
   /* v2.1 (standard 18. 9. 2026) */
   attribution_session_storage: true, // atribuce do sessionStorage před souhlasem (README §4.1)
   send_ga_client_id: false,          // zapnout až budou zásady ochrany OÚ zmiňovat spojení měřicího identifikátoru s poptávkou (README §8)
-  attribution_only: false
+  attribution_only: false,
+  /* Na nzulight.schlieger.cz se z GTM načte Cookiebot, ale subdoména zatím není v jeho domain group,
+     takže nezobrazí lištu ani nevrátí souhlas. Bez tohoto adaptéru by modul četl Cookiebot (vždy denied)
+     a ignoroval volbu z naší lišty. Až bude subdoména v domain group: smazat adaptér i lp-consent.js. */
+  consent_adapter: function () {
+    var c = window.LPConsent;
+    if (!c) return { known: false, marketing: false, analytics: false };
+    return { known: !!c.hasResponse, marketing: !!(c.consent && c.consent.marketing), analytics: !!(c.consent && c.consent.statistics) };
+  }
 };
 </script>
 <script src="lp-tracking.js"></script>
@@ -195,7 +204,7 @@ html.qa .hero__in{min-height:0!important}
 .paper__stamp b{display:inline-block;padding:5px 10px;border:2px solid var(--green);color:var(--green-dark);border-radius:5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-4deg);font-size:11px}
 .paper--lead{transform:rotate(-1.5deg)}
 @media (min-width:960px){
-  .hero__in{grid-template-columns:minmax(0,1fr) 460px;align-items:center;gap:0 96px;padding-top:56px;padding-bottom:56px;min-height:clamp(620px,calc(86vh - 80px),820px)}
+  .hero__in{grid-template-columns:minmax(0,1fr) 460px;align-items:center;gap:0 96px;padding-top:56px;padding-bottom:56px;min-height:calc(100vh - 80px);min-height:calc(100svh - 80px)}
   .hero__nzu img{height:74px}
   .quick{margin-top:8px}
   .hero::before{background:linear-gradient(90deg,rgba(18,22,28,.9) 0%,rgba(18,22,28,.66) 48%,rgba(18,22,28,.3) 100%)}
