@@ -82,6 +82,22 @@ html,body{margin:0;background:#12161C;font-family:P,system-ui,sans-serif;color:#
 .b.ultra .cta{background:#fff;color:var(--red)}
 .b.ultra .trust{color:rgba(255,255,255,.85)}
 .b.ultra .trust b{color:#fff}
+/* PLATBA – bankovní notifikace */
+.b.platba .ov{background:linear-gradient(180deg,rgba(18,22,28,.86) 0%,rgba(18,22,28,.9) 100%)}
+.b.platba .in{justify-content:center;gap:calc(var(--gap)*1.1)}
+.b.platba .top{position:absolute}
+.notif{background:#fff;color:var(--ink);border-radius:28px;padding:calc(var(--sub)*.9) calc(var(--sub)*1.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.8);display:grid;gap:calc(var(--sub)*.35)}
+.notif__app{display:flex;align-items:center;gap:.6em;font-size:calc(var(--sub)*.8);color:var(--ink-3);font-weight:500}
+.notif__app i{width:1.7em;height:1.7em;border-radius:.5em;background:var(--green);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:600;font-size:.9em}
+.notif__app span:last-child{margin-left:auto;color:#9aa0a6}
+.notif__t{font-size:calc(var(--sub)*1.05);font-weight:600;color:var(--ink)}
+.notif__amt{font-size:calc(var(--hf)*1.7);font-weight:600;letter-spacing:-.045em;line-height:1;color:var(--green-dark)}
+.notif__sub{font-size:calc(var(--sub)*.85);color:var(--ink-3);line-height:1.35}
+.notif__sub b{color:var(--ink);font-weight:600}
+.b.platba .q{font-size:calc(var(--q)*.8)}
+.b.platba>.stick{display:none}
+.notif{position:relative}
+.notif .stick{position:absolute;right:-14px;top:-30px;transform:rotate(6deg)}
 .safe{position:absolute;left:0;right:0;background:rgba(255,0,0,.25);z-index:9;pointer-events:none}
 </style>
 <div class="b" id="b"><div class="bg"></div><div class="ov"></div><div class="top" id="top"></div><div class="in" id="in"></div></div>
@@ -94,7 +110,7 @@ const tall = H/W>1.5;
 const v = tall ? {pt:250+40,pb:340+40,px:72,logo:70,q:92,hf:60,sub:33,cta:38,gap:28,tg:24,tr:24,ta:'16/9',tp:'14px 20px',tf:29,plus:70,sf:24,bgs:'145%',dark:'50%'}
                : {pt:64,pb:64,px:64,logo:60,q:66,hf:44,sub:26,cta:31,gap:18,tg:18,tr:18,ta:'2/1',tp:'10px 16px',tf:23,plus:54,sf:20,bgs:'cover',dark:'44%'};
 for (const k in v) r.setProperty('--'+k, typeof v[k]==='number' ? v[k]+'px' : v[k]);
-const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%'],broad:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%'],pozor:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%'],ultrapozor:['','50% 50%']};
+const IMG={senior:['src/couple-story.jpg','50% 100%'],nizkoprijmove:['src/mother-story.jpg','50% 100%'],osvc:['src/osvc-story.jpg','50% 100%'],broad:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%'],pozor:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 0%'],ultrapozor:['','50% 50%'],platba:[tall?'src/house-story.jpg':'src/house-sq.jpg','50% 40%']};
 if(A==='broad'||A==='pozor'){ r.setProperty('--bgs', tall?'118%':'cover'); r.setProperty('--dark', tall?'52%':'46%'); }
 const [img,pos]=IMG[A]; r.setProperty('--img',`url(${img})`); r.setProperty('--pos',pos);
 const ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -103,15 +119,21 @@ const T={
  nizkoprijmove:{q:'Pobíráte <em>superdávku?</em>', sub:'Stát zaplatí <b>320&nbsp;000&nbsp;Kč předem na účet.</b> Vy doplatíte jen zbytek, nic nepředplácíte.', cta:'Ověřit nárok za minutu'},
  osvc:{q:'Jste OSVČ <em>s&nbsp;nižšími příjmy?</em>', sub:'Na dotaci <b>320&nbsp;000&nbsp;Kč předem na účet</b> máte nárok i&nbsp;jako živnostník.', cta:'Spočítat můj doplatek'},
  ultrapozor:{ultra:true},
+ platba:{notif:true, q:'Takhle vypadá <em>dotace předem</em> na&nbsp;účet.', sub:'Fotovoltaika i&nbsp;zateplení střechy, <b>vy doplatíte jen 65&nbsp;500&nbsp;Kč.</b>', cta:'Ověřit nárok zdarma'},
  pozor:{alert:true, noPrice:true, q:'Fotovoltaika se&nbsp;zateplením střechy', sub:'Dotace <b>320&nbsp;000&nbsp;Kč přijde na účet předem.</b> Doplatek jen za zbytek.', cta:'Ověřit nárok zdarma'},
  broad:{q:'Fotovoltaika i&nbsp;zateplení střechy <em>za 65&nbsp;500&nbsp;Kč</em>', noPrice:true, sub:'Zbytek zaplatí dotace NZÚ&nbsp;Light, <b>přijde předem na účet.</b>', who:'Pro <em>nízkopříjmové domácnosti,</em> seniory, OSVČ a&nbsp;invalidní důchodce 3.&nbsp;stupně', cta:'Spočítat doplatek'}
 };
 const t=T[A];
 document.getElementById('top').innerHTML='<img class="nzu" src="../assets/img/nzu-light-logo-dark.png"><img class="sch" src="../assets/img/schlieger-logo-white.svg">';
-const st=document.createElement('div'); st.className='stick'; st.innerHTML='Dotace předem<b>320 000 Kč</b>na účet'; if(tall){st.style.top='calc(var(--pt) + var(--logo)*1.6)';} b.appendChild(st);
+const st=document.createElement('div'); st.className='stick'; st.innerHTML= t.notif ? 'Váš doplatek<b>65 500 Kč</b>místo 385 500' : 'Dotace předem<b>320 000 Kč</b>na účet'; if(tall){st.style.top='calc(var(--pt) + var(--logo)*1.6)';} b.appendChild(st);
 if(t.alert){ b.classList.add('pozor'); }
 if(t.ultra){ b.classList.add('ultra'); }
-document.getElementById('in').innerHTML= t.ultra ? `
+if(t.notif){ b.classList.add('platba'); }
+document.getElementById('in').innerHTML= t.notif ? `
+  <div class="notif"><div class="stick">Váš doplatek<b>65 500 Kč</b>místo 385 500</div><div class="notif__app"><i>Kč</i><span>Moje banka</span><span>dnes 9:41</span></div><div class="notif__t">Příchozí platba</div><div class="notif__amt">+320&nbsp;000&nbsp;Kč</div><div class="notif__sub"><b>Státní fond životního prostředí</b> · dotace NZÚ&nbsp;Light<br>Připsáno předem, ještě před montáží.</div></div>
+  <div class="q">${t.q}</div>
+  <div class="sub">${t.sub}</div>
+  <div class="bot"><span class="cta">${t.cta}${ARROW}</span><div class="trust"><b>Do 24 h</b> víte, zda máte nárok<br><b>23 000+</b> instalací · nezávazně</div></div>` : t.ultra ? `
   <div class="ultra__pozor"><small>Důležité upozornění</small>POZOR!</div>
   <div class="ultra__h">Fotovoltaika se zateplením střechy</div>
   <div class="ultra__box"><span class="lbl">Pouze za</span><span class="amt">65&nbsp;500&nbsp;Kč</span><span class="was">místo <s>385&nbsp;500&nbsp;Kč</s></span></div>
