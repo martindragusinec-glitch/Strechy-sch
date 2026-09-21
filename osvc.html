@@ -11,7 +11,7 @@
 <meta property="og:title" content="OSVČ s nižšími příjmy: fotovoltaika i zateplení střechy za 65 500 Kč">
 <meta property="og:description" content="Živnost vám nárok nebere, rozhoduje příjem domácnosti. Dotace NZÚ Light 320 000 Kč přijde předem na účet, z vašich peněz jde 65 500 Kč.">
 <meta property="og:url" content="https://nzulight.schlieger.cz/osvc">
-<meta property="og:image" content="https://nzulight.schlieger.cz/assets/img/og-image.jpg">
+<meta property="og:image" content="https://nzulight.schlieger.cz/assets/img/og-image-osvc.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="cs_CZ">
 <link rel="preload" href="assets/fonts/poppins-700-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-400-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/img/hero-house-fve-960.jpg" imagesrcset="assets/img/hero-house-fve-960.jpg 960w, assets/img/hero-house-fve-1920.jpg 1920w" imagesizes="100vw">
+<link rel="preload" as="image" href="assets/img/hero-osvc-960.jpg" imagesrcset="assets/img/hero-osvc-960.jpg 960w, assets/img/hero-osvc-1920.jpg 1920w" imagesizes="100vw">
 
 <!-- 1) dataLayer + cookie lišta + Consent Mode default — MUSÍ být před GTM -->
 <script>window.dataLayer = window.dataLayer || [];</script>
@@ -958,6 +958,41 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .offer__band{background:var(--green-dark)}
 .offer__figure img{filter:saturate(.94) contrast(1.04)}
 @media (min-width:960px){.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.9) 0%,rgba(18,22,28,.55) 46%,rgba(18,22,28,.14) 100%)}}
+
+/* ═══ OSVČ varianta ═══ */
+.hero__h1a{display:block;font-size:.5em;font-weight:500;color:rgba(255,255,255,.82);letter-spacing:-.01em;margin-bottom:10px}
+.hero__h1a::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin:0 10px 2px 0}
+.quick__calc{display:block;margin-top:6px;color:var(--red);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.myth{margin-top:22px;display:grid;gap:8px;max-width:460px}
+.myth__row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;background:#fff;border:1px solid var(--line-strong);font-weight:600;font-size:16px;color:var(--ink)}
+.myth__row i{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:15px;color:#fff}
+.myth__row--no{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+.myth__row--no i{background:var(--red)}
+.myth__row--yes{border-color:var(--green)}
+.myth__row--yes i{background:var(--green)}
+.elig__src{margin-top:12px;font-size:12.5px;color:var(--muted)}
+.ecalc-sec .sec-head h2{color:#fff}
+.ecalc .calc__ctrl{background:var(--paper)}
+.ecalc .ledger{color:var(--ink)}
+.ecalc__group{margin-top:22px}
+.ecalc__q{display:block;font-weight:600;color:var(--ink);font-size:15.5px;margin-bottom:8px}
+.ecalc .calc__presets{margin:8px 0 4px}
+.calc__label--sm output{font-size:28px}
+.ecalc__two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ecalc__checks{display:grid;gap:8px}
+.ecalc__check{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--line-strong);border-radius:12px;background:#fff;font-size:14.5px;font-weight:500;color:var(--ink);cursor:pointer}
+.ecalc__check input{width:20px;height:20px;flex:none;accent-color:var(--green);margin-top:1px}
+.ecalc__check:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+.ecalc__res{background:#fff;border-radius:16px;padding:18px!important}
+.ecalc__verdict{margin-top:14px;padding:18px;border-radius:14px;display:grid;gap:6px;background:var(--green-soft)}
+.ecalc__verdict b{font-size:20px;line-height:1.25;color:var(--green-dark);letter-spacing:-.01em}
+.ecalc__verdict span{font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.ecalc__verdict[data-state=edge]{background:#FFF3D6}.ecalc__verdict[data-state=edge] b{color:#7A5200}
+.ecalc__verdict[data-state=no]{background:var(--paper-2)}.ecalc__verdict[data-state=no] b{color:var(--ink)}
+.ecalc__note{margin-top:12px;font-size:13px;color:var(--ink-3);line-height:1.5}
+@media (max-width:959px){.ecalc__two{grid-template-columns:1fr}.ecalc .calc__live{display:none}.hero__h1a{font-size:.6em}.ecalc .calc__label{flex-wrap:wrap;gap:4px 12px}.ecalc .calc__label output{font-size:30px;white-space:nowrap}.ecalc .calc__presets button{padding:0 13px;font-size:14px}}
+@media (min-width:960px){.ecalc__res{align-self:start;position:sticky;top:96px}.hero__bg{object-position:50% 30%}.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.9) 0%,rgba(18,22,28,.7) 40%,rgba(18,22,28,.35) 62%,rgba(18,22,28,.55) 100%)}}
+@media (max-width:959px){.hero__bg{object-position:62% 30%}}
 </style>
 </head>
 <body>
@@ -1017,20 +1052,20 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
 <!-- ═══════════════ HERO (100 vh) ═══════════════ -->
 <section class="hero" aria-labelledby="h1">
-  <img class="hero__bg" src="assets/img/hero-house-fve-960.jpg" srcset="assets/img/hero-house-fve-960.jpg 960w, assets/img/hero-house-fve-1920.jpg 1920w" sizes="100vw" width="1920" height="1080" fetchpriority="high" decoding="async" alt="">
+  <img class="hero__bg" src="assets/img/hero-osvc-960.jpg" srcset="assets/img/hero-osvc-960.jpg 960w, assets/img/hero-osvc-1920.jpg 1920w" sizes="100vw" width="1920" height="1086" fetchpriority="high" decoding="async" alt="">
   <div class="container hero__in">
     <div class="hero__content">
       <div class="hero__nzu"><img src="assets/img/nzu-light-logo-dark.png" alt="Nová zelená úsporám Light" width="920" height="243"></div>
-      <h1 id="h1">Fotovoltaika i&nbsp;zateplení střechy <span class="hero__price"><span class="hl">za 65&nbsp;500&nbsp;Kč</span><s class="hero__was num"><i class="hero__was-hole"></i><span class="hero__was-l">místo</span><span class="hero__was-v">385&nbsp;500&nbsp;Kč<svg class="hero__was-x" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><path d="M3 17C30 9 70 5 97 9" fill="none" stroke="#DA000F" stroke-width="3.2" stroke-linecap="round"/></svg></span></s></span> <span class="hero__h1b">Zbytek zaplatí dotace, <span class="br-m">přijde předem na účet.</span></span></h1>
-      <p class="hero__who">Pro <span class="hl hl--who">OSVČ s&nbsp;nižšími příjmy.</span> Živnost vám nárok nebere, rozhoduje příjem domácnosti.</p>
+      <h1 id="h1"><span class="hero__h1a">Jste OSVČ s&nbsp;nižšími příjmy?</span> Fotovoltaika i&nbsp;zateplení střechy <span class="hero__price"><span class="hl">za 65&nbsp;500&nbsp;Kč</span><s class="hero__was num"><i class="hero__was-hole"></i><span class="hero__was-l">místo</span><span class="hero__was-v">385&nbsp;500&nbsp;Kč<svg class="hero__was-x" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><path d="M3 17C30 9 70 5 97 9" fill="none" stroke="#DA000F" stroke-width="3.2" stroke-linecap="round"/></svg></span></s></span> <span class="hero__h1b">Zbytek zaplatí dotace, <span class="br-m">přijde předem na účet.</span></span></h1>
+      <p class="hero__who"><span class="hl hl--who">Živnost vám nárok nebere.</span> Rozhoduje příjem domácnosti a&nbsp;stav domu, ne to, že podnikáte.</p>
       <a class="hero__call" href="tel:+420226223800"><svg width="18" height="18"><use href="#i-phone"/></svg> Raději zavolám: <b>226&nbsp;223&nbsp;800</b> <span class="hero__micro">Po–Pá 9–16</span></a>
 
     </div>
 
     <aside class="quick" aria-labelledby="quick-h">
-      <span class="quick__step">Krok 1 ze 6 · necelá minuta</span>
+      <span class="quick__step">Krok 1 ze 6 · pro OSVČ</span>
       <h2 id="quick-h" class="quick__h">Podnikáte a&nbsp;příjem vaší domácnosti je nižší?</h2>
-      <p class="quick__sub">Za minutu víte, jestli i&nbsp;jako živnostník dostanete dotaci předem na účet.</p>
+      <p class="quick__sub">Za minutu víte, jestli dotaci 320&nbsp;000&nbsp;Kč dostanete předem na účet. <a href="#narok" class="quick__calc">Nebo si nárok nejdřív spočítejte</a></p>
       <div class="quick__opts">
         <button type="button" class="quick__opt" data-quick="OSVČ" data-cta="hero-step-osvc"><svg width="26" height="26"><use href="#i-case"/></svg><span><b>Ano, jsem OSVČ</b> <small>příjem domácnosti je nižší</small></span><svg class="quick__arr" width="18" height="18"><use href="#i-arrow"/></svg></button>
         <button type="button" class="quick__opt" data-quick="Starobní důchod" data-cta="hero-step-senior"><svg width="26" height="26"><use href="#i-team"/></svg><span><b>Podnikám v&nbsp;důchodu</b> <small>pobírám starobní důchod</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
@@ -1059,17 +1094,99 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="elig__left">
       <img class="elig__logo" src="assets/img/nzu-light-logo.png" alt="Nová zelená úsporám Light" width="920" height="243">
       <h2 id="elig-h" class="elig__h">Živnost vám nárok nebere. <span class="hl">Rozhoduje příjem domácnosti.</span></h2>
-      <p class="elig__lead">Program Nová zelená úsporám Light neřeší, jestli podnikáte nebo jste zaměstnaní. Posuzuje příjem celé domácnosti a&nbsp;dům. Dotace přijde zálohově na účet ještě před realizací. Podmínkou je, že rodinný dům vlastníte, trvale v&nbsp;něm bydlíte a&nbsp;platí jedna z&nbsp;těchto situací.</p>
+      <p class="elig__lead">Podmínky NZÚ Light nikde neříkají „zaměstnanec“ ani „podnikatel“. Stát posuzuje čistý příjem celé domácnosti za poslední rok a&nbsp;energetický stav domu. Dotace přijde zálohově na účet ještě před realizací.</p>
+      <div class="myth" aria-label="Kdo má nárok">
+        <div class="myth__row myth__row--no"><i>✕</i><span>Podle toho, jestli máte živnost</span></div>
+        <div class="myth__row myth__row--yes"><i>✓</i><span>Podle příjmu domácnosti a&nbsp;stavu domu</span></div>
+      </div>
+      <p class="elig__src">Zdroj: Závazné pokyny NZÚ Light, SFŽP, verze 1.1 (červen 2026), kap. 2.1.</p>
 
 
     </div>
     <div>
       <div class="elig__panel">
-        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>OSVČ s&nbsp;nižšími příjmy</h3><p>Příjem domácnosti patří mezi <strong>nižší příjmy v&nbsp;ČR</strong> (do 3.&nbsp;příjmové skupiny podle daňového přiznání) a&nbsp;dům je starší, nezateplený. Paušální daň ani forma podnikání nevadí.</p></div>
-        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Podnikáte v&nbsp;důchodu</h3><p>Vy nebo partner pobíráte <strong>starobní důchod</strong> a&nbsp;příjem domácnosti je nižší než průměrný. Přivýdělek z&nbsp;živnosti nárok neruší.</p></div>
-        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Superdávka nebo invalidní důchod</h3><p>Domácnost pobírá <strong>superdávku</strong>, nebo některý z&nbsp;jejích členů <strong>invalidní důchod 3.&nbsp;stupně</strong>.</p></div>
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>OSVČ s&nbsp;nižšími příjmy</h3><p>Čistý příjem domácnosti na osobu je <strong>do 25&nbsp;426&nbsp;Kč měsíčně</strong> (3.&nbsp;příjmový decil, počítá se z&nbsp;daňového přiznání) a&nbsp;dům je starší, bez zateplení. Paušální daň ani obor podnikání nevadí.</p></div>
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Podnikáte v&nbsp;důchodu</h3><p>Všichni dospělí v&nbsp;domácnosti pobírají <strong>starobní důchod</strong> a&nbsp;příjem na osobu je <strong>do 31&nbsp;058&nbsp;Kč</strong> (5.&nbsp;decil). Přivýdělek z&nbsp;živnosti nárok neruší, jen se započítá.</p></div>
+        <div class="elig__row"><svg width="22" height="22"><use href="#i-check"/></svg><h3>Superdávka nebo invalidní důchod</h3><p>Domácnost pobírá <strong>superdávku</strong> (nárok bez ohledu na příjem), nebo některý z&nbsp;jejích členů <strong>invalidní důchod 3.&nbsp;stupně</strong> a&nbsp;příjem na osobu je do 31&nbsp;058&nbsp;Kč.</p></div>
       </div>
-      <p class="elig__alt">Příjem domácnosti máte vyšší? Stát nabízí na stejnou realizaci <strong>bezúročný úvěr až 400&nbsp;000&nbsp;Kč</strong>, úroky platí stát. Nárok neposuzujeme podle odhadu, ale podle vašeho daňového přiznání, zdarma a&nbsp;dřív, než cokoli podepíšete. <a href="#kalkulace" data-cta="elig-primary" class="tlink">Ověřit, zda mám nárok</a></p>
+      <p class="elig__alt">Příjem domácnosti máte vyšší? Stát nabízí na stejnou realizaci <strong>bezúročný úvěr až 400&nbsp;000&nbsp;Kč</strong>, úroky platí stát. Nárok neposuzujeme podle odhadu, ale podle vašeho daňového přiznání, zdarma a&nbsp;dřív, než cokoli podepíšete. <a href="#narok" data-cta="elig-calc" class="tlink">Spočítat, zda mám nárok</a></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ KALKULAČKA NÁROKU (OSVČ) ═══════════════ -->
+<section class="section section--ink ecalc-sec" id="narok" aria-labelledby="ecalc-h">
+  <div class="container">
+    <div class="sec-head">
+      <h2 id="ecalc-h">Dosáhnu na dotaci jako OSVČ?</h2>
+      <p>Zadejte, kolik ročně vyfakturujete a&nbsp;kdo s&nbsp;vámi bydlí. Výdaje počítáme paušálně 70&nbsp;% (průměr mezi 60&nbsp;a&nbsp;80&nbsp;%), přesně to pak ověříme z&nbsp;daňového přiznání.</p>
+    </div>
+    <div class="calc ecalc">
+      <div class="calc__ctrl">
+        <label class="calc__label" for="e-trzby">Roční příjmy z&nbsp;podnikání <output for="e-trzby" id="e-trzby-out" class="num">800&nbsp;000&nbsp;Kč</output></label>
+        <div class="calc__presets" role="group" aria-label="Rychlá volba příjmů">
+          <button type="button" data-trzby="300000">300&nbsp;tis.</button><button type="button" data-trzby="500000">500&nbsp;tis.</button><button type="button" data-trzby="800000" class="is-on">800&nbsp;tis.</button><button type="button" data-trzby="1000000">1&nbsp;mil.</button><button type="button" data-trzby="1500000">1,5&nbsp;mil.</button>
+        </div>
+        <input type="range" id="e-trzby" min="0" max="3000000" step="50000" value="800000" aria-valuetext="800 000 Kč ročně">
+        <div class="calc__hint"><span>0&nbsp;Kč</span><span>fakturace za rok, bez DPH</span><span>3&nbsp;mil.&nbsp;Kč</span></div>
+
+        <div class="ecalc__group">
+          <span class="ecalc__q">Bydlí s&nbsp;vámi partner/ka?</span>
+          <div class="calc__presets" role="group" aria-label="Partner">
+            <button type="button" data-partner="1" class="is-on">Ano</button><button type="button" data-partner="0">Ne, žiju sám/sama</button>
+          </div>
+        </div>
+        <div class="ecalc__group" id="e-partner-wrap">
+          <label class="calc__label calc__label--sm" for="e-partner">Čistý měsíční příjem partnera/ky <output for="e-partner" id="e-partner-out" class="num">25&nbsp;000&nbsp;Kč</output></label>
+          <div class="calc__presets" role="group" aria-label="Rychlá volba příjmu partnera">
+            <button type="button" data-pi="0">0&nbsp;Kč</button><button type="button" data-pi="15000">15&nbsp;tis.</button><button type="button" data-pi="25000" class="is-on">25&nbsp;tis.</button><button type="button" data-pi="35000">35&nbsp;tis.</button>
+          </div>
+          <input type="range" id="e-partner" min="0" max="80000" step="1000" value="25000" aria-valuetext="25 000 Kč měsíčně">
+          <div class="calc__hint"><span>0&nbsp;Kč</span><span>mzda, důchod nebo podnikání</span><span>80&nbsp;tis.&nbsp;Kč</span></div>
+        </div>
+
+        <div class="ecalc__two">
+          <div class="ecalc__group">
+            <span class="ecalc__q">Děti do 13&nbsp;let</span>
+            <div class="calc__presets" role="group" aria-label="Děti do 13 let"><button type="button" data-k1="0" class="is-on">0</button><button type="button" data-k1="1">1</button><button type="button" data-k1="2">2</button><button type="button" data-k1="3">3+</button></div>
+          </div>
+          <div class="ecalc__group">
+            <span class="ecalc__q">Další osoby 14+ (děti, rodiče)</span>
+            <div class="calc__presets" role="group" aria-label="Další osoby"><button type="button" data-k2="0" class="is-on">0</button><button type="button" data-k2="1">1</button><button type="button" data-k2="2">2</button><button type="button" data-k2="3">3+</button></div>
+          </div>
+        </div>
+
+        <div class="ecalc__group">
+          <span class="ecalc__q">Platí u&nbsp;vás něco z&nbsp;toho?</span>
+          <div class="ecalc__checks">
+            <label class="ecalc__check"><input type="checkbox" id="e-duchod"><span>Všichni dospělí v&nbsp;domě pobírají starobní důchod</span></label>
+            <label class="ecalc__check"><input type="checkbox" id="e-id3"><span>Někdo v&nbsp;domě má invalidní důchod 3.&nbsp;stupně</span></label>
+            <label class="ecalc__check"><input type="checkbox" id="e-super"><span>Domácnost pobírá superdávku</span></label>
+          </div>
+        </div>
+
+        <div class="ecalc__group">
+          <span class="ecalc__q">Jaký je váš dům?</span>
+          <div class="calc__presets" role="group" aria-label="Stav domu">
+            <button type="button" data-dum="stary" class="is-on">Starší, bez zateplení</button><button type="button" data-dum="novy">Zateplený nebo nový</button><button type="button" data-dum="nevim">Nevím</button>
+          </div>
+        </div>
+        <p class="calc__foot">Orientační výpočet podle podmínek NZÚ Light 2026 (3.&nbsp;decil 25&nbsp;426&nbsp;Kč, 5.&nbsp;decil 31&nbsp;058&nbsp;Kč na osobu; váhy 1&nbsp;/&nbsp;0,5&nbsp;/&nbsp;0,3). Příjem OSVČ: zisk po paušálních výdajích 70&nbsp;% minus daň a&nbsp;minimální pojistné. O&nbsp;nároku rozhoduje Státní fond životního prostředí ČR.</p>
+      </div>
+      <div class="ledger num ecalc__res" aria-live="polite">
+        <div class="ledger__row"><span>Váš čistý příjem z&nbsp;podnikání za měsíc</span><b id="e-net">≈ 0&nbsp;Kč</b></div>
+        <div class="ledger__row" id="e-row-partner"><span>Příjem partnera/ky</span><b id="e-pnet">25&nbsp;000&nbsp;Kč</b></div>
+        <div class="ledger__row"><span>Velikost domácnosti (váha)</span><b id="e-vaha">1,5</b></div>
+        <div class="ledger__row ledger__row--sum"><span>Příjem domácnosti na osobu</span><b id="e-eq">0&nbsp;Kč</b></div>
+        <div class="ledger__row ledger__row--sub"><span>Hranice pro vaši domácnost (<span id="e-decil">3.&nbsp;decil</span>)</span><b id="e-limit">25&nbsp;426&nbsp;Kč</b></div>
+        <div class="ecalc__verdict" id="e-verdict" data-state="ok">
+          <b id="e-verdict-h">Pravděpodobně máte nárok na dotaci předem</b>
+          <span id="e-verdict-t">320&nbsp;000&nbsp;Kč přijde na účet před montáží, vy doplatíte 65&nbsp;500&nbsp;Kč.</span>
+        </div>
+        <a class="btn btn--primary btn--block" href="#kalkulace" data-cta="ecalc-primary" id="e-cta">Ověřit nárok přesně a&nbsp;zdarma <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+        <p class="ecalc__note">Do 24 hodin zavoláme, spočítáme to z&nbsp;vašeho daňového přiznání a&nbsp;řekneme na rovinu, jak to je.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1518,6 +1635,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="faq" id="faq">
       <div class="faq__item is-open"><button class="faq__q" aria-expanded="true">Jsem OSVČ. Mám na dotaci nárok?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Ano, pokud splníte podmínky pro domácnost. Program NZÚ Light nerozlišuje zaměstnance a&nbsp;podnikatele, posuzuje příjem celé domácnosti za předchozí rok, vlastnictví domu a&nbsp;trvalé bydlení v&nbsp;něm. OSVČ s&nbsp;nižšími příjmy má nárok stejně jako zaměstnanec se stejným příjmem. Domácnosti s&nbsp;vyšším příjmem mají nárok na bezúročný úvěr až 400&nbsp;000&nbsp;Kč, kde úroky platí stát. Nárok neposuzujeme my, ale Státní fond životního prostředí ČR. Zdarma vám ale předem ověříme, zda podmínky splňujete, a&nbsp;řekneme vám to na rovinu i&nbsp;v&nbsp;případě, že ne.</p></div></div></div>
       <div class="faq__item"><button class="faq__q" aria-expanded="false">Co jako OSVČ dokládám?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Příjem domácnosti za předchozí rok, u&nbsp;podnikatele zpravidla daňovým přiznáním; při paušální dani se dokládá jinak, poradíme vám. Dále list vlastnictví a&nbsp;doklad o&nbsp;trvalém bydlení. Přesný seznam podkladů vám pošleme po prvním hovoru a&nbsp;žádost připravíme za vás.</p></div></div></div>
+      <div class="faq__item"><button class="faq__q" aria-expanded="false">Jsem řemeslník. Můžu si část udělat sám a&nbsp;vyfakturovat?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Ne. Podle pokynů NZÚ Light nejsou způsobilé výdaje za práce, které žadatel nebo spoluvlastník domu provádí a&nbsp;účtuje jako OSVČ, ani práce svépomocí. Dotaci dostanete na dodávku od firmy, proto celou realizaci včetně zateplení děláme my a&nbsp;vy si mezitím hlídáte vlastní zakázky.</p></div></div></div>
       <div class="faq__item"><button class="faq__q" aria-expanded="false">Mám v&nbsp;domě sídlo podnikání. Vadí to?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Rozhodující je, že dům vlastníte a&nbsp;trvale v&nbsp;něm bydlíte. Zapsané sídlo podnikání na adrese domu samo o&nbsp;sobě překážkou není. Pokud část domu slouží jako provozovna nebo dílna, posoudíme to s&nbsp;vámi individuálně ještě před podpisem smlouvy.</p></div></div></div>
       <div class="faq__item"><button class="faq__q" aria-expanded="false">Kdy dostanu dotaci, musím platit všechno předem?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Ne. V&nbsp;programu NZÚ Light se dotace vyplácí zálohově na účet ještě před realizací, takže celou zakázku nefinancujete ze svého. U&nbsp;fotovoltaiky se hradí záloha 30&nbsp;%, zbytek podle smluvního harmonogramu. Konkrétní podmínky čerpání dotace i&nbsp;splatnost vám ukážeme ještě před podpisem smlouvy, abyste přesně věděli, kdy z&nbsp;vašeho účtu odejde jaká částka. Žádost o&nbsp;dotaci podáváme a&nbsp;vyřizujeme za vás.</p></div></div></div>
       <div class="faq__item"><button class="faq__q" aria-expanded="false">Co když má moje střecha jinou plochu než 100&nbsp;m²?<svg width="22" height="22"><use href="#i-plus"/></svg></button><div class="faq__a"><div><p>Pak se změní cena i&nbsp;dotace, ale váš doplatek většinou zůstane stejný. Zateplení stojí 2&nbsp;000&nbsp;Kč/m² a&nbsp;dotace je také 2&nbsp;000&nbsp;Kč/m², u&nbsp;plochy do 125&nbsp;m² se tedy ve vašem doplatku neprojeví. Nad 125&nbsp;m² je vyčerpán strop dotace na zateplení (250&nbsp;000&nbsp;Kč) a&nbsp;každý další metr je už za plnou cenu. Přesnou plochu určí technik při zaměření.</p></div></div></div>
@@ -1600,6 +1718,51 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var fmt = function (n) { return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g, ' ') + ' Kč'; };
+
+
+  /* ═══════════ Kalkulačka nároku (OSVČ) ═══════════ */
+  var lastElig = null;
+  (function () {
+    var tr = $('#e-trzby'), pi = $('#e-partner'); if (!tr) return;
+    var st = { partner: 1, k1: 0, k2: 0, dum: 'stary' };
+    var LIM3 = 25426, LIM5 = 31058, SLEVA = 30840, MIN_SOC = 5720 * 12, MIN_ZDR = 3306 * 12;
+    function netOsvc(trzby) { var zisk = trzby * 0.30; var dan = Math.max(0, zisk * 0.15 - SLEVA); var soc = Math.max(MIN_SOC, zisk * 0.55 * 0.292); var zdr = Math.max(MIN_ZDR, zisk * 0.50 * 0.135); return Math.max(0, (zisk - dan - soc - zdr) / 12); }
+    function fmtK(n) { return Math.round(n).toLocaleString('cs-CZ') + ' Kč'; }
+    function setOn(sel, attr, val) { $$(sel).forEach(function (b) { b.classList.toggle('is-on', b.getAttribute(attr) === String(val)); }); }
+    function pct(inp) { inp.style.setProperty('--pct', ((inp.value - inp.min) / (inp.max - inp.min) * 100) + '%'); }
+    function render() {
+      var trzby = +tr.value, pinc = st.partner ? +pi.value : 0;
+      var net = netOsvc(trzby);
+      var duchod = $('#e-duchod').checked, id3 = $('#e-id3').checked, sup = $('#e-super').checked;
+      var vaha = 1 + (st.partner ? 0.5 : 0) + st.k2 * 0.5 + st.k1 * 0.3;
+      var eq = (net + pinc) / vaha;
+      var lim = (duchod || id3) ? LIM5 : LIM3;
+      pct(tr); pct(pi);
+      $('#e-trzby-out').textContent = fmtK(trzby); $('#e-partner-out').textContent = fmtK(+pi.value);
+      $('#e-partner-wrap').hidden = !st.partner; $('#e-row-partner').hidden = !st.partner;
+      $('#e-net').textContent = '≈ ' + fmtK(net); $('#e-pnet').textContent = fmtK(pinc);
+      $('#e-vaha').textContent = vaha.toLocaleString('cs-CZ'); $('#e-eq').textContent = '≈ ' + fmtK(eq);
+      $('#e-decil').textContent = lim === LIM5 ? '5. decil' : '3. decil'; $('#e-limit').textContent = fmtK(lim);
+      var state, h, t;
+      if (sup) { state = 'ok'; h = 'Máte nárok na dotaci předem'; t = 'Domácnost se superdávkou má nárok bez ohledu na příjem. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.'; }
+      else if (eq <= lim && st.dum === 'novy') { state = 'edge'; h = 'Příjem sedí, rozhodne stav domu'; t = 'Dotace předem je jen pro domy v energetické třídě E až G. Zateplený nebo nový dům ji zpravidla nesplní, ověříme to renovačním pasem. Jinak máte nárok na bezúročný úvěr.'; }
+      else if (eq <= lim) { state = 'ok'; h = 'Pravděpodobně máte nárok na dotaci předem'; t = 'Příjem domácnosti na osobu je pod hranicí ' + fmtK(lim) + '. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.' + (st.dum === 'nevim' ? ' Stav domu (třída E–G) ověříme renovačním pasem.' : ''); }
+      else if (eq <= lim * 1.15) { state = 'edge'; h = 'Jste těsně nad hranicí, spočítáme to přesně'; t = 'Paušálních 70 % je jen odhad. Z daňového přiznání a skutečně zaplaceného pojistného může příjem vyjít níž. Zavoláme a řekneme na rovinu.'; }
+      else { state = 'no'; h = 'Na dotaci předem pravděpodobně nedosáhnete'; t = 'Stát vám ale na stejnou realizaci nabízí bezúročný úvěr až 400 000 Kč, úroky platí stát. Spočítáme vám obě varianty.'; }
+      var v = $('#e-verdict'); v.setAttribute('data-state', state); $('#e-verdict-h').textContent = h; $('#e-verdict-t').textContent = t;
+      $('#e-cta').firstChild.textContent = state === 'no' ? 'Spočítat bezúročný úvěr ' : 'Ověřit nárok přesně a zdarma ';
+      lastElig = { trzby: trzby, partner: pinc, k1: st.k1, k2: st.k2, dum: st.dum, sup: sup, duchod: duchod, id3: id3, net: Math.round(net), eq: Math.round(eq), lim: lim, state: state,
+        txt: 'tržby ' + fmtK(trzby) + ', partner ' + fmtK(pinc) + ', děti<13: ' + st.k1 + ', osoby 14+: ' + st.k2 + ', dům: ' + st.dum + (sup ? ', superdávka' : '') + (duchod ? ', důchodci' : '') + (id3 ? ', ID3' : '') + ' → příjem/os. ' + fmtK(eq) + ' vs ' + fmtK(lim) + ' → ' + state };
+    }
+    tr.addEventListener('input', function () { setOn('[data-trzby]', 'data-trzby', tr.value); render(); });
+    pi.addEventListener('input', function () { setOn('[data-pi]', 'data-pi', pi.value); render(); });
+    $$('[data-trzby]').forEach(function (b) { b.addEventListener('click', function () { tr.value = b.getAttribute('data-trzby'); setOn('[data-trzby]', 'data-trzby', tr.value); render(); }); });
+    $$('[data-pi]').forEach(function (b) { b.addEventListener('click', function () { pi.value = b.getAttribute('data-pi'); setOn('[data-pi]', 'data-pi', pi.value); render(); }); });
+    ['partner', 'k1', 'k2', 'dum'].forEach(function (k) { $$('[data-' + k + ']').forEach(function (b) { b.addEventListener('click', function () { var v = b.getAttribute('data-' + k); st[k] = (k === 'dum') ? v : +v; setOn('[data-' + k + ']', 'data-' + k, v); render(); }); }); });
+    ['#e-duchod', '#e-id3', '#e-super'].forEach(function (id) { $(id).addEventListener('change', render); });
+    var sent = false; $('#e-cta').addEventListener('click', function () { if (!sent && window.dataLayer) { sent = true; window.dataLayer.push({ event: 'eligibility_calc', elig_state: lastElig ? lastElig.state : '' }); } });
+    render();
+  })();
 
   /* ═══════════ Kalkulačka ═══════════ */
   function spocitat(m2) {
@@ -1809,8 +1972,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     LPT.sendLead({
       name: name, phone: phone, email: fd.get('email'), zip: zip,
       type: answers.roof || 'neznáme',
-      note_fields: { 'Nárok NZÚ Light': answers.eligibility || 'neznáme', 'Typ střechy': answers.roof || 'neznáme', 'Plocha střechy': answers.area || 'neznáme', 'Stav střechy': answers.condition || 'neznáme', 'Vlastník': answers.owner || 'neznáme', 'Kalkulačka m²': lastCalc ? lastCalc.m2 + ' m² → doplatek ' + fmt(lastCalc.doplatek) : 'nepoužita' },
-      extra: { eligibility: answers.eligibility || '', roof: answers.roof || '', area: answers.area || '', condition: answers.condition || '', owner: answers.owner || '', calc_m2: lastCalc ? String(lastCalc.m2) : '' },
+      note_fields: { 'Nárok NZÚ Light': answers.eligibility || 'neznáme', 'Typ střechy': answers.roof || 'neznáme', 'Plocha střechy': answers.area || 'neznáme', 'Stav střechy': answers.condition || 'neznáme', 'Vlastník': answers.owner || 'neznáme', 'Kalkulačka nároku OSVČ': lastElig ? lastElig.txt : 'nepoužita', 'Kalkulačka m²': lastCalc ? lastCalc.m2 + ' m² → doplatek ' + fmt(lastCalc.doplatek) : 'nepoužita' },
+      extra: { eligibility: answers.eligibility || '', roof: answers.roof || '', area: answers.area || '', condition: answers.condition || '', owner: answers.owner || '', calc_m2: lastCalc ? String(lastCalc.m2) : '', elig_calc: lastElig ? lastElig.state : '' },
       productDetail: { productVariant: answers.roof || 'null', productParameters: { eligibility: answers.eligibility || 'null', area: answers.area || 'null', condition: answers.condition || 'null', bundle: 'FVE 3,69 kWp + zateplení střechy' } },
       additionalUserData: { roofType: answers.roof || 'null', ownerOfProperty: answers.owner || 'null', buildingType: 'Rodinný dům' },
       contactTime: { callTime: 'none', meetTime: 'none' }
