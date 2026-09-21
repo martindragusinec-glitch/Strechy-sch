@@ -34,8 +34,8 @@ const Captions: React.FC<{k: string; start: number; size?: number}> = ({k, start
   );
 };
 /* středový sloupec: vizuál nahoře, titulky pod ním, celé vertikálně na střed bezpečné zóny */
-const Center: React.FC<{children: React.ReactNode; gap?: number}> = ({children, gap = 40}) => (
-  <div style={{position: 'absolute', left: PX, right: PX, top: PT + 90, bottom: PB, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap}}>{children}</div>
+const Center: React.FC<{children: React.ReactNode; gap?: number; bottom?: boolean}> = ({children, gap = 40, bottom = false}) => (
+  <div style={{position: 'absolute', left: PX, right: PX, top: PT + 90, bottom: PB, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: bottom ? 'flex-end' : 'center', gap}}>{children}</div>
 );
 const font = ['600','500','400'].map(w=>`@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin-ext.woff2`)}) format("woff2");font-weight:${w};unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin.woff2`)}) format("woff2");font-weight:${w}}`).join('');
 
@@ -136,11 +136,11 @@ export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
   const mid3 = l3.start + (l3.end - l3.start) * 0.55;
   return (
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
-    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.45)'}} /><Center><HookCentered a={audience} /></Center></Sequence>
+    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none"><Shade h={55} /><Center bottom><HookCentered a={audience} /></Center></Sequence>
     {/* l2 dotace */}<Card from={sc(l2.start)} dur={sc(l3.start - l2.start)}><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div><Captions k="l2" start={0} /></CenterInCard></Card>
     {/* l3 produkt */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
-    <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><Tiles /><Captions k="l3" start={l3.start} /></Center></Sequence>
-    {/* l4 předem */}<Clip src="clips/4-house.mp4" from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><StickerCentered /><Captions k="l4" start={l4.start} /></Center></Sequence>
+    <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><Tiles /><Captions k="l3" start={0} /></Center></Sequence>
+    {/* l4 předem */}<Clip src="clips/4-house.mp4" from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center><StickerCentered /><Captions k="l4" start={0} /></Center></Sequence>
     {/* l5 doplatek */}<Card from={sc(l5.start)} dur={sc(l6.start - l5.start)}><CenterInCard><PriceCentered /><Captions k="l5" start={0} /></CenterInCard></Card>
     {/* l6 CTA */}<Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><Captions k="l6" start={0} /><CtaCentered /></Center></Sequence>
     {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
