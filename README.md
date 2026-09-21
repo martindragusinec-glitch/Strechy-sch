@@ -97,7 +97,7 @@ Podle `Schlieger-org/marketing-playbook` (AGENTS.md, docs/marketing-manual.md, d
 - [ ] `gw_lead_source` – kód zdroje leadu (CRM); `gw_lead_products` – potvrdit `FVE` + `ZAT`
 - [ ] `form_id` / `form_name` – potvrdit s analytikou
 - [ ] `make_webhook_url` – Make webhook + Router podle `type` (`lead` / `gateway_result`), reCAPTCHA siteverify jen v Make
-- [ ] `recaptcha_site_key` pro finální doménu
+- [x] `recaptcha_site_key` doplněn (v3, doména nzulight.schlieger.cz). **Secret key není v repu** – patří do Make scénáře do větve `gateway_result` (siteverify s `{{1.recaptcha_token}}`), viz standard §5.7
 - [ ] **Správce gateway musí namapovat nová pole v2.1** (leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId, adsetId, sourcePlatform, utm*, click IDs, device, firstTouch, consent) do CRM – gateway je jinak jen zaloguje (README standardu §5.1). Ověřit DEV leadem, že v CRM dorazila atribuce.
 - [ ] `send_ga_client_id` je **vypnuté**. Zapnout až zásady ochrany OÚ na schlieger.cz zmíní, že měřicí identifikátor (cookie `_ga`) spojujeme s poptávkou kvůli vyhodnocení zdrojů (README standardu §8, podmínka 2). Odkaz v souhlasu formuláře míří na `schlieger.cz/podminky-ochrany-osobnich-udaju/`.
 - [ ] `attribution_session_storage: true` (zápis atribuce do sessionStorage před souhlasem) – právník potvrdí výklad „nezbytné pro službu“, jinak přepnout na `false` (README §8).

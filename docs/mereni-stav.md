@@ -39,7 +39,7 @@ Kontrola proti `Schlieger-org/marketing-playbook` ke dni **19. 9. 2026** (commit
 | Potvrdit `gw_lead_products` `['FVE','ZAT']` | CRM | zateplení jako samostatný produktový kód |
 | Potvrdit `form_id` `MULTI_STEP_FORM_FVE_STRECHA` | analytika | web jinde používá `MULTI_STEP_FORM_FVE` |
 | `make_webhook_url` + Router podle `type` | marketing | bez něj není záloha leadu ani log; siteverify reCAPTCHA patří do Make, ne na LP |
-| `recaptcha_site_key` pro finální doménu | marketing | modul ho načítá líně až v kontaktním kroku |
+| ~~`recaptcha_site_key`~~ | hotovo 21. 9. | site key na LP; **secret jen do Make** (siteverify ve větvi `gateway_result`) |
 | **Namapovat nová pole v2.1/2.2 v gateway** | správce gateway | gateway neznámá pole nezamítne, ale bez mapování je jen zaloguje → atribuce nedojde do CRM |
 | DEV lead → `status: completed` → přepnout na PROD | marketing + CRM | `GET …/lead-gateway/result/<id>` |
 
