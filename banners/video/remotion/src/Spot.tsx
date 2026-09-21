@@ -55,7 +55,7 @@ const Card: React.FC<{from: number; dur: number; children: React.ReactNode; bg?:
   </AbsoluteFill></Sequence>
 );
 const Shade: React.FC<{h?: number; top?: boolean}> = ({h = 55, top = false}) => (<AbsoluteFill style={{background: top ? `linear-gradient(180deg, rgba(27,32,40,.75) 0%, rgba(27,32,40,0) ${h}%)` : `linear-gradient(180deg, rgba(27,32,40,0) ${100 - h}%, rgba(27,32,40,.92) 100%)`}} />);
-const Logos: React.FC = () => (<div style={{position: 'absolute', left: PX, right: PX, top: PT - 60, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}><Img src={staticFile('img/nzu-light-logo-dark.png')} style={{height: 64}} /><Img src={staticFile('img/schlieger-logo-white.svg')} style={{height: 27, marginTop: 14}} /></div>);
+const Logos: React.FC = () => (<div style={{position: 'absolute', left: 0, right: 0, top: PT - 40, display: 'flex', justifyContent: 'center'}}><Img src={staticFile('img/nzu-light-logo-dark.png')} style={{height: 84, filter: 'drop-shadow(0 6px 20px rgba(0,0,0,.6))'}} /></div>);
 const Pill: React.FC<{children: React.ReactNode; size: number; color?: string}> = ({children, size, color = GREEN}) => (<span style={{display: 'inline-block', background: color, color: '#fff', padding: '.02em .26em .06em', borderRadius: '.2em', whiteSpace: 'nowrap', fontSize: size, lineHeight: 1.05, fontWeight: 600, letterSpacing: '-.03em'}}>{children}</span>);
 const Word: React.FC<{i: number; children: React.ReactNode; size?: number; pill?: boolean}> = ({i, children, size = 108, pill}) => {
   const p = useSpring(3 + i * 5); const st: React.CSSProperties = {display: 'block', opacity: p, transform: `translateY(${(1 - p) * 60}px)`, fontSize: size, fontWeight: 600, lineHeight: 1.05, letterSpacing: '-.03em', textShadow: pill ? 'none' : '0 6px 40px rgba(0,0,0,.6)'};
@@ -104,9 +104,18 @@ const PriceCentered: React.FC = () => { const f = useCurrentFrame(); const a = u
   <div style={{opacity: a, position: 'relative', fontSize: 96, fontWeight: 600, letterSpacing: '-.04em', lineHeight: 1, color: 'rgba(255,255,255,.8)'}}>385 500 Kč<div style={{position: 'absolute', left: -6, top: '50%', height: 9, marginTop: -4, width: `${line}%`, background: RED, borderRadius: 4}} /></div>
   <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`, fontSize: 40, fontWeight: 500, marginTop: 8}}>Vy doplatíte jen</div>
   <div style={{opacity: b, transform: `scale(${0.6 + 0.4 * b})`}}><Pill size={150}>65 500 Kč</Pill></div></div>); };
-const CtaCentered: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(8); const pulse = 1 + 0.04 * Math.sin(Math.max(0, f - 20) / 4); return (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, opacity: a}}>
-  <div style={{transform: `scale(${pulse})`, display: 'inline-flex', alignItems: 'center', gap: '.5em', background: RED, fontWeight: 600, fontSize: 52, padding: '.7em 1.2em', borderRadius: 18, boxShadow: '0 24px 50px -16px rgba(218,0,15,.8)'}}>Ověřit nárok zdarma <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></div>
-  <div style={{fontSize: 30, color: 'rgba(255,255,255,.9)', lineHeight: 1.4, textAlign: 'center'}}><b>Do 24 h</b> víte, zda máte nárok · <b>23 000+</b> instalací · nezávazně</div></div>); };
+const CtaCentered: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(8);
+  const CLICK = 30; // snímek kliknutí
+  const press = interpolate(f, [CLICK - 4, CLICK, CLICK + 6], [1, 0.93, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const ring = interpolate(f, [CLICK, CLICK + 18], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const fx = interpolate(f, [CLICK - 22, CLICK - 2], [220, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const fy = interpolate(f, [CLICK - 22, CLICK - 2], [260, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const fo = interpolate(f, [CLICK - 24, CLICK - 18, CLICK + 10, CLICK + 18], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  return (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, opacity: a}}>
+  <div style={{position: 'relative'}}>
+  <div style={{position: 'absolute', left: '50%', top: '50%', width: 120, height: 120, marginLeft: -60, marginTop: -60, borderRadius: 60, border: '6px solid #fff', opacity: (1 - ring) * 0.9, transform: `scale(${1 + ring * 3.2})`, pointerEvents: 'none'}} />
+  <div style={{position: 'absolute', left: '50%', top: '50%', marginLeft: -20 + fx, marginTop: -10 + fy, opacity: fo, transform: `scale(${press < 1 ? 0.92 : 1})`, pointerEvents: 'none', zIndex: 2}}><svg width="96" height="96" viewBox="0 0 24 24" fill="#fff" stroke="#1B2028" strokeWidth="0.9" strokeLinejoin="round"><path d="M9 11.5V4.5a1.5 1.5 0 0 1 3 0v6l3.2.6c1.4.3 2.3 1.5 2.3 2.9V17a4 4 0 0 1-4 4h-2.4a4 4 0 0 1-3.3-1.7l-2.6-3.7a1.3 1.3 0 0 1 2-1.6L9 15.2v-3.7z"/></svg></div>
+  <div style={{transform: `scale(${press})`, display: 'inline-flex', alignItems: 'center', gap: '.5em', background: RED, fontWeight: 600, fontSize: 52, padding: '.7em 1.2em', borderRadius: 18, boxShadow: '0 24px 50px -16px rgba(218,0,15,.8)', background: press < 1 ? '#AD0F1A' : RED}}>Ověřit nárok zdarma <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></div></div>
+  <div style={{fontSize: 30, color: 'rgba(255,255,255,.9)', lineHeight: 1.4, textAlign: 'center'}}><b>Do 24 h</b> víte, zda máte nárok · nezávazně a zdarma</div></div>); };
 const Sticker: React.FC = () => { const p = useSpring(3, {damping: 8, stiffness: 260}); const q = useSpring(16); return (
   <div style={{position: 'absolute', left: PX, right: PX, bottom: PB, display: 'flex', flexDirection: 'column', gap: 26}}>
     <div style={{opacity: p, transform: `rotate(${-16 + 12 * p}deg) scale(${0.5 + 0.5 * p})`, transformOrigin: 'left center', alignSelf: 'flex-start', background: YEL, color: INK, fontWeight: 600, fontSize: 44, lineHeight: 1.05, textAlign: 'center', padding: '.5em .8em', borderRadius: 16, textTransform: 'uppercase', letterSpacing: '.02em', boxShadow: '0 24px 50px -14px rgba(0,0,0,.8)'}}>Dotace předem<b style={{display: 'block', fontSize: 70, letterSpacing: '-.02em'}}>320 000 Kč</b>na účet</div>
@@ -144,7 +153,7 @@ export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
     {/* l5 doplatek */}<Card from={sc(l5.start)} dur={sc(l6.start - l5.start)}><CenterInCard><PriceCentered /><Captions k="l5" start={0} /></CenterInCard></Card>
     {/* l6 CTA */}<Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><Captions k="l6" start={0} /><CtaCentered /></Center></Sequence>
     {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
-    <Audio src={staticFile('audio/bed.mp3')} volume={0.35} />
+    <Audio src={staticFile('audio/bed.mp3')} volume={0.5} />
     <Logos />
   </AbsoluteFill>);
 };
