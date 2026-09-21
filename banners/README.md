@@ -12,6 +12,7 @@ Jen formáty **1080×1080 (feed)** a **1080×1920 (Stories/Reels)**. Ve Stories 
 | `sch-fve-nizkoprijmove-…-v01` | superdávka | **Pobíráte superdávku?** | matka s dítětem u dveří domu |
 | `sch-fve-osvc-…-v01` | OSVČ s nižšími příjmy | **Jste OSVČ s nižšími příjmy?** | živnostník před domem |
 | `sch-fve-broad-…-v01` | široké cílení, bez lidí | **Fotovoltaika i zateplení střechy za 65 500 Kč** (= H1 z LP, message match) + řádek pro koho | dům s panely (stejný motiv jako hero LP) |
+| `sch-fve-pozor-…-v01` | široké cílení, bez lidí | **POZOR! FOTOVOLTAIKA SE ZATEPLENÍM STŘECHY POUZE ZA 65 500 Kč** – zpravodajský styl (červený štítek, verzálky, ticker „Aktuálně“) | dům s panely |
 
 Společné prvky (stejné jako na LP): dvě dlaždice **Fotovoltaika + Zateplení střechy** se zeleným plus (nabídka je vidět, ne jen napsaná), řádek „Obojí za **65 500 Kč**“ + cenovka „místo 385 500 Kč“, žlutá nálepka „Dotace předem 320 000 Kč na účet“ (jediný prvek mimo paletu webu, záměrně na pozornost), červené CTA, důvěra „Do 24 h víte, zda máte nárok · 23 000+ instalací · nezávazně“.
 
