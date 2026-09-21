@@ -127,3 +127,7 @@ Hero + zateplení + konzultace: generováno přes Higgsfield MCP (kredity vyčer
 4. Kalkulačka nahoře vs. pod „Co je v ceně“
 - Sdílecí náhled (og:image) je `assets/img/og-image.jpg` 1200×630, vyrenderovaný z hero fotky s logem a titulkem. Po nasazení zkontrolujte absolutní URL v `<meta property="og:image">`.
 - Hero na mobilu je zkrácený: bez řádku „Raději zavolám“ (telefon je v hlavičce i ve sticky liště), menší logo NZÚ a kompaktnější karta prvního kroku.
+
+## Varianta pro OSVČ (`/osvc`)
+
+`osvc.html` je kopie `index.html` s texty pro živnostníky: hero („Pro OSVČ s nižšími příjmy. Živnost vám nárok nebere, rozhoduje příjem domácnosti.“), krok 1 karty i formuláře („Podnikáte a příjem vaší domácnosti je nižší?“, volby Ano jsem OSVČ / Podnikám v důchodu / Invalidní důchod 3. st. / Superdávka / Příjem máme vyšší), sekce nároku (OSVČ do 3. příjmové skupiny, podnikání v důchodu, superdávka/ID), tři FAQ pro OSVČ (nárok, co dokládám, sídlo podnikání), závěrečné CTA. Hodnoty odpovědí (`OSVČ`, `Starobní důchod`…) jsou stejné jako na hlavní LP, takže CRM i Make dostávají stejná data; varianta se pozná podle `pageUrl` (`/osvc`) a `utm_content`. Tracking config je shodný. Nasazuje ji `deploy/publish.sh` (secrets se vkládají do obou souborů), `_redirects` posílá `/osvc.html` a `/osvc/` na `/osvc`. Při změně sdílených částí (CSS, JS, sekce) je nutné upravit oba soubory. Formulace nároku OSVČ (příjmová skupina, sídlo podnikání) čeká na kontrolu právníkem, stejně jako u hlavní LP.
