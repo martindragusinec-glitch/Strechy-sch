@@ -44,7 +44,7 @@ Kampaň v platformě: `SCH | FVE+střecha NZÚ Light | Lead | 2026-09`, ad sety 
 
 ## Video (koncept A, 15 s, 9:16)
 
-- Scénáře: `video/scenar.md`. Vyrobeno: koncept A ve třech hook verzích (senior / nizkoprijmove / osvc), 1080×1920, 30 fps, bez zvuku.
+- Scénáře: `video/scenar.md`. Vyrobeno: koncept A ve třech hook verzích (senior / nizkoprijmove / osvc), 1080×1920, 30 fps, ~19 s. **Zvuk:** český voiceover ElevenLabs (hlas Holden, přes Higgsfield, věty ve `video/vo/`), titulky slovo po slovu synchronizované s VO (časování slov = podíl znaků ve větě), tichý syntetický podkres `bed.mp3` jako placeholder, **před nasazením nahradit licencovaným trackem** (Meta Sound Collection nebo Epidemic) a stáhnout VO o pár dB pod něj.
 - Záběry: Higgsfield Seedance 2.5 (5 s, 1080p, start_image = fotky ze `src/`), uložené ve `video/clips/`.
 - Sestavení: **Remotion** ve `video/remotion/` (`npm install`, `npx remotion studio src/index.ts` pro náhled a úpravy textů v `src/Spot.tsx`, `npx remotion render src/index.ts spot-senior out.mp4`). Titulky, dlaždice, nálepka, cenovka a CTA jsou React komponenty se stejnými hodnotami jako bannery, safe zóny Meta dodržené.
-- Výstupy: `video/out/sch-fve-{publikum}-video15-1080x1920-{YYYYMM}-v01.mp4`, název = kód kreativy = `utm_content`.
+- Výstupy: `video/out/sch-fve-{publikum}-video-1080x1920-{YYYYMM}-v04.mp4`, název = kód kreativy = `utm_content`. Rozvržení: vizuál nahoře, titulky uprostřed, vše centrované, safe zóny 250/340 px.
