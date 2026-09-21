@@ -1966,7 +1966,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         at(8000, function () { verdict.classList.add('is-on'); tween(0, 320000, 900, function (v) { sum.textContent = K(v); }); });
         at(8700, function () { sticker.classList.add('is-on'); });
         at(12600, function () { demo.classList.add('is-reset'); sticker.classList.remove('is-on'); });
-        at(13100, function () { if (running) play(); });
+        at(12950, function () { if (running) play(); });
       }
       var screen = $('.demo__screen', demo);
       function size() { var keep = [inc.textContent, sum.textContent, val.textContent, net.textContent]; inc.textContent = K(10544); sum.textContent = K(320000); val.textContent = K(3000000); net.textContent = '≈ ' + K(49213) + ' / měsíc'; screen.style.height = '0px'; var h = 0; panes.forEach(function (p) { h = Math.max(h, p.scrollHeight); }); screen.style.height = (h + 6) + 'px'; inc.textContent = keep[0]; sum.textContent = keep[1]; val.textContent = keep[2]; net.textContent = keep[3]; }
