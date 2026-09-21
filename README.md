@@ -69,6 +69,16 @@ Odeslání jde výhradně přes `LPTracking.sendLead` (žádný vlastní fetch, 
 
 Test dle §6 (18. 9. 2026, podstrčený fetch, URL s utm + campaign_id/adset_id/ad_id + fbclid=TEST, souhlas přes LPConsent.acceptAll): `form_sent → leadCapture`, stejné `lead_id` = `eventDetails.leadId`; gateway (DEV URL) dostává jen `{ eventDetails }` s hlavičkou `x-gateway-key` a **plným tvarem §5.1** (31 klíčů: tenantId, leadSource, customerType, leadProducts, note, userData, leadId, submittedAt, formId, pageUrl, landingUrl, referrer, campaignId=111, adsetId=222, adId=333, sourcePlatform=META, utm*, gclid/gbraid/wbraid/fbclid=TEST/msclkid/sznclid, gaClientId="", device=desktop, firstTouch, consent.status=granted). `sessionStorage.lp_attr_first/last` zapsané hned při načtení, cookies `_attribution_first/last` až po souhlasu. `typeof fbq` i `gtag` = `undefined`.
 
+## Nasazení – nzulight.schlieger.cz (21. 9. 2026)
+
+LP běží jako Cloudflare Worker se statickými assety `fve-strecha-nzulight` (účet Cloudflare@schlieger.cz), custom doména **https://nzulight.schlieger.cz** (DNS v zóně schlieger.cz vzniklo automaticky), náhled https://fve-strecha-nzulight.obkladac-schlieger.workers.dev. Nasazuje se z čisté kopie (`index.html`, `lp-tracking.js`, `lp-consent.js`, `assets/`, `_headers`, `_redirects`, `wrangler.jsonc`) příkazem `wrangler deploy`; repo v organizaci není na Cloudflare napojené (privátní repo, bez GitHub tokenu).
+
+**Do spuštění je stránka `noindex, nofollow`** (meta robots i hlavička `X-Robots-Tag` v `_headers`). Při spuštění obojí přepnout na `index, follow`, resp. řádek z `_headers` smazat.
+
+**Souhlas:** na subdoméně se z GTM (`GTM-NWL639K`) načte Cookiebot, ale subdoména **není v jeho domain group** (`d9a57f9f-…`), takže Cookiebot lištu nezobrazí a souhlas nevrátí. Modul by přitom Cookiebot upřednostnil a ignoroval naši lištu (ověřeno živě 21. 9.: po „Přijmout vše“ vracel `known: false`). Proto je v `LP_TRACKING_CONFIG` `consent_adapter`, který čte `LPConsent`. **Až marketing přidá `nzulight.schlieger.cz` do Cookiebot domain group:** smazat `consent_adapter`, `LP_CONSENT_CONFIG`, `<script src="lp-consent.js">` a `[data-consent-open]` napojit na `Cookiebot.renew()`.
+
+**Pozor při testování na živé doméně:** GTM se načítá (blokuje se jen na localhostu), takže testovací odeslání formuláře odpálí `form_sent` a s ním konverze v Ads/Meta. Testovat s podstrčeným `fetch` podle §6 standardu, nebo na localhostu.
+
 ## DOPLNIT před nasazením
 
 > Kompletní audit měření proti playbooku (co máme / co chybí, včetně dvou rozporů mezi standardem a GTM manuálem) je v **[`docs/mereni-stav.md`](docs/mereni-stav.md)**.
