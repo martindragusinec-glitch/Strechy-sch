@@ -988,7 +988,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .ecalc__verdict b{font-size:20px;line-height:1.25;color:var(--green-dark);letter-spacing:-.01em}
 .ecalc__verdict span{font-size:14.5px;color:var(--ink-2);line-height:1.5}
 .ecalc__verdict[data-state=edge]{background:#FFF3D6}.ecalc__verdict[data-state=edge] b{color:#7A5200}
-.ecalc__verdict[data-state=no]{background:var(--paper-2)}.ecalc__verdict[data-state=no] b{color:var(--ink)}
+.ecalc__verdict[data-state=no]{background:var(--paper-2)}.ecalc__verdict[data-state=no] b{color:var(--ink)}.ecalc__verdict[data-state=empty]{background:#FFF3D6}.ecalc__verdict[data-state=empty] b{color:#7A5200}.epane--res.is-empty .ecalc__resh,.epane--res.is-empty .ecalc__bar,.epane--res.is-empty .ecalc__sum,.epane--res.is-empty .evlist,.epane--res.is-empty .edocs{display:none}
 .ecalc__note{margin-top:12px;font-size:13px;color:var(--ink-3);line-height:1.5}
 @media (max-width:959px){.ecalc__two{grid-template-columns:1fr 1fr;gap:12px}.ecalc .calc__live{display:none}.hero__h1a{font-size:.6em}
 .ecalc .calc__ctrl{padding:18px 14px 14px}.ecalc .calc__label{flex-wrap:wrap;gap:2px 12px;font-size:15px}.ecalc .calc__label output{font-size:26px;white-space:nowrap;margin-left:auto}
@@ -1018,7 +1018,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .ecalc__resh{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;font-weight:600;color:var(--ink)}.ecalc__resh b{font-size:30px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .ecalc__bar{margin:30px 0 12px}.ecalc__bar .demo__mark{transition:left .9s cubic-bezier(.2,.8,.2,1)}.ecalc__bar .demo__mark.out{border-color:#B8860B}
 .epane--res .ecalc__sum{margin:14px 0 16px;font-size:14px}.epane--res .evlist{margin-top:0}.epane--res .btn{margin-top:16px}.epane--res .ecalc__note .ecalc__link{margin-left:6px}
-@media (max-width:959px){.ecard{padding:16px 14px 20px;margin-top:22px;border-radius:20px}.ecard .calc__label output{font-size:30px}.ecalc__p3--big{grid-template-columns:1fr!important}.ecalc__p3--big button{min-height:52px!important}.ecalc__resh b{font-size:26px}}
+@media (max-width:959px){.ecard{padding:16px 14px 20px;margin-top:22px;border-radius:20px}.ecard .calc__label output{font-size:30px}.ecalc__p3--big{grid-template-columns:1fr!important}.ecalc__p3--big button{min-height:52px!important}.ecard__brand{display:none}.ecard__head .form-stepnum{white-space:nowrap}.ecalc__resh{display:grid;gap:2px}.ecalc__resh b{font-size:28px;white-space:nowrap}.ecalc__bar{margin-top:34px}}
 @media (min-width:960px) and (max-height:840px){.quick{padding:20px}.quick__h{margin-top:8px}.quick__opts{margin-top:12px;gap:8px}}
 @media (max-width:959px){.quick{padding:16px}.quick__opts{margin-top:14px}.quick__note{margin-top:14px}}
 @media (min-width:960px){.ecalc__res{align-self:start;position:sticky;top:96px}.hero__bg{width:130vw;max-width:none;left:calc(90px - 31.9vw);object-position:50% 36%}.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.92) 0%,rgba(18,22,28,.7) 36%,rgba(18,22,28,.26) 58%,rgba(18,22,28,.48) 100%)}.hero__in{gap:0 96px;padding-top:20px;padding-bottom:20px}.hero__content{max-width:640px}.quick{padding:24px}.quick__opts{margin-top:16px}.trust{margin-top:22px}.hero h1{font-size:clamp(34px,3.6vw,50px);margin-top:26px}.hero__h1b{margin-top:18px}.hero__who{margin-top:26px}.hero__call{margin-top:26px}.trust{margin-top:36px}}
@@ -1036,7 +1036,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .ecalc__inc--osvc{grid-template-columns:1fr;background:var(--paper-2);border-color:transparent;margin-top:12px}
 .ecalc__osvc .calc__presets{margin:6px 0 2px}.ecalc__osvc input[type=range]{height:40px}.ecalc__osvc .calc__hint output{font-weight:600;color:var(--ink)}
 .ecalc__osvcrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:10px;border-top:1px dashed var(--line-strong);font-size:14px;color:var(--ink-3)}.ecalc__osvcrow b{font-size:17px;color:var(--green-dark);white-space:nowrap}
-.ecalc__link{background:none;border:0;padding:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--red);text-decoration:underline;text-underline-offset:3px;cursor:pointer;justify-self:start}
+.ecalc__link{background:none;border:0;padding:10px 0;min-height:44px;font:inherit;font-size:14px;font-weight:600;color:var(--red);text-decoration:underline;text-underline-offset:3px;cursor:pointer;justify-self:start;display:inline-flex;align-items:center}
 .ecalc__fine{margin:8px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.5}
 .ecalc__sum{margin:14px 0 8px;font-size:15px;color:var(--ink-2);line-height:1.5}.ecalc__sum b{color:var(--ink)}
 .escale{display:flex;gap:4px}.escale i{flex:1;height:34px;border-radius:8px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:13px;color:var(--ink-3)}
@@ -1909,7 +1909,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       var eq = inc / units, scaleMax = limit * 1.6, zonePct = limit / scaleMax * 100, markPct = Math.min(100, eq / scaleMax * 100);
       $('#e-eqv').textContent = '≈ ' + fmtK(eq); $('#e-zone').style.width = zonePct + '%'; $('#e-limtick').style.left = zonePct + '%'; var mk = $('#e-mark'); mk.style.left = 'calc(' + markPct + '% - 15px)'; mk.classList.toggle('in', eq <= limit); mk.classList.toggle('out', eq > limit);
       var state, h, t;
-      if (sup) { state = 'ok'; h = 'Máte nárok na dotaci předem'; t = 'Domácnost se superdávkou má nárok bez ohledu na příjem. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.'; }
+      if (!sup && inc <= 0) { state = 'empty'; h = 'Zadejte prosím alespoň jeden příjem'; t = 'Bez příjmů nemáme co počítat. Vraťte se ke kroku 2 a zadejte roční fakturaci, případně další příjmy domácnosti.'; }
+      else if (sup) { state = 'ok'; h = 'Máte nárok na dotaci předem'; t = 'Domácnost se superdávkou má nárok bez ohledu na příjem. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.'; }
       else if (light && S.dum === 'novy') { state = 'edge'; h = 'Příjem sedí, rozhodne stav domu'; t = 'Dotace předem je jen pro domy v energetické třídě E až G. Zateplený nebo nový dům ji zpravidla nesplní, ověříme to renovačním pasem. Jinak máte nárok na bezúročný úvěr.'; }
       else if (light) { state = 'ok'; h = 'Pravděpodobně máte nárok na dotaci předem'; t = 'Příjem domácnosti je pod hranicí ' + fmtK(limit) + '. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.' + (S.dum === 'nevim' ? ' Stav domu (třída E–G) ověříme renovačním pasem.' : ''); }
       else if (edge) { state = 'edge'; h = 'Jste těsně nad hranicí, spočítáme to přesně'; t = 'Paušálních 70 % je jen odhad. Z daňového přiznání a skutečně zaplaceného pojistného může příjem vyjít níž. Zavoláme a řekneme na rovinu.'; }
@@ -1922,7 +1923,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       void davky;
       $('#e-docs').innerHTML = docs + '<li>Doklad totožnosti, list vlastnictví a číslo bankovního účtu</li>';
       $('#e-cta').firstChild.textContent = state === 'no' ? 'Spočítat bezúročný úvěr ' : 'Ověřit nárok přesně a zdarma ';
-      lastElig = { state: state, decil: d, inc: Math.round(inc), limit: Math.round(limit), units: units, osvc: Math.round(osvc), mode: S.mode, trzby: trzby, dum: S.dum,
+      var res = $('.epane--res', $('#e-wrap')); if (res) res.classList.toggle('is-empty', state === 'empty');
+      lastElig = { state: state, decil: d, inc: Math.round(inc), limit: Math.round(limit), units: units, osvc: Math.round(osvc), mode: S.mode, trzby: trzby, dum: S.dum, sup: sup, sen: sen, inv: inv,
         txt: 'domácnost ' + S.ad + '+' + S.k14 + '+' + S.k13 + ' (SJ ' + units + ')' + (sup ? ', superdávka' : '') + (sen ? ', důchodci' : '') + (inv ? ', ID3' : '') + '; OSVČ ' + (S.mode === 'a' ? 'fakturace ' + fmtK(trzby) : 'zisk ' + fmtK(num('#e-zisk')) + '/rok') + ' → ' + fmtK(osvc) + '/měs; mzdy ' + fmtK(mzdy) + ', důchody ' + fmtK(duchody) + ', dávky ' + fmtK(davky) + ', jiné ' + fmtK(jine) + '; příjem ' + fmtK(inc) + ', decil ' + d + ', hranice ' + fmtK(limit) + ', dům ' + S.dum + ' → ' + state };
     }
     tr.addEventListener('input', function () { setOn('data-trzby', tr.value); render(); });
@@ -1972,10 +1974,16 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     var stepEl = $('#e-stepnum'), progEl = $('#e-prog'), backBtn = $('#e-back'), wrap = $('#e-wrap'), curStep = 1;
     var panesEl = $('.epanes', wrap);
     function fit() { var a = $('.epane.is-active', wrap); if (a) panesEl.style.height = a.offsetHeight + 'px'; }
+    function prefillForm() {
+      if (!lastElig || typeof form === 'undefined' || !form || form.querySelector('input[name=eligibility]:checked')) return;
+      var val = lastElig.sup ? 'Superdávka' : lastElig.inv ? 'Invalidní důchod 3. stupně' : lastElig.sen ? 'Starobní důchod' : lastElig.state === 'no' ? 'Nic z toho' : 'OSVČ';
+      var inp = $$('input[name=eligibility]', form).filter(function (i) { return i.value === val; })[0];
+      if (inp) { inp.checked = true; answers.eligibility = val; save(); }
+    }
     function go(n, src) {
-      curStep = n; $$('.epane', wrap).forEach(function (p) { p.classList.toggle('is-active', +p.getAttribute('data-s') === n); }); fit();
+      curStep = n; if (n === 4) prefillForm(); $$('.epane', wrap).forEach(function (p) { p.classList.toggle('is-active', +p.getAttribute('data-s') === n); }); fit();
       stepEl.textContent = n < 4 ? 'Krok ' + n + ' ze 3' : 'Váš výsledek'; progEl.style.transform = 'scaleX(' + (n / 4) + ')'; backBtn.classList.toggle('is-visible', n > 1);
-      var top = wrap.getBoundingClientRect().top + window.pageYOffset - 84; if (window.pageYOffset > top + 40 || src === 'next') window.scrollTo({ top: top, behavior: 'smooth' });
+      if (src) setTimeout(function () { var top = wrap.getBoundingClientRect().top + window.pageYOffset - 96; window.scrollTo({ top: top, behavior: 'smooth' }); }, 60);
       var h = $('.epane.is-active h3', wrap); if (h && src) { try { h.focus({ preventScroll: true }); } catch (e) {} }
       if (window.dataLayer && src) window.dataLayer.push({ event: 'calc_step', calc_step: n });
     }
@@ -1989,7 +1997,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       var w = $('#e-wrap'), l = $('#e-launch'); if (!w) return;
       w.hidden = false; l.classList.add('is-open'); go(1);
       if (!opened) { opened = true; if (window.dataLayer) window.dataLayer.push({ event: 'calc_open', calc_source: src }); }
-      requestAnimationFrame(function () { fit(); w.classList.add('is-in'); var top = w.getBoundingClientRect().top + window.pageYOffset - 84; window.scrollTo({ top: top, behavior: 'smooth' }); });
+      requestAnimationFrame(function () { fit(); w.classList.add('is-in'); setTimeout(function () { var h = $('#ecalc-h'); var top = (h || w).getBoundingClientRect().top + window.pageYOffset - 100; window.scrollTo({ top: top, behavior: 'smooth' }); }, 80); });
     }
     $('#e-open').addEventListener('click', function () { openCalc('button'); });
     if (location.hash === '#narok-otevrit') openCalc('hash');
