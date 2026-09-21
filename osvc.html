@@ -1000,6 +1000,25 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .ecalc__pill{flex:none;padding:10px 14px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;color:var(--green-dark);background:var(--green-soft)}.ecalc__pill[data-state=edge]{background:#FFF3D6;color:#7A5200}.ecalc__pill[data-state=no]{background:var(--paper-2);color:var(--ink)}
 .ecalc__res{padding:16px!important}.ecalc__res .ledger__row{padding:9px 0}.ecalc__res .ledger__row span{font-size:13.5px}.ecalc__verdict{order:-1;margin:0 0 12px}.ecalc__res .btn{margin-top:12px}}
 @media (min-width:960px){.ecalc__live{display:none}}
+.ecard{max-width:720px;margin:36px auto 0;background:#fff;color:var(--ink);border-radius:24px;padding:22px 24px 26px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.ecard__head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.ecard__brand{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.ecard .form-back{margin-bottom:6px}
+.epanes{display:grid}.epane{grid-area:1/1;visibility:hidden;opacity:0;transform:translateX(24px);transition:opacity .35s var(--ease),transform .35s var(--ease);align-self:start}
+.epane.is-active{visibility:visible;opacity:1;transform:none}
+.ecard h3,.ecard strong,.ecard b{color:var(--ink)}.epane h3{font-size:clamp(22px,2.4vw,27px);letter-spacing:-.025em;outline:none;margin-top:8px}.epanes{overflow:hidden;transition:height .4s var(--ease)}
+.ecard .ecalc__hint{margin:8px 0 14px}.ecard .ecalc__three .ecalc__group{margin-top:4px}
+.ecard .calc__label{margin-top:4px}.ecard .calc__label output{font-size:38px}
+.ecalc__osvc .calc__presets{margin:12px 0 2px}.ecard .ecalc__osvcrow{margin-top:14px}
+.ecalc__more{margin-top:18px;border:1px solid var(--line-strong);border-radius:14px;padding:0 14px;background:var(--paper)}.ecalc__more summary{cursor:pointer;font-weight:600;font-size:15px;padding:13px 0;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:10px;list-style:none}
+.ecalc__more summary::-webkit-details-marker{display:none}.ecalc__more summary small{font-weight:400;color:var(--ink-3);font-size:13px}.ecalc__more summary::after{content:"+";font-size:22px;color:var(--ink-3);line-height:1}.ecalc__more[open] summary::after{content:"−"}
+.ecalc__more .ecalc__inc{margin:0 0 10px;background:#fff}.ecalc__more[open]{padding-bottom:4px}
+.ecalc__p3--big{grid-template-columns:1fr 1fr 1fr!important}.ecalc__p3--big button{min-height:60px!important;font-size:15.5px!important;white-space:normal!important}
+.ecard .form-next{margin-top:26px}
+.epane--res .ecalc__verdict{margin:6px 0 18px}
+.ecalc__resh{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;font-weight:600;color:var(--ink)}.ecalc__resh b{font-size:30px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ecalc__bar{margin:30px 0 12px}.ecalc__bar .demo__mark{transition:left .9s cubic-bezier(.2,.8,.2,1)}.ecalc__bar .demo__mark.out{border-color:#B8860B}
+.epane--res .ecalc__sum{margin:14px 0 16px;font-size:14px}.epane--res .evlist{margin-top:0}.epane--res .btn{margin-top:16px}.epane--res .ecalc__note .ecalc__link{margin-left:6px}
+@media (max-width:959px){.ecard{padding:16px 14px 20px;margin-top:22px;border-radius:20px}.ecard .calc__label output{font-size:30px}.ecalc__p3--big{grid-template-columns:1fr!important}.ecalc__p3--big button{min-height:52px!important}.ecalc__resh b{font-size:26px}}
 @media (min-width:960px) and (max-height:840px){.quick{padding:20px}.quick__h{margin-top:8px}.quick__opts{margin-top:12px;gap:8px}}
 @media (max-width:959px){.quick{padding:16px}.quick__opts{margin-top:14px}.quick__note{margin-top:14px}}
 @media (min-width:960px){.ecalc__res{align-self:start;position:sticky;top:96px}.hero__bg{width:130vw;max-width:none;left:calc(90px - 31.9vw);object-position:50% 36%}.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.92) 0%,rgba(18,22,28,.7) 36%,rgba(18,22,28,.26) 58%,rgba(18,22,28,.48) 100%)}.hero__in{gap:0 96px;padding-top:20px;padding-bottom:20px}.hero__content{max-width:640px}.quick{padding:24px}.quick__opts{margin-top:16px}.trust{margin-top:22px}.hero h1{font-size:clamp(34px,3.6vw,50px);margin-top:26px}.hero__h1b{margin-top:18px}.hero__who{margin-top:26px}.hero__call{margin-top:26px}.trust{margin-top:36px}}
@@ -1086,7 +1105,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .launch.is-open{grid-template-columns:1fr;gap:0}
 .launch.is-open .launch__media,.launch.is-open .launch__points,.launch.is-open .launch__btn,.launch.is-open .launch__note,.launch.is-open p{display:none}
 .launch.is-open h2{max-width:none}
-.launch.is-open+.ecalc{margin-top:28px}
+.launch.is-open+.ecard{margin-top:28px}
 .ecalc{opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .45s var(--ease)}.ecalc[hidden]{display:none}
 .ecalc.is-in{opacity:1;transform:none}
 @media (min-width:960px){.launch{grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:56px}.launch__media{width:100%;max-width:none;padding:48px 44px}.demo__screen{height:300px}.demo{padding:22px 30px 26px}.demo__q{font-size:19px;padding:16px 0 14px}.demo__chips i{height:48px;font-size:16px}.demo__checks span{font-size:13.5px;padding:10px 12px 10px 36px}.demo__slh b{font-size:30px}.demo__verdict>div>b{font-size:20px}.demo__resh b{font-size:32px}.demo__stats span b{font-size:21px}.demo__row b{font-size:19px}.demo__sticker{right:26px;top:22px;font-size:13px;padding:12px 16px}.demo__sticker b{font-size:26px}.launch.is-open .launch__txt{text-align:center;max-width:none}.launch.is-open h2{margin:0 auto}}
@@ -1256,32 +1275,37 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <div class="demo__sticker" id="demo-sticker">Dotace předem<b>320&nbsp;000&nbsp;Kč</b>na účet</div>
       </div>
     </div>
-    <div class="calc ecalc" id="e-wrap" hidden>
-      <div class="calc__ctrl">
-        <div class="ecalc__step"><b>1</b>Kdo u&nbsp;vás doma bydlí?</div>
-        <p class="ecalc__hint">Všichni, kdo s&nbsp;vámi opravdu bydlí.</p>
-        <div class="ecalc__two ecalc__three">
-          <div class="ecalc__group"><span class="ecalc__q">Dospělí</span><div class="calc__presets ecalc__p4" role="group" aria-label="Dospělí"><button type="button" data-ad="1" class="is-on">1</button><button type="button" data-ad="2">2</button><button type="button" data-ad="3">3</button><button type="button" data-ad="4">4+</button></div></div>
-          <div class="ecalc__group"><span class="ecalc__q">Děti 14–17</span><div class="calc__presets ecalc__p4" role="group" aria-label="Děti 14 až 17 let"><button type="button" data-k14="0" class="is-on">0</button><button type="button" data-k14="1">1</button><button type="button" data-k14="2">2</button><button type="button" data-k14="3">3+</button></div></div>
-          <div class="ecalc__group"><span class="ecalc__q">Děti do 13</span><div class="calc__presets ecalc__p4" role="group" aria-label="Děti do 13 let"><button type="button" data-k13="0" class="is-on">0</button><button type="button" data-k13="1">1</button><button type="button" data-k13="2">2</button><button type="button" data-k13="3">3+</button></div></div>
-        </div>
+    <div class="ecard ecalc" id="e-wrap" hidden>
+      <div class="ecard__head"><span class="form-stepnum" id="e-stepnum" aria-live="polite">Krok 1 ze 3</span><span class="ecard__brand">Kalkulačka nároku · NZÚ Light</span></div>
+      <div class="progress" aria-hidden="true"><i id="e-prog"></i></div>
+      <button type="button" class="form-back" id="e-back"><svg width="16" height="16" style="transform:rotate(180deg)"><use href="#i-arrow"/></svg> Zpět</button>
+      <div class="epanes">
 
-        <span class="ecalc__q ecalc__q--sub">Platí u&nbsp;vás něco z&nbsp;toho?</span>
-        <div class="ecalc__checks">
-          <label class="ecalc__check"><input type="checkbox" id="e-super"><span>Domácnost pobírá superdávku <small>nárok máte automaticky</small></span></label>
-          <label class="ecalc__check"><input type="checkbox" id="e-duchod"><span>Všichni dospělí jsou ve starobním důchodu <small>mírnější hranice příjmů</small></span></label>
-          <label class="ecalc__check"><input type="checkbox" id="e-id3"><span>Někdo pobírá invalidní důchod 3.&nbsp;stupně <small>mírnější hranice příjmů</small></span></label>
-        </div>
+        <section class="epane is-active" data-s="1" aria-label="Krok 1">
+          <h3 tabindex="-1">Kdo u&nbsp;vás doma bydlí?</h3>
+          <p class="ecalc__hint">Všichni, kdo s&nbsp;vámi opravdu bydlí, i&nbsp;dospělé dítě bez příjmu.</p>
+          <div class="ecalc__two ecalc__three">
+            <div class="ecalc__group"><span class="ecalc__q">Dospělí</span><div class="calc__presets ecalc__p4" role="group" aria-label="Dospělí"><button type="button" data-ad="1" class="is-on">1</button><button type="button" data-ad="2">2</button><button type="button" data-ad="3">3</button><button type="button" data-ad="4">4+</button></div></div>
+            <div class="ecalc__group"><span class="ecalc__q">Děti 14–17</span><div class="calc__presets ecalc__p4" role="group" aria-label="Děti 14 až 17 let"><button type="button" data-k14="0" class="is-on">0</button><button type="button" data-k14="1">1</button><button type="button" data-k14="2">2</button><button type="button" data-k14="3">3+</button></div></div>
+            <div class="ecalc__group"><span class="ecalc__q">Děti do 13</span><div class="calc__presets ecalc__p4" role="group" aria-label="Děti do 13 let"><button type="button" data-k13="0" class="is-on">0</button><button type="button" data-k13="1">1</button><button type="button" data-k13="2">2</button><button type="button" data-k13="3">3+</button></div></div>
+          </div>
+          <span class="ecalc__q ecalc__q--sub">Platí u&nbsp;vás něco z&nbsp;toho?</span>
+          <div class="ecalc__checks">
+            <label class="ecalc__check"><input type="checkbox" id="e-super"><span>Domácnost pobírá superdávku <small>nárok máte automaticky</small></span></label>
+            <label class="ecalc__check"><input type="checkbox" id="e-duchod"><span>Všichni dospělí jsou ve starobním důchodu <small>mírnější hranice příjmů</small></span></label>
+            <label class="ecalc__check"><input type="checkbox" id="e-id3"><span>Někdo pobírá invalidní důchod 3.&nbsp;stupně <small>mírnější hranice příjmů</small></span></label>
+          </div>
+          <button type="button" class="btn btn--primary btn--block form-next" data-go="2" data-cta="ecalc-step-1">Pokračovat <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></button>
+        </section>
 
-        <div class="ecalc__step"><b>2</b>Kolik peněz vám chodí?</div>
-        <p class="ecalc__hint">Fakturaci za rok, ostatní čisté částky za měsíc, za všechny členy. Co nemáte, nechte prázdné.</p>
-
-        <div class="ecalc__inc ecalc__inc--osvc">
-          <label for="e-trzby"><b>Roční fakturace (OSVČ)</b><small id="e-osvc-hint">Výdaje počítáme paušálně 70&nbsp;%, nemusíte nic dohledávat.</small></label>
+        <section class="epane" data-s="2" aria-label="Krok 2">
+          <h3 tabindex="-1">Kolik ročně vyfakturujete?</h3>
+          <p class="ecalc__hint" id="e-osvc-hint">Fakturace za rok bez DPH. Výdaje počítáme paušálně 70&nbsp;%, nemusíte nic dohledávat.</p>
           <div class="ecalc__osvc" id="e-osvc-a">
+            <div class="calc__label"><span>Roční fakturace</span><output for="e-trzby" id="e-trzby-out" class="num">800&nbsp;000&nbsp;Kč</output></div>
             <div class="calc__presets ecalc__p5" role="group" aria-label="Rychlá volba fakturace"><button type="button" data-trzby="300000">300&nbsp;tis.</button><button type="button" data-trzby="500000">500&nbsp;tis.</button><button type="button" data-trzby="800000" class="is-on">800&nbsp;tis.</button><button type="button" data-trzby="1000000">1&nbsp;mil.</button><button type="button" data-trzby="1500000">1,5&nbsp;mil.</button></div>
             <input type="range" id="e-trzby" min="0" max="3000000" step="50000" value="800000" aria-valuetext="800 000 Kč ročně">
-            <div class="calc__hint"><span>0&nbsp;Kč</span><span><output for="e-trzby" id="e-trzby-out" class="num">800&nbsp;000&nbsp;Kč</output> za rok</span><span>3&nbsp;mil.&nbsp;Kč</span></div>
+            <div class="calc__hint"><span>0&nbsp;Kč</span><span>nebo posuňte přesněji</span><span>3&nbsp;mil.&nbsp;Kč</span></div>
           </div>
           <div class="ecalc__osvc" id="e-osvc-b" hidden>
             <div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="1000" placeholder="0" id="e-zisk" aria-label="Roční čistý zisk"><span>Kč za rok</span></div>
@@ -1289,35 +1313,36 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
           </div>
           <div class="ecalc__osvcrow"><span>Čistý příjem z&nbsp;podnikání</span><b id="e-net">≈ 0&nbsp;Kč / měsíc</b></div>
           <button type="button" class="ecalc__link" id="e-osvc-toggle">Znám čistý zisk z&nbsp;daňového přiznání</button>
-        </div>
+          <details class="ecalc__more" id="e-more"><summary>Přidat další příjmy domácnosti <small>partner, důchody, dávky</small></summary>
+            <div class="ecalc__inc"><label for="e-mzdy"><b>Výplaty ze zaměstnání</b><small>partner, dospělé děti · čistá mzda za měsíc</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-mzdy"><span>Kč</span></div></div>
+            <div class="ecalc__inc"><label for="e-duchody"><b>Důchody</b><small>starobní i&nbsp;invalidní · za měsíc</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-duchody"><span>Kč</span></div></div>
+            <div class="ecalc__inc"><label for="e-jine"><b>Jiné příjmy</b><small>dávky a&nbsp;příspěvky, výživné, nájem · za měsíc</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-jine"><span>Kč</span></div></div>
+          </details>
+          <button type="button" class="btn btn--primary btn--block form-next" data-go="3" data-cta="ecalc-step-2">Pokračovat <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></button>
+        </section>
 
-        <div class="ecalc__inc"><label for="e-mzdy"><b>Výplaty ze zaměstnání</b><small>partner, dospělé děti</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-mzdy"><span>Kč</span></div></div>
-        <div class="ecalc__inc"><label for="e-duchody"><b>Důchody</b><small>starobní i&nbsp;invalidní</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-duchody"><span>Kč</span></div></div>
-        <div class="ecalc__inc"><label for="e-jine"><b>Jiné příjmy</b><small>dávky a&nbsp;příspěvky, výživné, nájem</small></label><div class="ecalc__money"><input type="number" inputmode="numeric" min="0" step="500" placeholder="0" id="e-jine"><span>Kč</span></div></div>
+        <section class="epane" data-s="3" aria-label="Krok 3">
+          <h3 tabindex="-1">Jaký je váš dům?</h3>
+          <p class="ecalc__hint">Dotace předem je pro domy v&nbsp;energetické třídě E až G, typicky starší dům bez zateplení.</p>
+          <div class="calc__presets ecalc__p3 ecalc__p3--big" role="group" aria-label="Stav domu"><button type="button" data-dum="stary" class="is-on">Starší, bez zateplení</button><button type="button" data-dum="novy">Zateplený nebo nový</button><button type="button" data-dum="nevim">Nevím</button></div>
+          <button type="button" class="btn btn--primary btn--block form-next" data-go="4" data-cta="ecalc-step-3">Zobrazit výsledek <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></button>
+        </section>
 
-        <div class="ecalc__step"><b>3</b>Jaký je váš dům?</div>
-        <div class="calc__presets ecalc__p3" role="group" aria-label="Stav domu"><button type="button" data-dum="stary" class="is-on">Starší, bez zateplení</button><button type="button" data-dum="novy">Zateplený nebo nový</button><button type="button" data-dum="nevim">Nevím</button></div>
-
-        <div class="ecalc__live" aria-live="polite">
-          <div><span>Vaše příjmová skupina</span><b id="e-d-m">3 z&nbsp;10</b><small>hranice <span id="e-limit-m">25&nbsp;426&nbsp;Kč</span></small></div>
-          <a href="#e-verdict" class="ecalc__pill" id="e-pill" data-state="ok">Nárok ✓</a>
-        </div>
-        <p class="calc__foot">Výpočet kopíruje nástroj SFŽP pro určení příjmového decilu, verze 1.2 (24.&nbsp;6.&nbsp;2026), data EU-SILC 2025. O&nbsp;přiznání podpory rozhoduje SFŽP ČR. Podmínkou dotace NZÚ Light je dům v&nbsp;energetické třídě E–G.</p>
-      </div>
-
-      <div class="ledger num ecalc__res" aria-live="polite">
-        <div class="ecalc__verdict" id="e-verdict" data-state="ok"><b id="e-verdict-h">Pravděpodobně máte nárok na dotaci předem</b><span id="e-verdict-t"></span></div>
-        <p class="ecalc__sum">Příjem domácnosti <b id="e-inc">0&nbsp;Kč</b> měsíčně, <b id="e-sj">1,0</b> spotřební jednotky. Patříte do <b id="e-d">3. skupiny z&nbsp;10</b> (1 = nejnižší příjmy).</p>
-        <div class="escale" id="e-scale" aria-hidden="true"></div>
-        <p class="ecalc__scalenote">Zelené pásmo = nárok na dotaci. Vaše hranice: <b id="e-limit">25&nbsp;426&nbsp;Kč</b> čistého měsíčně<span id="e-limit-note"></span>.</p>
-        <div class="evlist">
-          <div class="ev" id="ev-light"><i></i><span><b>Dotace NZÚ Light, 320&nbsp;000&nbsp;Kč předem</b><p id="ev-light-t"></p></span></div>
-          <div class="ev" id="ev-uver"><i></i><span><b>Bezúročný úvěr se splatností 25&nbsp;let</b><p id="ev-uver-t"></p></span></div>
-          <div class="ev" id="ev-pas"><i></i><span><b>Renovační pas a&nbsp;poradenství zdarma</b><p id="ev-pas-t"></p></span></div>
-        </div>
-        <details class="edocs"><summary>Co si připravit k&nbsp;žádosti</summary><ul id="e-docs"></ul></details>
-        <a class="btn btn--primary btn--block" href="#kalkulace" data-cta="ecalc-primary" id="e-cta">Ověřit nárok přesně a&nbsp;zdarma <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
-        <p class="ecalc__note">Do 24 hodin zavoláme, projdeme to s&nbsp;vámi podle skutečných dokladů a&nbsp;řekneme na rovinu, jak to je.</p>
+        <section class="epane epane--res" data-s="4" aria-label="Výsledek">
+          <div class="ecalc__verdict" id="e-verdict" data-state="ok"><b id="e-verdict-h">Pravděpodobně máte nárok na dotaci předem</b><span id="e-verdict-t"></span></div>
+          <div class="ecalc__resh"><span>Příjem domácnosti na osobu</span><b id="e-eqv">0&nbsp;Kč</b></div>
+          <div class="demo__bar ecalc__bar"><i class="demo__zone" id="e-zone"></i><i class="demo__lim" id="e-limtick"><em>hranice <span id="e-limit">25&nbsp;426&nbsp;Kč</span></em></i><i class="demo__mark" id="e-mark"></i></div>
+          <p class="ecalc__sum">Domácnost má <b id="e-inc">0&nbsp;Kč</b> čistého měsíčně při <b id="e-sj">1,0</b> spotřební jednotce. Patříte do <b id="e-d">3. skupiny z&nbsp;10</b> (1 = nejnižší příjmy)<span id="e-limit-note"></span>.</p>
+          <div class="evlist">
+            <div class="ev" id="ev-light"><i></i><span><b>Dotace NZÚ Light, 320&nbsp;000&nbsp;Kč předem</b><p id="ev-light-t"></p></span></div>
+            <div class="ev" id="ev-uver"><i></i><span><b>Bezúročný úvěr se splatností 25&nbsp;let</b><p id="ev-uver-t"></p></span></div>
+            <div class="ev" id="ev-pas"><i></i><span><b>Renovační pas a&nbsp;poradenství zdarma</b><p id="ev-pas-t"></p></span></div>
+          </div>
+          <details class="edocs"><summary>Co si připravit k&nbsp;žádosti</summary><ul id="e-docs"></ul></details>
+          <a class="btn btn--primary btn--block" href="#kalkulace" data-cta="ecalc-primary" id="e-cta">Ověřit nárok přesně a&nbsp;zdarma <span class="btn__arrow"><svg width="18" height="18"><use href="#i-arrow"/></svg></span></a>
+          <p class="ecalc__note">Do 24 hodin zavoláme, projdeme to s&nbsp;vámi podle skutečných dokladů a&nbsp;řekneme na rovinu, jak to je. <button type="button" class="ecalc__link" data-go="1">Upravit údaje</button></p>
+          <p class="calc__foot">Výpočet kopíruje nástroj SFŽP pro určení příjmového decilu, verze 1.2 (24.&nbsp;6.&nbsp;2026), data EU-SILC 2025. O&nbsp;přiznání podpory rozhoduje SFŽP ČR.</p>
+        </section>
       </div>
     </div>
   </div>
@@ -1881,8 +1906,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       $('#e-inc').textContent = fmtK(inc); $('#e-sj').textContent = units.toLocaleString('cs-CZ', { minimumFractionDigits: 1 });
       $('#e-d').textContent = d + '. skupiny z 10';
       $('#e-limit').textContent = fmtK(limit); $('#e-limit-note').textContent = (sen || inv) ? ' (mírnější hranice pro důchodce a invaliditu 3. stupně)' : '';
-      var segs = ''; for (var i = 1; i <= 10; i++) segs += '<i class="' + (i <= lightMax ? 'zone' : '') + (i === d ? (light ? ' me' : ' me out') : '') + '">' + i + '</i>';
-      $('#e-scale').innerHTML = segs;
+      var eq = inc / units, scaleMax = limit * 1.6, zonePct = limit / scaleMax * 100, markPct = Math.min(100, eq / scaleMax * 100);
+      $('#e-eqv').textContent = '≈ ' + fmtK(eq); $('#e-zone').style.width = zonePct + '%'; $('#e-limtick').style.left = zonePct + '%'; var mk = $('#e-mark'); mk.style.left = 'calc(' + markPct + '% - 15px)'; mk.classList.toggle('in', eq <= limit); mk.classList.toggle('out', eq > limit);
       var state, h, t;
       if (sup) { state = 'ok'; h = 'Máte nárok na dotaci předem'; t = 'Domácnost se superdávkou má nárok bez ohledu na příjem. 320 000 Kč přijde na účet před montáží, vy doplatíte 65 500 Kč.'; }
       else if (light && S.dum === 'novy') { state = 'edge'; h = 'Příjem sedí, rozhodne stav domu'; t = 'Dotace předem je jen pro domy v energetické třídě E až G. Zateplený nebo nový dům ji zpravidla nesplní, ověříme to renovačním pasem. Jinak máte nárok na bezúročný úvěr.'; }
@@ -1897,7 +1922,6 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       void davky;
       $('#e-docs').innerHTML = docs + '<li>Doklad totožnosti, list vlastnictví a číslo bankovního účtu</li>';
       $('#e-cta').firstChild.textContent = state === 'no' ? 'Spočítat bezúročný úvěr ' : 'Ověřit nárok přesně a zdarma ';
-      var pm = $('#e-pill'); pm.setAttribute('data-state', state); pm.textContent = state === 'ok' ? 'Nárok ✓' : state === 'edge' ? 'Na hraně' : 'Úvěr 0 %'; $('#e-d-m').textContent = d + ' z 10'; $('#e-limit-m').textContent = fmtK(limit);
       lastElig = { state: state, decil: d, inc: Math.round(inc), limit: Math.round(limit), units: units, osvc: Math.round(osvc), mode: S.mode, trzby: trzby, dum: S.dum,
         txt: 'domácnost ' + S.ad + '+' + S.k14 + '+' + S.k13 + ' (SJ ' + units + ')' + (sup ? ', superdávka' : '') + (sen ? ', důchodci' : '') + (inv ? ', ID3' : '') + '; OSVČ ' + (S.mode === 'a' ? 'fakturace ' + fmtK(trzby) : 'zisk ' + fmtK(num('#e-zisk')) + '/rok') + ' → ' + fmtK(osvc) + '/měs; mzdy ' + fmtK(mzdy) + ', důchody ' + fmtK(duchody) + ', dávky ' + fmtK(davky) + ', jiné ' + fmtK(jine) + '; příjem ' + fmtK(inc) + ', decil ' + d + ', hranice ' + fmtK(limit) + ', dům ' + S.dum + ' → ' + state };
     }
@@ -1906,7 +1930,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     ['ad', 'k14', 'k13', 'dum'].forEach(function (k) { $$('[data-' + k + ']').forEach(function (b) { b.addEventListener('click', function () { var v = b.getAttribute('data-' + k); S[k] = (k === 'dum') ? v : +v; setOn('data-' + k, v); render(); }); }); });
     ['#e-super', '#e-duchod', '#e-id3'].forEach(function (id) { $(id).addEventListener('change', render); });
     ['#e-zisk', '#e-mzdy', '#e-duchody', '#e-jine'].forEach(function (id) { $(id).addEventListener('input', render); });
-    $('#e-osvc-toggle').addEventListener('click', function () { S.mode = S.mode === 'a' ? 'b' : 'a'; $('#e-osvc-a').hidden = S.mode !== 'a'; $('#e-osvc-b').hidden = S.mode !== 'b'; this.textContent = S.mode === 'a' ? 'Znám čistý zisk z daňového přiznání' : 'Raději zadám roční fakturaci'; $('#e-osvc-hint').textContent = S.mode === 'a' ? 'Výdaje počítáme paušálně 70 %, nemusíte nic dohledávat.' : 'Roční čistý zisk po dani a odvodech, vydělíme dvanácti.'; if (S.mode === 'b') $('#e-zisk').focus(); render(); });
+    $('#e-osvc-toggle').addEventListener('click', function () { S.mode = S.mode === 'a' ? 'b' : 'a'; $('#e-osvc-a').hidden = S.mode !== 'a'; $('#e-osvc-b').hidden = S.mode !== 'b'; requestAnimationFrame(fit); this.textContent = S.mode === 'a' ? 'Znám čistý zisk z daňového přiznání' : 'Raději zadám roční fakturaci'; $('#e-osvc-hint').textContent = S.mode === 'a' ? 'Fakturace za rok bez DPH. Výdaje počítáme paušálně 70 %, nemusíte nic dohledávat.' : 'Roční čistý zisk po dani a odvodech, vydělíme dvanácti.'; if (S.mode === 'b') $('#e-zisk').focus(); render(); });
     var sent = false; $('#e-cta').addEventListener('click', function () { if (!sent && window.dataLayer) { sent = true; window.dataLayer.push({ event: 'eligibility_calc', elig_state: lastElig ? lastElig.state : '', elig_decil: lastElig ? lastElig.decil : '' }); } });
     /* živá ukázka kalkulačky: pevná výška, kroky se střídají jako obrazovky; smyčka, pauza mimo viewport, statický konec při prefers-reduced-motion */
     (function () {
@@ -1944,15 +1968,33 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       function stop() { running = false; timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); }
       if ('IntersectionObserver' in window) { new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) start(); else stop(); }); }, { threshold: 0.35 }).observe(demo); } else start();
     })();
+    /* kroky */
+    var stepEl = $('#e-stepnum'), progEl = $('#e-prog'), backBtn = $('#e-back'), wrap = $('#e-wrap'), curStep = 1;
+    var panesEl = $('.epanes', wrap);
+    function fit() { var a = $('.epane.is-active', wrap); if (a) panesEl.style.height = a.offsetHeight + 'px'; }
+    function go(n, src) {
+      curStep = n; $$('.epane', wrap).forEach(function (p) { p.classList.toggle('is-active', +p.getAttribute('data-s') === n); }); fit();
+      stepEl.textContent = n < 4 ? 'Krok ' + n + ' ze 3' : 'Váš výsledek'; progEl.style.transform = 'scaleX(' + (n / 4) + ')'; backBtn.classList.toggle('is-visible', n > 1);
+      var top = wrap.getBoundingClientRect().top + window.pageYOffset - 84; if (window.pageYOffset > top + 40 || src === 'next') window.scrollTo({ top: top, behavior: 'smooth' });
+      var h = $('.epane.is-active h3', wrap); if (h && src) { try { h.focus({ preventScroll: true }); } catch (e) {} }
+      if (window.dataLayer && src) window.dataLayer.push({ event: 'calc_step', calc_step: n });
+    }
+    $$('[data-go]', wrap).forEach(function (b) { b.addEventListener('click', function () { go(+b.getAttribute('data-go'), 'next'); }); });
+    backBtn.addEventListener('click', function () { go(Math.max(1, curStep - 1), 'back'); });
+    ['#e-more', '.edocs'].forEach(function (sel) { var d = $(sel, wrap); if (d) d.addEventListener('toggle', function () { requestAnimationFrame(fit); }); });
+    window.addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    $$('[data-dum]', wrap).forEach(function (b) { b.addEventListener('click', function () { if (curStep === 3) setTimeout(function () { go(4, 'next'); }, 220); }); });
     var opened = false;
     function openCalc(src) {
       var w = $('#e-wrap'), l = $('#e-launch'); if (!w) return;
-      w.hidden = false; l.classList.add('is-open');
+      w.hidden = false; l.classList.add('is-open'); go(1);
       if (!opened) { opened = true; if (window.dataLayer) window.dataLayer.push({ event: 'calc_open', calc_source: src }); }
-      requestAnimationFrame(function () { w.classList.add('is-in'); var top = w.getBoundingClientRect().top + window.pageYOffset - 84; window.scrollTo({ top: top, behavior: 'smooth' }); });
+      requestAnimationFrame(function () { fit(); w.classList.add('is-in'); var top = w.getBoundingClientRect().top + window.pageYOffset - 84; window.scrollTo({ top: top, behavior: 'smooth' }); });
     }
     $('#e-open').addEventListener('click', function () { openCalc('button'); });
     if (location.hash === '#narok-otevrit') openCalc('hash');
+    if (location.hash === '#narok-vysledek') { openCalc('hash'); go(4); }
+    var mh = location.hash.match(/^#narok-krok-([1-4])$/); if (mh) { openCalc('hash'); go(+mh[1]); }
     render();
   })();
   /* ═══════════ Kalkulačka ═══════════ */
