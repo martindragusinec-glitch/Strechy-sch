@@ -990,9 +990,20 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .ecalc__verdict[data-state=edge]{background:#FFF3D6}.ecalc__verdict[data-state=edge] b{color:#7A5200}
 .ecalc__verdict[data-state=no]{background:var(--paper-2)}.ecalc__verdict[data-state=no] b{color:var(--ink)}
 .ecalc__note{margin-top:12px;font-size:13px;color:var(--ink-3);line-height:1.5}
-@media (max-width:959px){.ecalc__two{grid-template-columns:1fr}.ecalc .calc__live{display:none}.hero__h1a{font-size:.6em}.ecalc .calc__label{flex-wrap:wrap;gap:4px 12px}.ecalc .calc__label output{font-size:30px;white-space:nowrap}.ecalc .calc__presets button{padding:0 13px;font-size:14px}}
-@media (min-width:960px){.ecalc__res{align-self:start;position:sticky;top:96px}.hero__bg{width:114%;max-width:none;left:-14%;object-position:50% 38%}.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.92) 0%,rgba(18,22,28,.7) 36%,rgba(18,22,28,.26) 58%,rgba(18,22,28,.48) 100%)}.hero__in{gap:0 96px}.hero__content{max-width:640px}.hero h1{font-size:clamp(34px,3.6vw,50px);margin-top:26px}.hero__h1b{margin-top:18px}.hero__who{margin-top:26px}.hero__call{margin-top:26px}.trust{margin-top:36px}}
-@media (max-width:959px){.hero__bg{object-position:53% 0%;height:520px}.hero::before{background:linear-gradient(180deg,rgba(18,22,28,.22) 0%,rgba(18,22,28,.3) 40%,rgba(18,22,28,.72) 62%,#12161C 520px)}.hero__in{padding-top:250px}.hero h1{margin-top:16px}.hero__h1a{margin-bottom:12px}.hero__h1b{margin-top:30px}.hero__who{margin-top:16px}.quick{margin-top:14px}}
+@media (max-width:959px){.ecalc__two{grid-template-columns:1fr 1fr;gap:12px}.ecalc .calc__live{display:none}.hero__h1a{font-size:.6em}
+.ecalc .calc__ctrl{padding:18px 14px 14px}.ecalc .calc__label{flex-wrap:wrap;gap:2px 12px;font-size:15px}.ecalc .calc__label output{font-size:26px;white-space:nowrap;margin-left:auto}
+.ecalc .calc__presets{display:grid;gap:6px;margin:10px 0 2px}.ecalc .calc__presets button{padding:0 6px;font-size:13.5px;min-height:42px;white-space:nowrap}
+.ecalc__p5{grid-template-columns:repeat(5,1fr)}.ecalc__p4{grid-template-columns:repeat(4,1fr)}.ecalc__p2{grid-template-columns:1fr 1.4fr}.ecalc__p3{grid-template-columns:1fr 1fr}.ecalc__p3 button:last-child{grid-column:1/-1}
+.ecalc__group{margin-top:18px}.ecalc__q{font-size:15px;margin-bottom:6px}.ecalc__check{padding:9px 12px;font-size:14px}.ecalc input[type=range]{height:40px}
+.ecalc__live{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom));z-index:3;margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 24px -12px rgba(27,32,40,.35)}
+.ecalc__live>div{display:grid;line-height:1.2}.ecalc__live span{font-size:11.5px;color:var(--ink-3)}.ecalc__live b{font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.02em;white-space:nowrap}.ecalc__live small{font-size:11.5px;color:var(--ink-3)}
+.ecalc__pill{flex:none;padding:10px 14px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;color:var(--green-dark);background:var(--green-soft)}.ecalc__pill[data-state=edge]{background:#FFF3D6;color:#7A5200}.ecalc__pill[data-state=no]{background:var(--paper-2);color:var(--ink)}
+.ecalc__res{padding:16px!important}.ecalc__res .ledger__row{padding:9px 0}.ecalc__res .ledger__row span{font-size:13.5px}.ecalc__verdict{order:-1;margin:0 0 12px}.ecalc__res .btn{margin-top:12px}}
+@media (min-width:960px){.ecalc__live{display:none}}
+@media (min-width:960px) and (max-height:840px){.quick{padding:20px}.quick__h{margin-top:8px}.quick__opts{margin-top:12px;gap:8px}}
+@media (max-width:959px){.quick{padding:16px}.quick__opts{margin-top:14px}.quick__note{margin-top:14px}}
+@media (min-width:960px){.ecalc__res{align-self:start;position:sticky;top:96px}.hero__bg{width:130vw;max-width:none;left:calc(90px - 31.9vw);object-position:50% 36%}.hero::before{background:linear-gradient(90deg,rgba(18,22,28,.92) 0%,rgba(18,22,28,.7) 36%,rgba(18,22,28,.26) 58%,rgba(18,22,28,.48) 100%)}.hero__in{gap:0 96px;padding-top:20px;padding-bottom:20px}.hero__content{max-width:640px}.quick{padding:24px}.quick__opts{margin-top:16px}.trust{margin-top:22px}.hero h1{font-size:clamp(34px,3.6vw,50px);margin-top:26px}.hero__h1b{margin-top:18px}.hero__who{margin-top:26px}.hero__call{margin-top:26px}.trust{margin-top:36px}}
+@media (max-width:959px){.hero__bg{object-position:52% 50%;height:640px}.hero::before{background:linear-gradient(180deg,rgba(18,22,28,.72) 0%,rgba(18,22,28,.4) 30%,rgba(18,22,28,.62) 52%,#12161C 640px)}.hero__in{padding-top:18px}.hero h1{margin-top:16px}.hero__h1a{margin-bottom:12px}.hero__h1b{margin-top:30px}.hero__who{margin-top:16px}.quick{margin-top:14px}}
 </style>
 </head>
 <body>
@@ -1072,10 +1083,6 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <button type="button" class="quick__opt" data-quick="Invalidní důchod 3. stupně" data-cta="hero-step-invalidni"><svg width="26" height="26"><use href="#i-shield"/></svg><span><b>Invalidní důchod 3.&nbsp;stupně</b> <small>já nebo někdo z&nbsp;domácnosti</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
         <button type="button" class="quick__opt" data-quick="Superdávka" data-cta="hero-step-superdavka"><svg width="26" height="26"><use href="#i-euro"/></svg><span><b>Pobíráme superdávku</b> <small>dávku státní sociální pomoci</small></span><svg class="quick__arr" width="20" height="20"><use href="#i-arrow"/></svg></button>
       </div>
-      <div class="quick__foot">
-        <button type="button" class="quick__link" data-quick="Nic z toho" data-cta="hero-step-nic">Příjem máme vyšší, chci bezúročný úvěr</button>
-        <button type="button" class="quick__link" data-quick="Nevím" data-cta="hero-step-nevim">Nevím, poraďte mi</button>
-      </div>
       <p class="quick__note">Nezávazně a&nbsp;zdarma. Do 24 hodin zavoláme s&nbsp;výsledkem.</p>
     </aside>
     <ul class="trust" aria-label="Proč Schlieger">
@@ -1125,7 +1132,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="calc ecalc">
       <div class="calc__ctrl">
         <label class="calc__label" for="e-trzby">Roční příjmy z&nbsp;podnikání <output for="e-trzby" id="e-trzby-out" class="num">800&nbsp;000&nbsp;Kč</output></label>
-        <div class="calc__presets" role="group" aria-label="Rychlá volba příjmů">
+        <div class="calc__presets ecalc__p5" role="group" aria-label="Rychlá volba příjmů">
           <button type="button" data-trzby="300000">300&nbsp;tis.</button><button type="button" data-trzby="500000">500&nbsp;tis.</button><button type="button" data-trzby="800000" class="is-on">800&nbsp;tis.</button><button type="button" data-trzby="1000000">1&nbsp;mil.</button><button type="button" data-trzby="1500000">1,5&nbsp;mil.</button>
         </div>
         <input type="range" id="e-trzby" min="0" max="3000000" step="50000" value="800000" aria-valuetext="800 000 Kč ročně">
@@ -1133,13 +1140,13 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
         <div class="ecalc__group">
           <span class="ecalc__q">Bydlí s&nbsp;vámi partner/ka?</span>
-          <div class="calc__presets" role="group" aria-label="Partner">
+          <div class="calc__presets ecalc__p2" role="group" aria-label="Partner">
             <button type="button" data-partner="1" class="is-on">Ano</button><button type="button" data-partner="0">Ne, žiju sám/sama</button>
           </div>
         </div>
         <div class="ecalc__group" id="e-partner-wrap">
           <label class="calc__label calc__label--sm" for="e-partner">Čistý měsíční příjem partnera/ky <output for="e-partner" id="e-partner-out" class="num">25&nbsp;000&nbsp;Kč</output></label>
-          <div class="calc__presets" role="group" aria-label="Rychlá volba příjmu partnera">
+          <div class="calc__presets ecalc__p4" role="group" aria-label="Rychlá volba příjmu partnera">
             <button type="button" data-pi="0">0&nbsp;Kč</button><button type="button" data-pi="15000">15&nbsp;tis.</button><button type="button" data-pi="25000" class="is-on">25&nbsp;tis.</button><button type="button" data-pi="35000">35&nbsp;tis.</button>
           </div>
           <input type="range" id="e-partner" min="0" max="80000" step="1000" value="25000" aria-valuetext="25 000 Kč měsíčně">
@@ -1149,11 +1156,11 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <div class="ecalc__two">
           <div class="ecalc__group">
             <span class="ecalc__q">Děti do 13&nbsp;let</span>
-            <div class="calc__presets" role="group" aria-label="Děti do 13 let"><button type="button" data-k1="0" class="is-on">0</button><button type="button" data-k1="1">1</button><button type="button" data-k1="2">2</button><button type="button" data-k1="3">3+</button></div>
+            <div class="calc__presets ecalc__p4" role="group" aria-label="Děti do 13 let"><button type="button" data-k1="0" class="is-on">0</button><button type="button" data-k1="1">1</button><button type="button" data-k1="2">2</button><button type="button" data-k1="3">3+</button></div>
           </div>
           <div class="ecalc__group">
-            <span class="ecalc__q">Další osoby 14+ (děti, rodiče)</span>
-            <div class="calc__presets" role="group" aria-label="Další osoby"><button type="button" data-k2="0" class="is-on">0</button><button type="button" data-k2="1">1</button><button type="button" data-k2="2">2</button><button type="button" data-k2="3">3+</button></div>
+            <span class="ecalc__q">Další osoby 14+</span>
+            <div class="calc__presets ecalc__p4" role="group" aria-label="Další osoby"><button type="button" data-k2="0" class="is-on">0</button><button type="button" data-k2="1">1</button><button type="button" data-k2="2">2</button><button type="button" data-k2="3">3+</button></div>
           </div>
         </div>
 
@@ -1168,9 +1175,13 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
         <div class="ecalc__group">
           <span class="ecalc__q">Jaký je váš dům?</span>
-          <div class="calc__presets" role="group" aria-label="Stav domu">
+          <div class="calc__presets ecalc__p3" role="group" aria-label="Stav domu">
             <button type="button" data-dum="stary" class="is-on">Starší, bez zateplení</button><button type="button" data-dum="novy">Zateplený nebo nový</button><button type="button" data-dum="nevim">Nevím</button>
           </div>
+        </div>
+        <div class="ecalc__live" aria-live="polite">
+          <div><span>Příjem na osobu</span><b id="e-eq-m">≈ 0&nbsp;Kč</b><small>hranice <span id="e-limit-m">25&nbsp;426&nbsp;Kč</span></small></div>
+          <a href="#e-verdict" class="ecalc__pill" id="e-pill" data-state="ok">Nárok ✓</a>
         </div>
         <p class="calc__foot">Orientační výpočet podle podmínek NZÚ Light 2026 (3.&nbsp;decil 25&nbsp;426&nbsp;Kč, 5.&nbsp;decil 31&nbsp;058&nbsp;Kč na osobu; váhy 1&nbsp;/&nbsp;0,5&nbsp;/&nbsp;0,3). O&nbsp;nároku rozhoduje Státní fond životního prostředí ČR.</p>
       </div>
@@ -1750,6 +1761,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       else if (eq <= lim * 1.15) { state = 'edge'; h = 'Jste těsně nad hranicí, spočítáme to přesně'; t = 'Paušálních 70 % je jen odhad. Z daňového přiznání a skutečně zaplaceného pojistného může příjem vyjít níž. Zavoláme a řekneme na rovinu.'; }
       else { state = 'no'; h = 'Na dotaci předem pravděpodobně nedosáhnete'; t = 'Stát vám ale na stejnou realizaci nabízí bezúročný úvěr až 400 000 Kč, úroky platí stát. Spočítáme vám obě varianty.'; }
       var v = $('#e-verdict'); v.setAttribute('data-state', state); $('#e-verdict-h').textContent = h; $('#e-verdict-t').textContent = t;
+      var pm = $('#e-pill'); if (pm) { pm.setAttribute('data-state', state); pm.textContent = state === 'ok' ? 'Nárok ✓' : state === 'edge' ? 'Na hraně' : 'Úvěr 0 %'; $('#e-eq-m').textContent = '≈ ' + fmtK(eq); $('#e-limit-m').textContent = fmtK(lim); }
       $('#e-cta').firstChild.textContent = state === 'no' ? 'Spočítat bezúročný úvěr ' : 'Ověřit nárok přesně a zdarma ';
       lastElig = { trzby: trzby, partner: pinc, k1: st.k1, k2: st.k2, dum: st.dum, sup: sup, duchod: duchod, id3: id3, net: Math.round(net), eq: Math.round(eq), lim: lim, state: state,
         txt: 'tržby ' + fmtK(trzby) + ', partner ' + fmtK(pinc) + ', děti<13: ' + st.k1 + ', osoby 14+: ' + st.k2 + ', dům: ' + st.dum + (sup ? ', superdávka' : '') + (duchod ? ', důchodci' : '') + (id3 ? ', ID3' : '') + ' → příjem/os. ' + fmtK(eq) + ' vs ' + fmtK(lim) + ' → ' + state };
