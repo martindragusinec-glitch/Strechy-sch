@@ -44,10 +44,10 @@ window.LP_TRACKING_CONFIG = {
   product_type: 'fotovoltaika_zatepleni_strechy',
   form_name: 'kontakt-fve-strecha-schlieger',
   form_id: 'MULTI_STEP_FORM_FVE_STRECHA',   // POTVRDIT s analytikou (ať se neliší mezi LP)
-  tenant_id: 'fve_nove',           // marketing-manual §1.3: fve_nove = Schlieger FVE (v manuálu „odvozeno z názvu – ověřit“ se správcem CRM)
-  gw_lead_source: '',              // DOPLNIT (kód zdroje leadu od CRM)
+  tenant_id: 'fve-a-zatepleni-strechy_nove', // zadání 21. 9. 2026
+  gw_lead_source: 'ACQ-LP-COMB-DOTACE-SCHLIEGER', // zadání 21. 9. 2026
   gw_customer_type: 'B2C',
-  gw_lead_products: ['FVE', 'ZAT'], // POTVRDIT produktové kódy s CRM
+  gw_lead_products: ['FVE', 'INS'], // INS = zateplení, potvrdit s Markétou
   /* v2.1 (standard 18. 9. 2026) */
   attribution_session_storage: true, // atribuce do sessionStorage před souhlasem (README §4.1)
   send_ga_client_id: false,          // zapnout až budou zásady ochrany OÚ zmiňovat spojení měřicího identifikátoru s poptávkou (README §8)

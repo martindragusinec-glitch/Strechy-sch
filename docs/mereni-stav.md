@@ -25,7 +25,7 @@ Kontrola proti `Schlieger-org/marketing-playbook` ke dni **19. 9. 2026** (commit
 | Do gateway jde jen `{ eventDetails }` s `x-gateway-key` | ano |
 | Plný `eventDetails` dle §5.1 (v2.1) | ano, **31 polí** včetně `leadId`, `submittedAt`, `formId`, `pageUrl`, `landingUrl`, `referrer`, `campaignId/adsetId/adId`, `sourcePlatform`, `utm*`, `gclid/gbraid/wbraid/fbclid/msclkid/sznclid`, `gaClientId`, `device`, `firstTouch`, `consent` |
 | Atribuce v `sessionStorage` před souhlasem, cookies až po souhlasu | ano (`lp_attr_first` / `lp_attr_last` → `_attribution_first` / `_attribution_last`) |
-| `tenantId` camelCase uvnitř `eventDetails` | ano, `fve_nove` |
+| `tenantId` camelCase uvnitř `eventDetails` | ano, `fve-a-zatepleni-strechy_nove` |
 | Gateway | v repu DEV bez klíče; **nasazená kopie PROD s klíčem** (od 21. 9.) |
 | Žádný redirect nezahazuje query string | `_redirects` má jen `/index.html → /` |
 
@@ -34,11 +34,11 @@ Kontrola proti `Schlieger-org/marketing-playbook` ke dni **19. 9. 2026** (commit
 | Co | Kdo | Poznámka |
 |---|---|---|
 | ~~`gateway_key`~~ | hotovo 21. 9. | PROD klíč v `deploy/secrets.env` (mimo git), vkládá `deploy/publish.sh`; klíč pro DEV neexistuje, test jde rovnou do PROD |
-| Potvrdit `tenant_id` | správce CRM | teď `fve_nove`; alternativa `nzu_schlieger_nove`, pokud má NZÚ Light LP patřit do NZÚ kampaně |
-| `gw_lead_source` | CRM | teď prázdné → prázdné je i `form_sent.lead_source` a `leadCapture.eventDetails.leadSource` |
-| Potvrdit `gw_lead_products` `['FVE','ZAT']` | CRM | zateplení jako samostatný produktový kód |
+| ~~`tenant_id`~~ | hotovo 21. 9. | `fve-a-zatepleni-strechy_nove` (zadání), existence tenanta se ověří prvním ostrým leadem (`GET …/result/<id>`) |
+| ~~`gw_lead_source`~~ | hotovo 21. 9. | `ACQ-LP-COMB-DOTACE-SCHLIEGER` |
+| `gw_lead_products` | Markéta | nasazeno `['FVE','INS']`, kód INS pro zateplení čeká na potvrzení |
 | Potvrdit `form_id` `MULTI_STEP_FORM_FVE_STRECHA` | analytika | web jinde používá `MULTI_STEP_FORM_FVE` |
-| `make_webhook_url` + Router podle `type` | marketing | bez něj není záloha leadu ani log; siteverify reCAPTCHA patří do Make, ne na LP |
+| ~~`make_webhook_url`~~ | hotovo 21. 9. | `hook.eu1.make.com/ak5unq79…` (stejný webhook jako Woltido leadgen); v Make ověřit Router podle `type` a siteverify se secretem reCAPTCHA ve větvi `gateway_result` |
 | ~~`recaptcha_site_key`~~ | hotovo 21. 9. | site key na LP; **secret jen do Make** (siteverify ve větvi `gateway_result`) |
 | **Namapovat nová pole v2.1/2.2 v gateway** | správce gateway | gateway neznámá pole nezamítne, ale bez mapování je jen zaloguje → atribuce nedojde do CRM |
 | DEV lead → `status: completed` → přepnout na PROD | marketing + CRM | `GET …/lead-gateway/result/<id>` |
@@ -53,7 +53,7 @@ Kontrola proti `Schlieger-org/marketing-playbook` ke dni **19. 9. 2026** (commit
 
 ## Chybí – souhlas a právní část
 
-- **Cookiebot vs. `lp-consent.js`.** Na subdoméně schlieger.cz naběhne Cookiebot z kontejneru, GTM manuál §6 zakazuje vlastní řešení. Před nasazením na subdoménu odstranit `lp-consent.js` i `LP_CONSENT_CONFIG`, `[data-consent-open]` napojit na `Cookiebot.renew()` a subdoménu přidat do domain group `d9a57f9f-eeb3-4af2-9d35-a107ee14014a`. Na samostatné doméně `lp-consent.js` zůstává.
+- **Cookiebot vs. `lp-consent.js`.** Zadání 21. 9.: vlastní lištu po nasazení odstranit. **Zatím nejde**: Cookiebot se na nzulight.schlieger.cz z GTM načte, ale bez subdomény v domain group nevykreslí dialog (ověřeno 21. 9., `CybotCookiebotDialog` v DOM není). Bez naší lišty by stránka neměla žádný souhlas. Postup: přidat subdoménu do domain group → ověřit, že dialog naběhne → pak odstranit `lp-consent.js` i `LP_CONSENT_CONFIG`, `[data-consent-open]` napojit na `Cookiebot.renew()` a subdoménu přidat do domain group `d9a57f9f-eeb3-4af2-9d35-a107ee14014a`. Na samostatné doméně `lp-consent.js` zůstává.
 - **`gaClientId` je vypnutý** (`send_ga_client_id: false`). Zapnout až zásady ochrany osobních údajů zmíní, že měřicí identifikátor spojujeme s poptávkou (standard §8, podmínka 2).
 - **`sessionStorage` před souhlasem** (`attribution_session_storage: true`) je výklad „nezbytné pro službu“. Pokud ho právník neuzná, přepnout na `false`.
 
