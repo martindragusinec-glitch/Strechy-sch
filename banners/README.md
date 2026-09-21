@@ -41,3 +41,10 @@ Kampaň v platformě: `SCH | FVE+střecha NZÚ Light | Lead | 2026-09`, ad sety 
 - Loga jsou oficiální assety. Fotky lidí jsou z Higgsfieldu; playbook preferuje reálné fotky, dlaždice FVE už reálnou realizaci (Zbraslavice) používá. Jakmile budou reálné fotky zákazníků, vyměnit v objektu `IMG`.
 - Text v obrázku držet přiměřený, hlavní sdělení opakovat v primárním textu inzerátu.
 - Nová varianta = nové `vNN`, ne přepis staré.
+
+## Video (koncept A, 15 s, 9:16)
+
+- Scénáře: `video/scenar.md`. Vyrobeno: koncept A ve třech hook verzích (senior / nizkoprijmove / osvc), 1080×1920, 30 fps, bez zvuku.
+- Záběry: Higgsfield Seedance 2.5 (5 s, 1080p, start_image = fotky ze `src/`), uložené ve `video/clips/`.
+- Sestavení: **Remotion** ve `video/remotion/` (`npm install`, `npx remotion studio src/index.ts` pro náhled a úpravy textů v `src/Spot.tsx`, `npx remotion render src/index.ts spot-senior out.mp4`). Titulky, dlaždice, nálepka, cenovka a CTA jsou React komponenty se stejnými hodnotami jako bannery, safe zóny Meta dodržené.
+- Výstupy: `video/out/sch-fve-{publikum}-video15-1080x1920-{YYYYMM}-v01.mp4`, název = kód kreativy = `utm_content`.
