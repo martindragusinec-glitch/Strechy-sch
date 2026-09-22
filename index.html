@@ -89,7 +89,7 @@ window.LP_TRACKING_CONFIG = {
   --container:1340px;--gutter:20px;--ease:cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
 body{margin:0;font-family:var(--ff);font-size:16.5px;line-height:1.6;color:var(--ink-2);background:var(--white);padding-bottom:84px;-webkit-font-smoothing:antialiased}
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
@@ -1579,6 +1579,31 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 </div>
 
 <script>
+/* Plynulý scroll na kotvy: pevné tempo (450–1100 ms podle vzdálenosti), odsazení pod lepivou hlavičku, cíl se přepočítává za jízdy (layout se může měnit). Nativní scroll-behavior je vypnutý, aby se animace nesčítaly. */
+(function () {
+  var HDR = 96, anim = null;
+  function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  window.lpScrollTo = function (el, extra) {
+    if (!el) return; if (anim) cancelAnimationFrame(anim);
+    var start = window.pageYOffset, t0 = performance.now(), off = HDR + (extra || 0);
+    var dist = Math.abs(el.getBoundingClientRect().top + start - off - start);
+    var dur = Math.max(450, Math.min(1100, dist * 0.45));
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) dur = 0;
+    (function step(now) {
+      var k = dur ? Math.min(1, (now - t0) / dur) : 1;
+      var target = el.getBoundingClientRect().top + window.pageYOffset - off;
+      window.scrollTo(0, Math.round(start + (target - start) * ease(k)));
+      if (k < 1) anim = requestAnimationFrame(step); else anim = null;
+    })(t0);
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null; if (!a || a.hasAttribute('data-noscroll')) return;
+    var id = a.getAttribute('href').slice(1); var el = id && document.getElementById(id); if (!el) return;
+    e.preventDefault(); window.lpScrollTo(el); if (history.replaceState) history.replaceState(null, '', '#' + id);
+  });
+})();
+</script>
+<script>
 (function () {
   'use strict';
 
@@ -1833,7 +1858,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       var note = $('#note-elig'); if (note) note.classList.toggle('is-visible', val === 'Nic z toho');
       if (LPT && LPT.formStep) LPT.formStep(2, 'roof');
       show(2, false);
-      host.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.lpScrollTo) window.lpScrollTo(host, 8); else host.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setTimeout(function () { var h = $('h3', steps[1]); if (h) h.focus({ preventScroll: true }); }, 500);
     });
   });

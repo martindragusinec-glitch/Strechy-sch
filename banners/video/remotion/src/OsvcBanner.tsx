@@ -117,30 +117,38 @@ const Chips: React.FC<{s: number; label: string; items: string[]; sel: number; k
 const Sticker: React.FC<{s: number; from: number; style?: React.CSSProperties}> = ({s, from, style}) => { const p = useS(from, {damping: 8, stiffness: 240}); return (<div style={{position: 'absolute', opacity: p, transform: `rotate(${-18 + 12 * p}deg) scale(${0.4 + 0.6 * p})`, background: YEL, color: INK, fontWeight: 600, fontSize: 24 * s, lineHeight: 1.05, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '.02em', padding: `${16 * s}px ${24 * s}px`, borderRadius: 18 * s, boxShadow: '0 24px 50px -14px rgba(0,0,0,.8)', zIndex: 6, ...style}}>Dotace předem<b style={{display: 'block', fontSize: 52 * s, letterSpacing: '-.02em', margin: `${2 * s}px 0`}}>320 000 Kč</b>na účet</div>); };
 
 const Footer: React.FC<{s: number; from: number; clickAt: number}> = ({s, from, clickAt}) => {
-  const f = useCurrentFrame(); const p = useS(from, {damping: 15, stiffness: 150}); const strike = clamp(f, from + 18, from + 34, 0, 100);
-  const cta = useS(from + 16, {damping: 12, stiffness: 170}); const trust = useS(from + 30, {damping: 16, stiffness: 150});
-  /* kurzor přijede zprava dole na střed tlačítka a klikne */
-  const mv = clamp(f, clickAt - 34, clickAt - 4, 1, 0, ease); const cx = 260 * s * mv, cy = 150 * s * mv; const curOn = f >= clickAt - 34 && f < clickAt + 30 ? clamp(f, clickAt + 18, clickAt + 30, 1, 0) : 0;
-  const press = f >= clickAt && f < clickAt + 9 ? 0.95 : 1; const rip = clamp(f, clickAt, clickAt + 22, 0, 1); const ripOn = f >= clickAt && f < clickAt + 22;
-  const pulse = f > clickAt + 30 ? 1 + 0.025 * Math.sin((f - clickAt) / 6) : 1;
-  const R = 18 * s, grow = 16 * s * rip;
-  return (<div style={{opacity: p, transform: `translateY(${(1 - p) * 30}px)`, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 * s, color: '#fff'}}>
+  const f = useCurrentFrame(); const {fps} = useVideoConfig();
+  const sp = (at: number, cfg = {damping: 14, stiffness: 150}) => spring({frame: f - at, fps, config: cfg});
+  const p = sp(from, {damping: 16, stiffness: 140}); const strike = clamp(f, from + 20, from + 38, 0, 100, ease);
+  const cta = sp(from + 18, {damping: 13, stiffness: 160});
+  const chips = [0, 1, 2].map((i) => sp(from + 34 + i * 6, {damping: 14, stiffness: 170}));
+  /* kurzor: plynule přijede, klikne, zmizí */
+  const mv = clamp(f, clickAt - 40, clickAt - 4, 1, 0, ease); const cx = 300 * s * mv, cy = 170 * s * mv;
+  const curOn = clamp(f, clickAt - 42, clickAt - 32, 0, 1) * clamp(f, clickAt + 14, clickAt + 26, 1, 0);
+  /* stisk: pružina dolů a zpět */
+  const down = sp(clickAt, {damping: 12, stiffness: 400}), up = sp(clickAt + 7, {damping: 12, stiffness: 260}); const press = 1 - 0.06 * Math.max(0, down - up);
+  const rip = clamp(f, clickAt, clickAt + 26, 0, 1, ease); const ripO = f >= clickAt ? (1 - rip) * 0.9 : 0;
+  const after = clamp(f, clickAt + 26, clickAt + 40, 0, 1); const pulse = 1 + after * 0.018 * Math.sin((f - clickAt - 26) / 7);
+  const glow = 0.35 + after * 0.25 * (0.5 + 0.5 * Math.sin((f - clickAt - 26) / 7));
+  const nudge = after * 6 * s * (0.5 + 0.5 * Math.sin((f - clickAt - 26) / 7));
+  const R = 22 * s, grow = 18 * s * rip;
+  return (<div style={{opacity: p, transform: `translateY(${(1 - p) * 30}px)`, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 26 * s, color: '#fff'}}>
     <div style={{textAlign: 'center', textShadow: '0 4px 20px rgba(0,0,0,.6)'}}>
-      <div style={{fontSize: 34 * s, fontWeight: 600, marginBottom: 12 * s}}>Fotovoltaika + zateplení střechy</div>
-      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18 * s, flexWrap: 'wrap'}}>
-        <span style={{background: GREEN, padding: `${4 * s}px ${22 * s}px`, borderRadius: 16 * s, fontSize: 56 * s, fontWeight: 700, letterSpacing: '-.02em'}}>za 65 500 Kč</span>
-        <span style={{position: 'relative', color: 'rgba(255,255,255,.8)', fontSize: 30 * s, fontWeight: 500}}>místo 385 500 Kč<span style={{position: 'absolute', left: 0, top: '52%', height: 5 * s, width: `${strike}%`, background: RED, borderRadius: 3}} /></span>
+      <div style={{fontSize: 30 * s, fontWeight: 500, letterSpacing: '.02em', color: 'rgba(255,255,255,.85)', marginBottom: 12 * s}}>Fotovoltaika + zateplení střechy</div>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 * s}}>
+        <span style={{background: GREEN, padding: `${6 * s}px ${26 * s}px`, borderRadius: 18 * s, fontSize: 62 * s, fontWeight: 700, letterSpacing: '-.025em', lineHeight: 1.1, boxShadow: '0 16px 40px -14px rgba(0,0,0,.7)'}}>za 65 500 Kč</span>
+        <span style={{position: 'relative', color: 'rgba(255,255,255,.75)', fontSize: 28 * s, fontWeight: 500, whiteSpace: 'nowrap'}}>místo 385 500 Kč<span style={{position: 'absolute', left: -4, top: '50%', height: 5 * s, width: `${strike}%`, background: RED, borderRadius: 3, transform: 'rotate(-4deg)'}} /></span>
       </div>
     </div>
-    <div style={{position: 'relative', opacity: cta, transform: `scale(${(0.9 + 0.1 * cta) * press * pulse})`}}>
-      <div style={{background: RED, color: '#fff', fontSize: 44 * s, fontWeight: 600, padding: `${28 * s}px ${56 * s}px`, borderRadius: R, boxShadow: '0 24px 50px -16px rgba(0,0,0,.8)', display: 'flex', alignItems: 'center', gap: 20 * s, whiteSpace: 'nowrap'}}>Spočítat můj nárok <span style={{fontSize: 48 * s, lineHeight: 0.8}}>→</span></div>
-      {ripOn && <div style={{position: 'absolute', inset: -(6 * s + grow), borderRadius: R + 6 * s + grow, border: `${3 * s}px solid #fff`, opacity: 1 - rip, pointerEvents: 'none'}} />}
-      <div style={{position: 'absolute', left: '50%', top: '50%', width: 34 * s, height: 34 * s, opacity: curOn, transform: `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`, zIndex: 5}}>
+    <div style={{position: 'relative', opacity: cta, transform: `translateY(${(1 - cta) * 20}px) scale(${press * pulse})`}}>
+      <div style={{background: RED, color: '#fff', fontSize: 44 * s, fontWeight: 600, height: 108 * s, borderRadius: R, boxShadow: `0 24px 50px -14px rgba(0,0,0,.8), 0 0 ${60 * s}px rgba(218,0,15,${glow})`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18 * s, whiteSpace: 'nowrap'}}>Spočítat můj nárok <span style={{display: 'inline-block', fontSize: 48 * s, lineHeight: 0.8, transform: `translateX(${nudge}px)`}}>→</span></div>
+      <div style={{position: 'absolute', inset: -(6 * s + grow), borderRadius: R + 6 * s + grow, border: `${3 * s}px solid #fff`, opacity: ripO, pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', left: '50%', top: '50%', width: 36 * s, height: 36 * s, opacity: curOn, transform: `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`, zIndex: 5}}>
         <div style={{position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff', boxShadow: `0 0 0 ${4 * s}px ${RED}, 0 10px 24px rgba(0,0,0,.5)`}} />
       </div>
     </div>
-    <div style={{opacity: trust, display: 'flex', gap: 14 * s, alignItems: 'center', fontSize: 24 * s, color: 'rgba(255,255,255,.85)', flexWrap: 'wrap', justifyContent: 'center'}}>
-      <span>✓ Zdarma a nezávazně</span><span style={{opacity: .5}}>·</span><span>✓ Do 24 h víte, jak na tom jste</span><span style={{opacity: .5}}>·</span><span>✓ Žádost vyřídíme za vás</span>
+    <div style={{display: 'flex', gap: 10 * s, justifyContent: 'center', flexWrap: 'wrap'}}>
+      {['Zdarma a nezávazně', 'Výsledek do 24 h', 'Žádost vyřídíme za vás'].map((t, i) => (<span key={i} style={{opacity: chips[i], transform: `translateY(${(1 - chips[i]) * 12}px)`, display: 'inline-flex', alignItems: 'center', gap: 8 * s, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.22)', backdropFilter: 'blur(6px)', borderRadius: 999, padding: `${10 * s}px ${18 * s}px`, fontSize: 22 * s, fontWeight: 500, color: 'rgba(255,255,255,.92)', whiteSpace: 'nowrap'}}><span style={{width: 22 * s, height: 22 * s, borderRadius: '50%', background: GREEN, display: 'grid', placeItems: 'center'}}><svg width={12 * s} height={12 * s} viewBox="0 0 15 15" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 8l3.2 3.2L12.5 4" /></svg></span>{t}</span>))}
     </div>
   </div>);
 };
@@ -156,7 +164,7 @@ export const OsvcBanner: React.FC<{format: Fmt}> = ({format}) => {
   void footerOn;
   const stageShift = useS(D[0], {damping: 16, stiffness: 120});
   const fadeOut = clamp(f, BANNER_FRAMES - 8, BANNER_FRAMES, 1, 0);
-  const footH = story ? 480 : 345;
+  const footH = story ? 372 : 262;
   return (<AbsoluteFill style={{background: '#12161C', fontFamily: 'P, system-ui, sans-serif', overflow: 'hidden'}}><style>{font}</style>
     <Img src={staticFile(story ? 'img/osvc-story.jpg' : 'img/osvc-wide.jpg')} style={{position: 'absolute', left: 0, right: 0, top: '-12%', width: '100%', height: '112%', objectFit: 'cover', objectPosition: story ? '50% 0%' : '63% 0%', transform: `scale(${zoom})`, transformOrigin: '50% 20%'}} />
     <AbsoluteFill style={{background: story ? 'linear-gradient(180deg, rgba(18,22,28,.9) 0%, rgba(18,22,28,.35) 22%, rgba(18,22,28,.25) 38%, rgba(18,22,28,.86) 62%, rgba(18,22,28,.95) 100%)' : 'linear-gradient(180deg, rgba(18,22,28,.72) 0%, rgba(18,22,28,.3) 30%, rgba(18,22,28,.86) 60%, rgba(18,22,28,.95) 100%)'}} />
@@ -166,7 +174,7 @@ export const OsvcBanner: React.FC<{format: Fmt}> = ({format}) => {
     </div>
     {/* jeviště: obsah dole, hlava živnostníka zůstává volná */}
     <div style={{position: 'absolute', left: PX, right: PX, top: PT, bottom: PB, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', opacity: fadeOut}}>
-      <div style={{width: '100%', position: 'relative', transform: `translateY(${-stageShift * footH}px) scale(${1 - stageShift * 0.3})`, transformOrigin: 'bottom center'}}>
+      <div style={{width: '100%', position: 'relative', transform: `translateY(${-stageShift * footH}px) scale(${1 - stageShift * 0.34})`, transformOrigin: 'bottom center'}}>
         {f < A[1] && <Hook s={s} from={A[0]} to={A[1]} />}
         {f >= B[0] && f < B[1] && <Myth s={s} from={B[0]} to={B[1]} />}
         {inC && <div><CalcTitle s={s} from={C[0]} hide={stageShift} /><div style={{position: 'relative'}}><Calc s={s} from={C[0]} W={cardW} /><Sticker s={s} from={C[0] + 188} style={{right: -14 * s, top: -34 * s}} /></div></div>}
