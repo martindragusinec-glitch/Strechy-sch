@@ -7,9 +7,11 @@ const RED = '#DA000F', GREEN = '#24A531', INK = '#1B2028', YEL = '#FFD23F';
 const HOOK: Record<Audience, string[]> = {senior: ['Pobíráte', 'starobní důchod?'], nizkoprijmove: ['Pobíráte', 'superdávku?'], osvc: ['Jste OSVČ', 's nižšími příjmy?']};
 const PX = 72, PT = 290, PB = 380;
 /* rozvržení: portrét 1080×1920 vs. landscape 1920×1080 (vlevo klip 760 px, vpravo grafika + titulky) */
-type Lay = {land: boolean; L: number; R: number; capBottom: number; centerTop: number; centerBottom: number; logoTop: number; col: number};
-const PORT: Lay = {land: false, L: PX, R: PX, capBottom: PB - 10, centerTop: PT + 80, centerBottom: PB + 260, logoTop: PT - 40, col: 0};
-const LAND: Lay = {land: true, L: 860, R: 96, capBottom: 64, centerTop: 150, centerBottom: 310, logoTop: 44, col: 760};
+type Lay = {land: boolean; L: number; R: number; capBottom: number; centerTop: number; centerBottom: number; logoTop: number; col: number; W: number; H: number; pos: string};
+const PORT: Lay = {land: false, L: PX, R: PX, capBottom: PB - 10, centerTop: PT + 80, centerBottom: PB + 260, logoTop: PT - 40, col: 0, W: 1080, H: 1920, pos: 'center'};
+/* čtverec 1080×1080: klip celoplošně s ořezem na horní část (tváře), karty na střed, titulky dole */
+const SQ: Lay = {land: false, L: 64, R: 64, capBottom: 56, centerTop: 150, centerBottom: 310, logoTop: 44, col: 0, W: 1080, H: 1080, pos: 'center 22%'};
+const LAND: Lay = {land: true, L: 860, R: 96, capBottom: 64, centerTop: 150, centerBottom: 310, logoTop: 44, col: 760, W: 1920, H: 1080, pos: 'center'};
 /* celoplošné scény v landscape (karty, závěr): obsah na střed celé šířky */
 const FULL: Lay = {...LAND, L: 96, R: 96, col: 0};
 const Full: React.FC<{children: React.ReactNode}> = ({children}) => { const L = useLay(); return <LayCtx.Provider value={L.land ? FULL : L}>{children}</LayCtx.Provider>; };
@@ -66,7 +68,7 @@ const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, nu
     <div style={{position: 'absolute', left: L.col - 1, top: 0, width: 140, height: 1080, background: 'linear-gradient(90deg, rgba(18,22,28,0), rgba(18,22,28,.55))'}} />
   </AbsoluteFill></Sequence>);
   return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden'}}>
-    <OffthreadVideo src={staticFile(src)} muted style={{width: 1080, height: 1920, objectFit: 'cover', objectPosition: pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} />
+    <OffthreadVideo src={staticFile(src)} muted style={{width: L.W, height: L.H, objectFit: 'cover', objectPosition: pos === 'center' ? L.pos : pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} />
   </AbsoluteFill></Sequence>);
 };
 const Card: React.FC<{children?: React.ReactNode; bg?: string}> = ({children, bg = INK}) => (
@@ -162,13 +164,14 @@ const Cta: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2
     <div style={{opacity: a, fontSize: 30, color: 'rgba(255,255,255,.85)', lineHeight: 1.4}}><b>Do 24 h</b> víte, zda máte nárok · <b>23 000+</b> instalací · nezávazně</div>
   </div>); };
 
-export const Spot: React.FC<{audience: Audience; land?: boolean}> = ({audience, land = false}) => {
+export const Spot: React.FC<{audience: Audience; land?: boolean; sq?: boolean}> = ({audience, land = false, sq = false}) => {
   const tl = timeline(audience); const [h, l2, l3, l4, l5, l6] = tl; const END = tl[5].end + 0.8; const sc = (x: number) => S(x);
   const mid3 = l3.start + (l3.end - l3.start) * 0.55;
   const isO = audience === 'osvc';
-  return (<LayCtx.Provider value={land ? LAND : PORT}>
+  const lay = land ? LAND : sq ? SQ : PORT;
+  return (<LayCtx.Provider value={lay}>
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
-    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none">{land ? <Center><HookCentered a={audience} /></Center> : <><Shade h={55} /><div style={{position: 'absolute', left: PX, right: PX, bottom: PB - 10, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></>}</Sequence>
+    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none">{land ? <Center><HookCentered a={audience} /></Center> : <><Shade h={55} /><div style={{position: 'absolute', left: lay.L, right: lay.R, bottom: lay.capBottom, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></>}</Sequence>
     {/* scéna 2 */}{isO ? <Clip src="clips/5-osvc-work.mp4" from={sc(l2.start)} dur={sc(l3.start - l2.start)} zoom={[1.02, 1.1]} /> : null}
     <Sequence from={sc(l2.start)} durationInFrames={sc(l3.start - l2.start)} layout="none">{isO ? (<><AbsoluteFill style={{background: 'rgba(18,22,28,.72)'}} /><Center top gap={34}><ZivnostCard /></Center><Captions k="o2" start={0} /></>) : (<Card><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div></CenterInCard><Captions k="l2" start={0} /></Card>)}</Sequence>
     {/* scéna 3 */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
