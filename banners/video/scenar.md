@@ -76,3 +76,16 @@ Hlavní námitka OSVČ: „na dotaci jako podnikatel nedosáhnu“. Proto druhá
 | 17,7–21 s | dům, CTA s kliknutím | Ověřte si nárok zdarma. Zabere to minutu. | CTA |
 
 Nové záběry (Higgsfield, identita z `osvc-story.jpg` přes image_references): `clips/5-osvc-work.mp4`, `clips/6-osvc-kitchen.mp4`.
+
+## Animovaný banner OSVČ (v01, 22. 9. 2026)
+
+15 s, 1080×1920 a 1080×1080, Remotion `src/OsvcBanner.tsx`, VO Holden (ElevenLabs přes Higgsfield), podkres `bed.mp3`. Fotka živnostníka (`osvc-story.jpg` / `osvc-wide.jpg`), NZÚ Light logo na střed nahoře, texty a karta dole, hlava zůstává volná.
+
+| Čas | Obraz | VO |
+|---|---|---|
+| 0–4,7 s | „Živnostníci, pozor“ + „Myslíte, že jako OSVČ na dotaci nedosáhnete?“, razítko OMYL. přibouchne u slova „Omyl“ | Myslíte, že jako OSVČ na dotaci nedosáhnete? Omyl. |
+| 4,7–8,3 s | „Kdo má nárok na dotaci?“ ✕ Podle toho, jestli máte živnost (škrt) / ✓ Podle příjmu domácnosti | Rozhoduje příjem domácnosti, ne živnost. |
+| 8,3–12,4 s | kalkulačka: kurzor vybere domácnost, přetáhne fakturaci 500 → 800 tis., výsledek: příjem na osobu 10 544 Kč pod hranicí, „Pravděpodobně máte nárok“, nálepka Dotace předem 320 000 Kč | Spočítejte si za minutu, jestli máte nárok na 320 tisíc předem. |
+| 12,4–15 s | karta se zmenší, cena „za 65 500 Kč místo 385 500“, CTA „Spočítat můj nárok“ s kliknutím | Klikněte a zjistěte to hned. |
+
+Výstupy: `banners/video/out/sch-fve-osvc-anim-{1080x1920,1080x1080}-202609-v01.mp4`, Desktop `08_Animovany_banner_OSVC/`. utm_content = název souboru bez přípony.
