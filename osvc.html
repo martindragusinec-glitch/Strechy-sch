@@ -1960,6 +1960,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
       $('#e-docs').innerHTML = docs + '<li>Doklad totožnosti, list vlastnictví a číslo bankovního účtu</li>';
       $('#e-cta').firstChild.textContent = state === 'no' ? 'Spočítat bezúročný úvěr ' : 'Ověřit nárok přesně a zdarma ';
       var res = $('.epane--res', $('#e-wrap')); if (res) res.classList.toggle('is-empty', state === 'empty');
+      if (typeof fit === 'function') requestAnimationFrame(fit);
       lastElig = { state: state, decil: d, inc: Math.round(inc), eq: Math.round(eq), limit: Math.round(limitU), units: units, osvc: Math.round(osvc), mode: S.mode, trzby: trzby, dum: S.dum, sup: sup, sen: sen, inv: inv,
         txt: 'domácnost ' + S.ad + '+' + S.k13 + ' (SJ ' + units + ')' + (sup ? ', superdávka' : '') + (sen ? ', důchodci' : '') + (inv ? ', ID3' : '') + '; OSVČ ' + (S.mode === 'a' ? 'fakturace ' + fmtK(trzby) : 'zisk ' + fmtK(num('#e-zisk')) + '/rok') + ' → ' + fmtK(osvc) + '/měs; mzdy ' + fmtK(mzdy) + ', důchody ' + fmtK(duchody) + ', jiné ' + fmtK(jine) + '; příjem ' + fmtK(inc) + ', decil ' + d + ', hranice ' + fmtK(limit) + ', dům ' + S.dum + ' → ' + state };
     }
@@ -2012,7 +2013,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     /* kroky */
     var stepEl = $('#e-stepnum'), progEl = $('#e-prog'), backBtn = $('#e-back'), wrap = $('#e-wrap'), curStep = 1;
     var panesEl = $('.epanes', wrap);
-    function fit() { var a = $('.epane.is-active', wrap); if (a) panesEl.style.height = a.offsetHeight + 'px'; }
+    function fit() { var a = $('.epane.is-active', wrap); if (a && !wrap.hidden) panesEl.style.height = (a.offsetHeight + 8) + 'px'; }
     function eligVal() { return !lastElig ? 'OSVČ' : lastElig.sup ? 'Superdávka' : lastElig.inv ? 'Invalidní důchod 3. stupně' : lastElig.sen ? 'Starobní důchod' : lastElig.state === 'no' ? 'Nic z toho' : 'OSVČ'; }
     function prefillForm() {
       if (!lastElig || typeof form === 'undefined' || !form || form.querySelector('input[name=eligibility]:checked')) return;
@@ -2031,6 +2032,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     backBtn.addEventListener('click', function () { go(Math.max(1, curStep - 1), 'back'); });
     ['#e-more', '.edocs'].forEach(function (sel) { var d = $(sel, wrap); if (d) d.addEventListener('toggle', function () { requestAnimationFrame(fit); }); });
     window.addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    if ('ResizeObserver' in window) { var ro = new ResizeObserver(function () { fit(); }); $$('.epane', wrap).forEach(function (p) { ro.observe(p); }); }
     $$('[data-dum]', wrap).forEach(function (b) { b.addEventListener('click', function () { if (curStep === 3) setTimeout(function () { go(4, 'next'); }, 220); }); });
     backBtn.addEventListener('click', function () { if (curStep === 4) { S.dum = ''; setOn('data-dum', ''); } });
     var opened = false;
