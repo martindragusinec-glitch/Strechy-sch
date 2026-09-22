@@ -77,9 +77,9 @@ Hlavní námitka OSVČ: „na dotaci jako podnikatel nedosáhnu“. Proto druhá
 
 Nové záběry (Higgsfield, identita z `osvc-story.jpg` přes image_references): `clips/5-osvc-work.mp4`, `clips/6-osvc-kitchen.mp4`.
 
-## Animovaný banner OSVČ (v03, 22. 9. 2026)
+## Animovaný banner OSVČ (v04, 22. 9. 2026)
 
-20 s, 1080×1920 a 1080×1080, Remotion `src/OsvcBanner.tsx`, VO Holden (ElevenLabs přes Higgsfield), podkres `bed.mp3`. Fotka živnostníka (`osvc-story.jpg` / `osvc-wide.jpg`), NZÚ Light logo na střed nahoře, texty a karta dole, hlava zůstává volná.
+20 s, 1080×1920 a 1080×1080, Remotion `src/OsvcBanner.tsx`, VO Holden (ElevenLabs přes Higgsfield), podkres `bed.mp3`. Pozadí = klip živnostníka `clips/1-osvc.mp4` ve smyčce s prolnutím (u 1:1 na výšku uprostřed s rozmazanou kopií za ním), NZÚ Light logo na střed nahoře, texty a karta dole, hlava zůstává volná.
 
 | Čas | Obraz | VO |
 |---|---|---|
@@ -88,4 +88,4 @@ Nové záběry (Higgsfield, identita z `osvc-story.jpg` přes image_references):
 | 8,3–12,4 s | kalkulačka: kurzor vybere domácnost, přetáhne fakturaci 500 → 800 tis., výsledek: příjem na osobu 10 544 Kč pod hranicí, „Pravděpodobně máte nárok“, nálepka Dotace předem 320 000 Kč | Spočítejte si, jestli máte nárok na 320 tisíc předem. |
 | 12,4–15 s | karta se zmenší, cena „za 65 500 Kč místo 385 500“, CTA „Spočítat můj nárok“ s kliknutím | Klikněte a zjistěte to hned. |
 
-Výstupy: `banners/video/out/sch-fve-osvc-anim-{1080x1920,1080x1080}-202609-v03.mp4`, Desktop `08_Animovany_banner_OSVC/`. utm_content = název souboru bez přípony.
+Výstupy: `banners/video/out/sch-fve-osvc-anim-{1080x1920,1080x1080}-202609-v04.mp4`, Desktop `08_Animovany_banner_OSVC/`. utm_content = název souboru bez přípony.

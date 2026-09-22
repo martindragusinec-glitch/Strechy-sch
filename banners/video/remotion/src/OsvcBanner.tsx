@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 
 /* Animovaný Meta banner OSVČ: hook → mýtus → kalkulačka dojde k nároku → cena + CTA. Bez zvuku, 10 s, smyčka. */
 export type Fmt = 'story' | 'square';
@@ -153,6 +153,17 @@ const Footer: React.FC<{s: number; from: number; clickAt: number}> = ({s, from, 
   </div>);
 };
 
+const BgClip: React.FC<{story: boolean; zoom: number; fadeIn: boolean}> = ({story, zoom, fadeIn}) => {
+  const f = useCurrentFrame(); const op = fadeIn ? clamp(f, 0, 14, 0, 1) : 1; const src = staticFile('clips/1-osvc.mp4');
+  if (story) return (<AbsoluteFill style={{opacity: op}}>
+    <OffthreadVideo src={src} muted style={{position: 'absolute', left: 0, top: '-12%', width: '100%', height: '112%', objectFit: 'cover', objectPosition: '50% 0%', transform: `scale(${zoom})`, transformOrigin: '50% 20%'}} />
+  </AbsoluteFill>);
+  /* čtverec: klip na výšku uprostřed, za ním rozmazaná kopie přes celou šířku */
+  return (<AbsoluteFill style={{opacity: op}}>
+    <OffthreadVideo src={src} muted style={{position: 'absolute', left: '-10%', top: '-10%', width: '120%', height: '120%', objectFit: 'cover', objectPosition: '50% 30%', filter: 'blur(28px) brightness(.6)'}} />
+    <OffthreadVideo src={src} muted style={{position: 'absolute', left: '50%', top: '-4%', height: '108%', width: 'auto', transform: `translateX(-50%) scale(${zoom})`, transformOrigin: '50% 25%', boxShadow: '0 0 80px rgba(0,0,0,.6)'}} />
+  </AbsoluteFill>);
+};
 export const OsvcBanner: React.FC<{format: Fmt}> = ({format}) => {
   const f = useCurrentFrame(); const story = format === 'story';
   const W = 1080, H = story ? 1920 : 1080, s = story ? 1 : 0.74;
@@ -166,7 +177,10 @@ export const OsvcBanner: React.FC<{format: Fmt}> = ({format}) => {
   const fadeOut = clamp(f, BANNER_FRAMES - 8, BANNER_FRAMES, 1, 0);
   const footH = story ? 372 : 262;
   return (<AbsoluteFill style={{background: '#12161C', fontFamily: 'P, system-ui, sans-serif', overflow: 'hidden'}}><style>{font}</style>
-    <Img src={staticFile(story ? 'img/osvc-story.jpg' : 'img/osvc-wide.jpg')} style={{position: 'absolute', left: 0, right: 0, top: '-12%', width: '100%', height: '112%', objectFit: 'cover', objectPosition: story ? '50% 0%' : '63% 0%', transform: `scale(${zoom})`, transformOrigin: '50% 20%'}} />
+    {/* živé pozadí: klip živnostníka ve smyčce s prolnutím (5 s klip, přesah 14 snímků) */}
+    {[0, 1, 2, 3, 4].map((i) => { const at = i * 136; return (<Sequence key={i} from={at} durationInFrames={150} layout="none">
+      <BgClip story={story} zoom={zoom} fadeIn={i > 0} />
+    </Sequence>); })}
     <AbsoluteFill style={{background: story ? 'linear-gradient(180deg, rgba(18,22,28,.9) 0%, rgba(18,22,28,.35) 22%, rgba(18,22,28,.25) 38%, rgba(18,22,28,.86) 62%, rgba(18,22,28,.95) 100%)' : 'linear-gradient(180deg, rgba(18,22,28,.72) 0%, rgba(18,22,28,.3) 30%, rgba(18,22,28,.86) 60%, rgba(18,22,28,.95) 100%)'}} />
     {/* logo NZÚ na střed */}
     <div style={{position: 'absolute', left: 0, right: 0, top: PT - (story ? 10 : 0), display: 'flex', justifyContent: 'center', opacity: fadeOut}}>
