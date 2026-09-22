@@ -10,6 +10,9 @@ const PX = 72, PT = 290, PB = 380;
 type Lay = {land: boolean; L: number; R: number; capBottom: number; centerTop: number; centerBottom: number; logoTop: number; col: number};
 const PORT: Lay = {land: false, L: PX, R: PX, capBottom: PB - 10, centerTop: PT + 80, centerBottom: PB + 260, logoTop: PT - 40, col: 0};
 const LAND: Lay = {land: true, L: 860, R: 96, capBottom: 64, centerTop: 150, centerBottom: 310, logoTop: 44, col: 760};
+/* celoplošné scény v landscape (karty, závěr): obsah na střed celé šířky */
+const FULL: Lay = {...LAND, L: 96, R: 96, col: 0};
+const Full: React.FC<{children: React.ReactNode}> = ({children}) => { const L = useLay(); return <LayCtx.Provider value={L.land ? FULL : L}>{children}</LayCtx.Provider>; };
 const LayCtx = React.createContext<Lay>(PORT);
 const useLay = () => React.useContext(LayCtx);
 /* VO (ElevenLabs, cs): délky v s, změřeno ffmpeg. Scény začínají s větou. */
@@ -45,7 +48,7 @@ const Captions: React.FC<{k: string; start: number; size?: number}> = ({k, start
 };
 /* středový sloupec: vizuál nahoře, titulky pod ním, celé vertikálně na střed bezpečné zóny */
 const Center: React.FC<{children: React.ReactNode; gap?: number; bottom?: boolean; top?: boolean}> = ({children, gap = 40, bottom = false, top = false}) => { const L = useLay(); return (
-  <div style={{position: 'absolute', left: L.L, right: L.R, top: L.centerTop, bottom: L.centerBottom, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: bottom ? 'flex-end' : top ? 'flex-start' : 'center', gap}}>{children}</div>
+  <div style={{position: 'absolute', left: L.L, right: L.R, top: L.centerTop, bottom: L.centerBottom, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: bottom && !L.land ? 'flex-end' : top && !L.land ? 'flex-start' : 'center', gap}}>{children}</div>
 ); };
 const font = ['600','500','400'].map(w=>`@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin-ext.woff2`)}) format("woff2");font-weight:${w};unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin.woff2`)}) format("woff2");font-weight:${w}}`).join('');
 
@@ -54,6 +57,9 @@ const useSpring = (delay: number, cfg = {damping: 12, stiffness: 180, mass: 0.7}
 /* ---------- stavební prvky ---------- */
 const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, number]; bright?: number; pos?: string}> = ({src, from, dur, zoom = [1, 1.06], bright = 1, pos = 'center'}) => {
   const f = useCurrentFrame(); const sc = interpolate(f - from, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const L = useLay();
+  if (L.land && !L.col) return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden', background: INK}}>
+    <OffthreadVideo src={staticFile(src)} muted style={{position: 'absolute', left: '-6%', top: '-6%', width: '112%', height: '112%', objectFit: 'cover', objectPosition: 'center 30%', transform: `scale(${sc})`, filter: 'blur(22px) brightness(.5)'}} />
+  </AbsoluteFill></Sequence>);
   if (L.land) return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden', background: INK}}>
     <OffthreadVideo src={staticFile(src)} muted style={{position: 'absolute', left: '-6%', top: '-6%', width: '112%', height: '112%', objectFit: 'cover', objectPosition: 'center 30%', filter: 'blur(36px) brightness(.32)'}} />
     <div style={{position: 'absolute', left: 0, top: 0, width: L.col, height: 1080, overflow: 'hidden'}}><OffthreadVideo src={staticFile(src)} muted style={{width: L.col, height: 1080, objectFit: 'cover', objectPosition: pos === 'center' ? 'center 22%' : pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} /></div>
@@ -64,9 +70,9 @@ const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, nu
   </AbsoluteFill></Sequence>);
 };
 const Card: React.FC<{children?: React.ReactNode; bg?: string}> = ({children, bg = INK}) => (
-  <><AbsoluteFill style={{background: bg}}>
+  <Full><AbsoluteFill style={{background: bg}}>
     <AbsoluteFill style={{background: 'repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 1px,transparent 1px 9px)'}} />
-    </AbsoluteFill>{children}</>
+    </AbsoluteFill>{children}</Full>
 );
 const Shade: React.FC<{h?: number; top?: boolean}> = ({h = 55, top = false}) => (<AbsoluteFill style={{background: top ? `linear-gradient(180deg, rgba(27,32,40,.75) 0%, rgba(27,32,40,0) ${h}%)` : `linear-gradient(180deg, rgba(27,32,40,0) ${100 - h}%, rgba(27,32,40,.92) 100%)`}} />);
 const Logos: React.FC = () => { const L = useLay(); return (<div style={{position: 'absolute', left: L.land ? L.L : 0, right: L.land ? L.R : 0, top: L.logoTop, display: 'flex', justifyContent: 'center'}}><Img src={staticFile('img/nzu-light-logo-dark.png')} style={{height: 84, filter: 'drop-shadow(0 6px 20px rgba(0,0,0,.6))'}} /></div>); };
@@ -169,7 +175,7 @@ export const Spot: React.FC<{audience: Audience; land?: boolean}> = ({audience, 
     <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center gap={30}>{isO ? <div style={{color: YEL}}><Counter to={320000} delay={3} dur={30} size={150} /></div> : null}<Tiles /></Center><Captions k={isO ? 'o3' : 'l3'} start={0} /></Sequence>
     {/* scéna 4 */}<Clip src={isO ? 'clips/6-osvc-kitchen.mp4' : 'clips/4-house.mp4'} from={sc(l4.start)} dur={sc(l5.start - l4.start)} zoom={[1.06, 1.16]} pos="center 30%" /><Sequence from={sc(l4.start)} durationInFrames={sc(l5.start - l4.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center bottom={isO}><StickerCentered /></Center><Captions k="l4" start={0} /></Sequence>
     {/* scéna 5 */}<Sequence from={sc(l5.start)} durationInFrames={sc(l6.start - l5.start)} layout="none"><Card><CenterInCard><PriceCentered /></CenterInCard><Captions k="l5" start={0} /></Card></Sequence>
-    {/* scéna 6 */}<Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><CtaCentered /></Center><Captions k="l6" start={0} /></Sequence>
+    {/* scéna 6 */}<Full><Clip src="clips/4-house.mp4" from={sc(l6.start)} dur={sc(END - l6.start)} zoom={[1.16, 1.22]} pos="center 30%" /><Sequence from={sc(l6.start)} durationInFrames={sc(END - l6.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.55)'}} /><Center><CtaCentered /></Center><Captions k="l6" start={0} /></Sequence></Full>
     {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
     <Audio src={staticFile('audio/bed.mp3')} volume={0.5} />
     <Logos />

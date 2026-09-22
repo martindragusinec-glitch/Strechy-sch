@@ -92,4 +92,4 @@ Výstupy: `banners/video/out/sch-fve-osvc-anim-{1080x1920,1080x1080}-202609-v05.
 
 ## Verze 16:9 (22. 9. 2026)
 
-Stejné tři spoty (senior, superdávka, OSVČ) v 1920×1080 pro YouTube / display: vlevo sloupec 760 px s ostrým klipem, za ním rozmazaná kopie klipu, vpravo grafika, karty a titulky (stejné prvky jako 9:16, jen jiné rozvržení přes `LayCtx` v `Spot.tsx`). Výstupy `banners/video/out/sch-fve-{senior,nizkoprijmove,osvc}-video-1920x1080-202609-v01.mp4`, Desktop `09_Video_16x9/`.
+Stejné tři spoty (senior, superdávka, OSVČ) v 1920×1080 pro YouTube / display: vlevo sloupec 760 px s ostrým klipem, za ním rozmazaná kopie klipu, vpravo grafika, karty a titulky (stejné prvky jako 9:16, jen jiné rozvržení přes `LayCtx` v `Spot.tsx`). Výstupy `banners/video/out/sch-fve-{senior,nizkoprijmove,osvc}-video-1920x1080-202609-v02.mp4`, Desktop `09_Video_16x9/`.
