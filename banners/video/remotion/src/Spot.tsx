@@ -6,6 +6,12 @@ const FPS = 30; const S = (s: number) => Math.round(s * FPS);
 const RED = '#DA000F', GREEN = '#24A531', INK = '#1B2028', YEL = '#FFD23F';
 const HOOK: Record<Audience, string[]> = {senior: ['Pobíráte', 'starobní důchod?'], nizkoprijmove: ['Pobíráte', 'superdávku?'], osvc: ['Jste OSVČ', 's nižšími příjmy?']};
 const PX = 72, PT = 290, PB = 380;
+/* rozvržení: portrét 1080×1920 vs. landscape 1920×1080 (vlevo klip 760 px, vpravo grafika + titulky) */
+type Lay = {land: boolean; L: number; R: number; capBottom: number; centerTop: number; centerBottom: number; logoTop: number; col: number};
+const PORT: Lay = {land: false, L: PX, R: PX, capBottom: PB - 10, centerTop: PT + 80, centerBottom: PB + 260, logoTop: PT - 40, col: 0};
+const LAND: Lay = {land: true, L: 860, R: 96, capBottom: 64, centerTop: 150, centerBottom: 310, logoTop: 44, col: 760};
+const LayCtx = React.createContext<Lay>(PORT);
+const useLay = () => React.useContext(LayCtx);
 /* VO (ElevenLabs, cs): délky v s, změřeno ffmpeg. Scény začínají s větou. */
 const VO: Record<string, {file: string; words: string; dur: number}> = {
   'hook-senior': {file: 'audio/hook-senior.mp3', words: 'Pobíráte starobní důchod?', dur: 1.72},
@@ -28,9 +34,9 @@ const Captions: React.FC<{k: string; start: number; size?: number}> = ({k, start
   const f = useCurrentFrame(); const t = f / FPS - start; const v = VO[k]; const words = v.words.split(' ');
   const total = words.reduce((n, w) => n + w.length + 1, 0); let acc = 0;
   const times = words.map((w) => { const s0 = (acc / total) * v.dur; acc += w.length + 1; return s0; });
-  const idx = times.filter((x) => t >= x - 0.05).length - 1;
+  const idx = times.filter((x) => t >= x - 0.05).length - 1; const L = useLay();
   return (
-    <div style={{position: 'absolute', left: PX, right: PX, bottom: PB - 10, height: size * 1.2 * 3 + 10, display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
+    <div style={{position: 'absolute', left: L.L, right: L.R, bottom: L.capBottom, height: size * 1.2 * 3 + 10, display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
       <div style={{textAlign: 'center', fontSize: size, fontWeight: 600, lineHeight: 1.2, textShadow: '0 4px 20px rgba(0,0,0,.95), 0 0 40px rgba(0,0,0,.6)', maxWidth: 936}}>
         {words.map((w, i) => { const on = i <= idx; const isNum = /\d/.test(w) || w === 'Kč.' || w === 'Kč'; return <span key={i} style={{display: 'inline-block', margin: '0 .16em', color: isNum && on ? '#FFD23F' : '#fff', opacity: on ? 1 : 0.32, textTransform: 'uppercase', letterSpacing: '-.01em'}}>{w}</span>; })}
       </div>
@@ -38,16 +44,21 @@ const Captions: React.FC<{k: string; start: number; size?: number}> = ({k, start
   );
 };
 /* středový sloupec: vizuál nahoře, titulky pod ním, celé vertikálně na střed bezpečné zóny */
-const Center: React.FC<{children: React.ReactNode; gap?: number; bottom?: boolean; top?: boolean}> = ({children, gap = 40, bottom = false, top = false}) => (
-  <div style={{position: 'absolute', left: PX, right: PX, top: PT + 80, bottom: PB + 260, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: bottom ? 'flex-end' : top ? 'flex-start' : 'center', gap}}>{children}</div>
-);
+const Center: React.FC<{children: React.ReactNode; gap?: number; bottom?: boolean; top?: boolean}> = ({children, gap = 40, bottom = false, top = false}) => { const L = useLay(); return (
+  <div style={{position: 'absolute', left: L.L, right: L.R, top: L.centerTop, bottom: L.centerBottom, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: bottom ? 'flex-end' : top ? 'flex-start' : 'center', gap}}>{children}</div>
+); };
 const font = ['600','500','400'].map(w=>`@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin-ext.woff2`)}) format("woff2");font-weight:${w};unicode-range:U+0100-024F,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF}@font-face{font-family:P;src:url(${staticFile(`fonts/poppins-${w}-latin.woff2`)}) format("woff2");font-weight:${w}}`).join('');
 
 const useSpring = (delay: number, cfg = {damping: 12, stiffness: 180, mass: 0.7}) => { const f = useCurrentFrame(); const {fps} = useVideoConfig(); return spring({frame: f - delay, fps, config: cfg}); };
 
 /* ---------- stavební prvky ---------- */
 const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, number]; bright?: number; pos?: string}> = ({src, from, dur, zoom = [1, 1.06], bright = 1, pos = 'center'}) => {
-  const f = useCurrentFrame(); const sc = interpolate(f - from, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const f = useCurrentFrame(); const sc = interpolate(f - from, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const L = useLay();
+  if (L.land) return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden', background: INK}}>
+    <OffthreadVideo src={staticFile(src)} muted style={{position: 'absolute', left: '-6%', top: '-6%', width: '112%', height: '112%', objectFit: 'cover', objectPosition: 'center 30%', filter: 'blur(36px) brightness(.32)'}} />
+    <div style={{position: 'absolute', left: 0, top: 0, width: L.col, height: 1080, overflow: 'hidden'}}><OffthreadVideo src={staticFile(src)} muted style={{width: L.col, height: 1080, objectFit: 'cover', objectPosition: pos === 'center' ? 'center 22%' : pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} /></div>
+    <div style={{position: 'absolute', left: L.col - 1, top: 0, width: 140, height: 1080, background: 'linear-gradient(90deg, rgba(18,22,28,0), rgba(18,22,28,.55))'}} />
+  </AbsoluteFill></Sequence>);
   return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden'}}>
     <OffthreadVideo src={staticFile(src)} muted style={{width: 1080, height: 1920, objectFit: 'cover', objectPosition: pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} />
   </AbsoluteFill></Sequence>);
@@ -58,7 +69,7 @@ const Card: React.FC<{children?: React.ReactNode; bg?: string}> = ({children, bg
     </AbsoluteFill>{children}</>
 );
 const Shade: React.FC<{h?: number; top?: boolean}> = ({h = 55, top = false}) => (<AbsoluteFill style={{background: top ? `linear-gradient(180deg, rgba(27,32,40,.75) 0%, rgba(27,32,40,0) ${h}%)` : `linear-gradient(180deg, rgba(27,32,40,0) ${100 - h}%, rgba(27,32,40,.92) 100%)`}} />);
-const Logos: React.FC = () => (<div style={{position: 'absolute', left: 0, right: 0, top: PT - 40, display: 'flex', justifyContent: 'center'}}><Img src={staticFile('img/nzu-light-logo-dark.png')} style={{height: 84, filter: 'drop-shadow(0 6px 20px rgba(0,0,0,.6))'}} /></div>);
+const Logos: React.FC = () => { const L = useLay(); return (<div style={{position: 'absolute', left: L.land ? L.L : 0, right: L.land ? L.R : 0, top: L.logoTop, display: 'flex', justifyContent: 'center'}}><Img src={staticFile('img/nzu-light-logo-dark.png')} style={{height: 84, filter: 'drop-shadow(0 6px 20px rgba(0,0,0,.6))'}} /></div>); };
 const Pill: React.FC<{children: React.ReactNode; size: number; color?: string}> = ({children, size, color = GREEN}) => (<span style={{display: 'inline-block', background: color, color: '#fff', padding: '.02em .26em .06em', borderRadius: '.2em', whiteSpace: 'nowrap', fontSize: size, lineHeight: 1.05, fontWeight: 600, letterSpacing: '-.03em'}}>{children}</span>);
 const Word: React.FC<{i: number; children: React.ReactNode; size?: number; pill?: boolean}> = ({i, children, size = 108, pill}) => {
   const p = useSpring(3 + i * 5); const st: React.CSSProperties = {display: 'block', opacity: p, transform: `translateY(${(1 - p) * 60}px)`, fontSize: size, fontWeight: 600, lineHeight: 1.05, letterSpacing: '-.03em', textShadow: pill ? 'none' : '0 6px 40px rgba(0,0,0,.6)'};
@@ -145,13 +156,13 @@ const Cta: React.FC = () => { const f = useCurrentFrame(); const a = useSpring(2
     <div style={{opacity: a, fontSize: 30, color: 'rgba(255,255,255,.85)', lineHeight: 1.4}}><b>Do 24 h</b> víte, zda máte nárok · <b>23 000+</b> instalací · nezávazně</div>
   </div>); };
 
-export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
+export const Spot: React.FC<{audience: Audience; land?: boolean}> = ({audience, land = false}) => {
   const tl = timeline(audience); const [h, l2, l3, l4, l5, l6] = tl; const END = tl[5].end + 0.8; const sc = (x: number) => S(x);
   const mid3 = l3.start + (l3.end - l3.start) * 0.55;
   const isO = audience === 'osvc';
-  return (
+  return (<LayCtx.Provider value={land ? LAND : PORT}>
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
-    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none"><Shade h={55} /><div style={{position: 'absolute', left: PX, right: PX, bottom: PB - 10, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></Sequence>
+    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none">{land ? <Center><HookCentered a={audience} /></Center> : <><Shade h={55} /><div style={{position: 'absolute', left: PX, right: PX, bottom: PB - 10, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></>}</Sequence>
     {/* scéna 2 */}{isO ? <Clip src="clips/5-osvc-work.mp4" from={sc(l2.start)} dur={sc(l3.start - l2.start)} zoom={[1.02, 1.1]} /> : null}
     <Sequence from={sc(l2.start)} durationInFrames={sc(l3.start - l2.start)} layout="none">{isO ? (<><AbsoluteFill style={{background: 'rgba(18,22,28,.72)'}} /><Center top gap={34}><ZivnostCard /></Center><Captions k="o2" start={0} /></>) : (<Card><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div></CenterInCard><Captions k="l2" start={0} /></Card>)}</Sequence>
     {/* scéna 3 */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
@@ -162,5 +173,5 @@ export const Spot: React.FC<{audience: Audience}> = ({audience}) => {
     {tl.map(({k, start}) => <Sequence key={'a' + k} from={sc(start)} layout="none"><Audio src={staticFile(VO[k].file)} volume={1} /></Sequence>)}
     <Audio src={staticFile('audio/bed.mp3')} volume={0.5} />
     <Logos />
-  </AbsoluteFill>);
+  </AbsoluteFill></LayCtx.Provider>);
 };
