@@ -57,7 +57,7 @@ const font = ['600','500','400'].map(w=>`@font-face{font-family:P;src:url(${stat
 const useSpring = (delay: number, cfg = {damping: 12, stiffness: 180, mass: 0.7}) => { const f = useCurrentFrame(); const {fps} = useVideoConfig(); return spring({frame: f - delay, fps, config: cfg}); };
 
 /* ---------- stavební prvky ---------- */
-const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, number]; bright?: number; pos?: string}> = ({src, from, dur, zoom = [1, 1.06], bright = 1, pos = 'center'}) => {
+const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, number]; bright?: number; pos?: string; sqPos?: string}> = ({src, from, dur, zoom = [1, 1.06], bright = 1, pos = 'center', sqPos}) => {
   const f = useCurrentFrame(); const sc = interpolate(f - from, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}); const L = useLay();
   if (L.land && !L.col) return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden', background: INK}}>
     <OffthreadVideo src={staticFile(src)} muted style={{position: 'absolute', left: '-6%', top: '-6%', width: '112%', height: '112%', objectFit: 'cover', objectPosition: 'center 30%', transform: `scale(${sc})`, filter: 'blur(22px) brightness(.5)'}} />
@@ -68,7 +68,7 @@ const Clip: React.FC<{src: string; from: number; dur: number; zoom?: [number, nu
     <div style={{position: 'absolute', left: L.col - 1, top: 0, width: 140, height: 1080, background: 'linear-gradient(90deg, rgba(18,22,28,0), rgba(18,22,28,.55))'}} />
   </AbsoluteFill></Sequence>);
   return (<Sequence from={from} durationInFrames={dur} layout="none"><AbsoluteFill style={{overflow: 'hidden'}}>
-    <OffthreadVideo src={staticFile(src)} muted style={{width: L.W, height: L.H, objectFit: 'cover', objectPosition: pos === 'center' ? L.pos : pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} />
+    <OffthreadVideo src={staticFile(src)} muted style={{width: L.W, height: L.H, objectFit: 'cover', objectPosition: (L.W === L.H && sqPos) ? sqPos : pos === 'center' ? L.pos : pos, transform: `scale(${sc})`, filter: `brightness(${bright})`}} />
   </AbsoluteFill></Sequence>);
 };
 const Card: React.FC<{children?: React.ReactNode; bg?: string}> = ({children, bg = INK}) => (
@@ -171,8 +171,8 @@ export const Spot: React.FC<{audience: Audience; land?: boolean; sq?: boolean}> 
   const lay = land ? LAND : sq ? SQ : PORT;
   return (<LayCtx.Provider value={lay}>
   <AbsoluteFill style={{background: INK, fontFamily: 'P, system-ui, sans-serif', color: '#fff'}}><style>{font}</style>
-    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none">{land ? <Center><HookCentered a={audience} /></Center> : <><Shade h={55} /><div style={{position: 'absolute', left: lay.L, right: lay.R, bottom: lay.capBottom, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></>}</Sequence>
-    {/* scéna 2 */}{isO ? <Clip src="clips/5-osvc-work.mp4" from={sc(l2.start)} dur={sc(l3.start - l2.start)} zoom={[1.02, 1.1]} /> : null}
+    {/* hook */}<Clip src={`clips/1-${audience}.mp4`} from={0} dur={sc(l2.start)} zoom={[1.02, 1.1]} sqPos="center 58%" /><Sequence from={0} durationInFrames={sc(l2.start)} layout="none">{land ? <Center><HookCentered a={audience} /></Center> : <><Shade h={55} /><div style={{position: 'absolute', left: lay.L, right: lay.R, bottom: lay.capBottom, display: 'flex', justifyContent: 'center'}}><HookCentered a={audience} /></div></>}</Sequence>
+    {/* scéna 2 */}{isO ? <Clip src="clips/5-osvc-work.mp4" from={sc(l2.start)} dur={sc(l3.start - l2.start)} zoom={[1.02, 1.1]} sqPos="center 0%" /> : null}
     <Sequence from={sc(l2.start)} durationInFrames={sc(l3.start - l2.start)} layout="none">{isO ? (<><AbsoluteFill style={{background: 'rgba(18,22,28,.72)'}} /><Center top gap={34}><ZivnostCard /></Center><Captions k="o2" start={0} /></>) : (<Card><CenterInCard><div style={{fontSize: 40, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', fontWeight: 500}}>Dotace NZÚ Light</div><div style={{color: YEL}}><Counter to={320000} delay={4} dur={34} size={170} /></div></CenterInCard><Captions k="l2" start={0} /></Card>)}</Sequence>
     {/* scéna 3 */}<Clip src="clips/2-drone.mp4" from={sc(l3.start)} dur={sc(mid3 - l3.start)} zoom={[1, 1.08]} /><Clip src="clips/3-attic.mp4" from={sc(mid3)} dur={sc(l4.start - mid3)} zoom={[1.05, 1.15]} bright={1.3} />
     <Sequence from={sc(l3.start)} durationInFrames={sc(l4.start - l3.start)} layout="none"><AbsoluteFill style={{background: 'rgba(18,22,28,.5)'}} /><Center gap={30}>{isO ? <div style={{color: YEL}}><Counter to={320000} delay={3} dur={30} size={150} /></div> : null}<Tiles /></Center><Captions k={isO ? 'o3' : 'l3'} start={0} /></Sequence>
